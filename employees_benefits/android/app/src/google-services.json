@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "351015583614",
+    "firebase_url": "https://employees-benifits-app.firebaseio.com",
+    "project_id": "employees-benifits-app",
+    "storage_bucket": "employees-benifits-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351015583614:android:83584a100ab09ea6",
+        "android_client_info": {
+          "package_name": "com.example.employees_benefits"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "351015583614-1hudm5llb6soasejobt1eg90kivbrl2n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLFz5clC3HQk-SGKY5GerwZSWV7qtJtYI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "351015583614-1hudm5llb6soasejobt1eg90kivbrl2n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
