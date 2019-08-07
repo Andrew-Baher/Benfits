@@ -10,7 +10,7 @@ import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 
-import 'HomePage.dart';
+import 'MainApp.dart';
 
 class NewBenefit extends StatefulWidget {
   @override
@@ -258,7 +258,7 @@ class _NewBenefit extends State<NewBenefit>
     await new Future.delayed(const Duration(seconds: 3));
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => MainApplication()),
     );
   }
 
