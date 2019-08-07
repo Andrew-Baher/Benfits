@@ -1,16 +1,11 @@
-# employees_benefits
+# Employees Benefits
 
-A new Flutter application.
+Cross-Platform Mobile application that helps an organization handle and manage the benefits to be assigned to its employees. 
+The application is made to Evapharma Company, one of the leading branded generic pharmaceutical manufacturers in the EMEA region.
 
-## Getting Started
+# Built With
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* [Flutter](https://flutter.dev/?gclid=CjwKCAjw7anqBRALEiwAgvGgm4qYkcwLojg98Eta3FO5I9drf48DdMVOGCTMvEpy9OwpPgCKyYlJORoCLNkQAvD_BwE) - The framework used. 
+* [Firebase](https://firebase.google.com/?gclid=CjwKCAjw7anqBRALEiwAgvGgm6b-eTaGlnW-s2pqdQA_qfk7hK4s-Cz6YMtUXxDDV_AxjmWUzRKV9BoCgE4QAvD_BwE) - Online database. 
+## Authors 
+See the list of [contributors](https://github.com/Andrew-Baher/Benfits/contributors) who participated in this project.
