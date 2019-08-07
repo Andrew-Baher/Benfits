@@ -445,12 +445,12 @@ class _EditProfileState extends State<EditProfile> {
     Employee employee = mainEmployee;
 
     //Initialize TextFields with the employee's data
-    editedFirstNameController.text = employee.employeeFirstName;
-    editedLastNameController.text = employee.employeeLastName;
-    editedPhoneController.text = employee.employeePhoneNumber;
-    editedEmailController.text = employee.employeeEmail;
-    editedPasswordController.text = employee.employeePassword;
-    editedPositionController.text = employee.employeePosition;
+    editedFirstNameController.text  = employee.employeeFirstName;
+    editedLastNameController.text   = employee.employeeLastName;
+    editedPhoneController.text      = employee.employeePhoneNumber;
+    editedEmailController.text      = employee.employeeEmail;
+    editedPasswordController.text   = employee.employeePassword;
+    editedPositionController.text   = employee.employeePosition;
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,

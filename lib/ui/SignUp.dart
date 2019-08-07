@@ -40,10 +40,14 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(MediaQuery.of(context).size.width / 20),
+      padding: EdgeInsets.all(MediaQuery.of(context).size.width / 500),
       color: Colors.white,
       child: Scaffold(
         key: _scaffoldKey,
+        appBar: AppBar(
+          backgroundColor: Color.fromRGBO(19, 46, 99, 10),
+          title: new Text("Sign-Up"),
+        ),
         backgroundColor: Colors.transparent,
         body: ListView(
           padding: EdgeInsets.only(top: MediaQuery.of(context).size.width / 200),
