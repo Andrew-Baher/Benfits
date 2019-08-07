@@ -18,9 +18,6 @@ class MainApplicationState extends State<MainApplication> {
   @override
   void initState() {
     super.initState();
-
-    print(mainEmployee.employeeFirstName.toString());
-
     NewBenefit();
   }
 

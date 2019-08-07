@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 
 import '../main.dart';
 import 'HomePage.dart';
+import 'MainApp.dart';
 import 'SignUp.dart';
 
 class SignIn extends StatefulWidget {
@@ -72,7 +73,7 @@ class _SignInState extends State<SignIn> {
         padding: EdgeInsets.all(12),
         color: Color.fromRGBO(19, 46, 99, 10),
         child:
-            Text('Log In', style: TextStyle(color: Colors.white, fontSize: 24)),
+        Text('Log In', style: TextStyle(color: Colors.white, fontSize: 24)),
       ),
     );
 
@@ -81,7 +82,7 @@ class _SignInState extends State<SignIn> {
         'Forgot password?',
         style: TextStyle(color: Color.fromRGBO(19, 46, 99, 10), fontSize: 18),
       ),
-     onPressed: (){},
+      onPressed: (){},
     );
 
     final dontHaveAnAccount = FlatButton(
@@ -89,10 +90,10 @@ class _SignInState extends State<SignIn> {
         'Don\'t\ have an account',
         style: TextStyle(color: Color.fromRGBO(19, 46, 99, 10), fontSize: 18),
       ),
-        onPressed: () =>
-        {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()))
-        },
+      onPressed: () =>
+      {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()))
+      },
     );
 
 
@@ -102,22 +103,22 @@ class _SignInState extends State<SignIn> {
         key: _scaffoldKey,
         backgroundColor: Colors.white,
         body: Center(
-            child: ListView(
-              shrinkWrap: true,
-              padding: EdgeInsets.only(left: 24.0, right: 24.0),
-              children: <Widget>[
-                logo,
-                SizedBox(height: MediaQuery.of(context).size.height / 25),
-                email,
-                SizedBox(height: MediaQuery.of(context).size.height / 50),
-                password,
-                SizedBox(height: MediaQuery.of(context).size.height / 30),
-                loginButton,
-                forgotLabel,
-                dontHaveAnAccount,
-              ],
-            ),
+          child: ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.only(left: 24.0, right: 24.0),
+            children: <Widget>[
+              logo,
+              SizedBox(height: MediaQuery.of(context).size.height / 25),
+              email,
+              SizedBox(height: MediaQuery.of(context).size.height / 50),
+              password,
+              SizedBox(height: MediaQuery.of(context).size.height / 30),
+              loginButton,
+              forgotLabel,
+              dontHaveAnAccount,
+            ],
           ),
+        ),
 
       ),
     );
@@ -139,10 +140,11 @@ class _SignInState extends State<SignIn> {
       if (emps[i].employeeEmail == loginEmailController.text &&
           emps[i].employeePassword == loginPasswordController.text) {
         mainEmployee = emps[i];
+        mainEmployeeCompanyID = mainEmployee.employeeCompanyID.toString();
         Navigator.push
           (context,
             new MaterialPageRoute(builder:
-                (context) => new HomePage()));
+                (context) => new MainApplication()));
       }
       else
         showInSnackBar('Incorrect email or password ! Please try again.');

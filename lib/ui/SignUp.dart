@@ -489,6 +489,8 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
     String companyID = signUpCompanyIDController.text;
     String position  = signUpPositionController.text;
 
+    //TODO: If ID exists -> overwriting happens -> fix bug (check if ID exists)
+
     DBRef.child('employees').child(companyID).set({
       "employeeFirstName": firstName,
       "employeeLastName": lastName,
@@ -496,6 +498,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
       "employeeEmail": email,
       "employeePassword": password,
       "employeePosition": position,
+      "employeeCompanyID": companyID,
       "employeeAuthority": 'User',
       "employeeApprovalStatus" : false
     });

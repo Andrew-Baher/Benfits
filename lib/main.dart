@@ -5,6 +5,8 @@ import 'models/Employee.dart';
 
 int mainCurrentIndex = 0;
 Employee mainEmployee;
+String mainEmployeeCompanyID;
+
 
 void main() => runApp(new MyApp());
 

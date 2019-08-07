@@ -2,21 +2,22 @@ import 'dart:convert';
 
 import 'package:employees_benefits/models/Employee.dart';
 import 'package:employees_benefits/style/theme.dart' as Theme;
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart';
 
 import '../main.dart';
-
+import 'MainApp.dart';
 
 class EditProfile extends StatefulWidget {
-
   @override
   _EditProfileState createState() => new _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
+  final DBRef = FirebaseDatabase.instance.reference();
+  Employee emp = mainEmployee; 
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -34,9 +35,7 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController editedEmailController = new TextEditingController();
   TextEditingController editedPasswordController = new TextEditingController();
   TextEditingController editedPhoneController = new TextEditingController();
-  TextEditingController editedCompanyIDController = new TextEditingController();
   TextEditingController editedPositionController = new TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,8 @@ class _EditProfileState extends State<EditProfile> {
         key: _scaffoldKey,
         backgroundColor: Colors.transparent,
         body: ListView(
-          padding: EdgeInsets.only(top: MediaQuery.of(context).size.width / 200),
+          padding:
+              EdgeInsets.only(top: MediaQuery.of(context).size.width / 200),
           children: <Widget>[
             DrawerHeader(
               child: Padding(
@@ -74,10 +74,7 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
             SizedBox(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 50,
+              height: MediaQuery.of(context).size.height / 50,
             ),
             GestureDetector(
               child: Column(
@@ -87,28 +84,22 @@ class _EditProfileState extends State<EditProfile> {
                       Icon(
                         Icons.person,
                         color: Colors.black,
-                        size: MediaQuery.of(context).size.width /15,
+                        size: MediaQuery.of(context).size.width / 15,
                       ),
                       SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 30,
+                        width: MediaQuery.of(context).size.width / 30,
                       ),
                       Text(
                         'Edit First Name',
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width /20,
+                            fontSize: MediaQuery.of(context).size.width / 20,
                             fontFamily: "WorkSansBold"),
                       ),
                     ],
                   ),
                   SizedBox(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height / 70,
+                    height: MediaQuery.of(context).size.height / 70,
                   ),
                   TextField(
                     controller: editedFirstNameController,
@@ -131,10 +122,7 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
             SizedBox(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 70,
+              height: MediaQuery.of(context).size.height / 70,
             ),
             GestureDetector(
               child: Column(
@@ -144,28 +132,22 @@ class _EditProfileState extends State<EditProfile> {
                       Icon(
                         Icons.person,
                         color: Colors.black,
-                        size: MediaQuery.of(context).size.width /15,
+                        size: MediaQuery.of(context).size.width / 15,
                       ),
                       SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 30,
+                        width: MediaQuery.of(context).size.width / 30,
                       ),
                       Text(
                         'Edit Last Name',
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width /20,
+                            fontSize: MediaQuery.of(context).size.width / 20,
                             fontFamily: "WorkSansBold"),
                       ),
                     ],
                   ),
                   SizedBox(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height / 70,
+                    height: MediaQuery.of(context).size.height / 70,
                   ),
                   TextField(
                     controller: editedLastNameController,
@@ -173,7 +155,7 @@ class _EditProfileState extends State<EditProfile> {
                     textCapitalization: TextCapitalization.words,
                     style: TextStyle(
                         fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width /20,
+                        fontSize: MediaQuery.of(context).size.width / 20,
                         color: Color.fromRGBO(19, 46, 99, 10)),
                     decoration: InputDecoration(
                       hasFloatingPlaceholder: false,
@@ -187,10 +169,7 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
             SizedBox(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 70,
+              height: MediaQuery.of(context).size.height / 70,
             ),
             GestureDetector(
               child: Column(
@@ -200,28 +179,22 @@ class _EditProfileState extends State<EditProfile> {
                       Icon(
                         Icons.phone_iphone,
                         color: Colors.black,
-                        size: MediaQuery.of(context).size.width /15,
+                        size: MediaQuery.of(context).size.width / 15,
                       ),
                       SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 30,
+                        width: MediaQuery.of(context).size.width / 30,
                       ),
                       Text(
                         'Edit Phone Number',
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width /20,
+                            fontSize: MediaQuery.of(context).size.width / 20,
                             fontFamily: "WorkSansBold"),
                       ),
                     ],
                   ),
                   SizedBox(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height / 70,
+                    height: MediaQuery.of(context).size.height / 70,
                   ),
                   TextField(
                     controller: editedPhoneController,
@@ -229,7 +202,7 @@ class _EditProfileState extends State<EditProfile> {
                     textCapitalization: TextCapitalization.words,
                     style: TextStyle(
                         fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width /20,
+                        fontSize: MediaQuery.of(context).size.width / 20,
                         color: Color.fromRGBO(19, 46, 99, 10)),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(8),
@@ -244,67 +217,7 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
             SizedBox(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 70,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.email,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width /15,
-                      ),
-                      SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 30,
-                      ),
-                      Text(
-                        'Edit Email',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width /20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height / 70,
-                  ),
-                  TextField(
-                    controller: editedEmailController,
-                    keyboardType: TextInputType.emailAddress,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width /20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 70,
+              height: MediaQuery.of(context).size.height / 70,
             ),
             GestureDetector(
               child: Column(
@@ -314,28 +227,22 @@ class _EditProfileState extends State<EditProfile> {
                       Icon(
                         Icons.person_pin,
                         color: Colors.black,
-                        size: MediaQuery.of(context).size.width /15,
+                        size: MediaQuery.of(context).size.width / 15,
                       ),
                       SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 30,
+                        width: MediaQuery.of(context).size.width / 30,
                       ),
                       Text(
                         'Edit Position',
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width /20,
+                            fontSize: MediaQuery.of(context).size.width / 20,
                             fontFamily: "WorkSansBold"),
                       ),
                     ],
                   ),
                   SizedBox(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height / 70,
+                    height: MediaQuery.of(context).size.height / 70,
                   ),
                   TextField(
                     controller: editedPositionController,
@@ -343,7 +250,7 @@ class _EditProfileState extends State<EditProfile> {
                     textCapitalization: TextCapitalization.words,
                     style: TextStyle(
                         fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width /20,
+                        fontSize: MediaQuery.of(context).size.width / 20,
                         color: Color.fromRGBO(19, 46, 99, 10)),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(8),
@@ -358,10 +265,103 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
             SizedBox(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 70,
+              height: MediaQuery.of(context).size.height / 70,
+            ),
+            GestureDetector(
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.person_pin,
+                        color: Colors.black,
+                        size: MediaQuery.of(context).size.width / 15,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 30,
+                      ),
+                      Text(
+                        'Edit Position',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: MediaQuery.of(context).size.width / 20,
+                            fontFamily: "WorkSansBold"),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 70,
+                  ),
+                  TextField(
+                    controller: editedPositionController,
+                    keyboardType: TextInputType.emailAddress,
+                    textCapitalization: TextCapitalization.words,
+                    style: TextStyle(
+                        fontFamily: "WorkSansSemiBold",
+                        fontSize: MediaQuery.of(context).size.width / 20,
+                        color: Color.fromRGBO(19, 46, 99, 10)),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(8),
+                      hasFloatingPlaceholder: false,
+                      border: UnderlineInputBorder(),
+                      //hoverColor: Colors.black,
+                      //focusColor: Colors.black,
+                      fillColor: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 70,
+            ),
+            GestureDetector(
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.email,
+                        color: Colors.black,
+                        size: MediaQuery.of(context).size.width / 15,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 30,
+                      ),
+                      Text(
+                        'Edit Email',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: MediaQuery.of(context).size.width / 20,
+                            fontFamily: "WorkSansBold"),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 70,
+                  ),
+                  TextField(
+                    controller: editedEmailController,
+                    keyboardType: TextInputType.emailAddress,
+                    textCapitalization: TextCapitalization.words,
+                    style: TextStyle(
+                        fontFamily: "WorkSansSemiBold",
+                        fontSize: MediaQuery.of(context).size.width / 20,
+                        color: Color.fromRGBO(19, 46, 99, 10)),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(8),
+                      hasFloatingPlaceholder: false,
+                      border: UnderlineInputBorder(),
+                      //hoverColor: Colors.black,
+                      //focusColor: Colors.black,
+                      fillColor: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 70,
             ),
             GestureDetector(
               child: Column(
@@ -371,28 +371,22 @@ class _EditProfileState extends State<EditProfile> {
                       Icon(
                         Icons.lock,
                         color: Colors.black,
-                        size: MediaQuery.of(context).size.width /15,
+                        size: MediaQuery.of(context).size.width / 15,
                       ),
                       SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 30,
+                        width: MediaQuery.of(context).size.width / 30,
                       ),
                       Text(
                         'Edit Password',
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width /20,
+                            fontSize: MediaQuery.of(context).size.width / 20,
                             fontFamily: "WorkSansBold"),
                       ),
                     ],
                   ),
                   SizedBox(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height / 70,
+                    height: MediaQuery.of(context).size.height / 70,
                   ),
                   TextField(
                     obscureText: true,
@@ -401,7 +395,7 @@ class _EditProfileState extends State<EditProfile> {
                     textCapitalization: TextCapitalization.words,
                     style: TextStyle(
                         fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width /20,
+                        fontSize: MediaQuery.of(context).size.width / 20,
                         color: Color.fromRGBO(19, 46, 99, 10)),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(8),
@@ -416,10 +410,7 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
             SizedBox(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 70,
+              height: MediaQuery.of(context).size.height / 70,
             ),
             MaterialButton(
                 shape: RoundedRectangleBorder(
@@ -429,10 +420,7 @@ class _EditProfileState extends State<EditProfile> {
                 splashColor: Theme.Colors.loginGradientStart,
                 color: Color.fromRGBO(19, 46, 99, 10),
                 minWidth: 70,
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height / 30,
+                height: MediaQuery.of(context).size.height / 30,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
@@ -443,8 +431,7 @@ class _EditProfileState extends State<EditProfile> {
                         fontFamily: "WorkSansBold"),
                   ),
                 ),
-                onPressed: _onSaveButtonPressed
-            ),
+                onPressed: _onSaveButtonPressed),
           ],
         ),
       ),
@@ -457,17 +444,13 @@ class _EditProfileState extends State<EditProfile> {
 
     Employee employee = mainEmployee;
 
-    //TODO: Get employee
-
     //Initialize TextFields with the employee's data
-    editedFirstNameController.text  = employee.employeeFirstName;
-    editedLastNameController.text   = employee.employeeLastName;
-    editedPhoneController.text      = employee.employeePhoneNumber;
-    editedEmailController.text      = employee.employeeEmail;
-    editedPasswordController.text   = employee.employeePassword;
-    editedCompanyIDController.text  = employee.employeeCompanyID;
-    editedPositionController.text   = employee.employeePosition;
-
+    editedFirstNameController.text = employee.employeeFirstName;
+    editedLastNameController.text = employee.employeeLastName;
+    editedPhoneController.text = employee.employeePhoneNumber;
+    editedEmailController.text = employee.employeeEmail;
+    editedPasswordController.text = employee.employeePassword;
+    editedPositionController.text = employee.employeePosition;
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -476,46 +459,27 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   void _onSaveButtonPressed() async {
-    String editedFirstName = editedFirstNameController.text;
-    String editedLastName = editedLastNameController.text;
-    String editedPhone = editedPhoneController.text;
-    String editedEmail = editedEmailController.text;
-    String editedPassword = editedPasswordController.text;
-    String editedCompanyID = editedCompanyIDController.text;
-    String editedPosition = editedPositionController.text;
+    String firstName = editedFirstNameController.text;
+    String lastName  = editedLastNameController.text;
+    String email     = editedEmailController.text;
+    String password  = editedPasswordController.text;
+    String phoneNo   = editedPhoneController.text;
+    String position  = editedPositionController.text;
 
-    final url = 'https://employees-benifits-app.firebaseio.com/employees.json';
-    final httpClient = new Client();
-    var response = await httpClient.get(url);
+    DBRef.child('employees').child(mainEmployeeCompanyID).update({
+      "employeeFirstName": firstName,
+      "employeeLastName": lastName,
+      "employeePhoneNumber": phoneNo,
+      "employeeEmail": email,
+      "employeePassword": password,
+      "employeePosition": position,
+      "employeeAuthority": 'User',
+      "employeeApprovalStatus" : false
+    });
 
-    Map employees = jsonCodec.decode(response.body);
-    List<dynamic> emps = employees.values.toList();
-
-    //Index of emp to be removed
-    int neededIndex;
-
-    //Compare the entered email & pass with db
-    for (int i = 0; i < emps.length; i++)
-      if (emps[i].employeeEmail == mainEmployee.employeeEmail)
-        neededIndex = i;
-
-    //TRIALS for debugging
-    print(emps[0].employeeEmail + '\n' + emps[0].employeePassword);
-
-    /*await Firestore.instance.runTransaction((Transaction myTransaction) async {
-      await myTransaction.delete(snapshot.data.documents[neededIndex].reference);
-    });*/
-
-
-
-      emps.removeAt(neededIndex);
-
-
-
-    //TRIALS for debugging
-    print(emps[0].employeeFirstName);
-    print("Employees length: " + employees.length.toString());
-
+    showInSnackBar('Data saved successfully !');
+    await Future.delayed(const Duration(seconds: 2), (){});
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainApplication()));
   }
 
   void showInSnackBar(String value) {
@@ -535,13 +499,6 @@ class _EditProfileState extends State<EditProfile> {
     ));
   }
 }
-
-_reviver(Object key, Object value) {
-  if (key != null && value is Map) return new Employee.fromJson(value);
-  return value;
-}
-
-const jsonCodec = const JsonCodec(reviver: _reviver);
 
 hexStringToHexInt(String hex) {
   hex = hex.replaceFirst('#', '');
