@@ -5,6 +5,7 @@ import 'package:employees_benefits/style/theme.dart' as Theme;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import 'SignIn.dart';
 
@@ -15,6 +16,8 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  final DBRef = FirebaseDatabase.instance.reference();
 
   final FocusNode myFocusNodePassword = FocusNode();
   final FocusNode myFocusNodeEmail = FocusNode();
@@ -221,6 +224,54 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                   Row(
                     children: <Widget>[
                       Icon(
+                        Icons.person_pin,
+                        color: Colors.black,
+                        size: MediaQuery.of(context).size.width / 15,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 30,
+                      ),
+                      Text(
+                        'Position',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: MediaQuery.of(context).size.width / 20,
+                            fontFamily: "WorkSansBold"),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 70,
+                  ),
+                  TextField(
+                    controller: signUpPositionController,
+                    keyboardType: TextInputType.emailAddress,
+                    textCapitalization: TextCapitalization.words,
+                    style: TextStyle(
+                        fontFamily: "WorkSansSemiBold",
+                        fontSize: MediaQuery.of(context).size.width / 20,
+                        color: Color.fromRGBO(19, 46, 99, 10)),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(8),
+                      hasFloatingPlaceholder: false,
+                      border: UnderlineInputBorder(),
+                      //hoverColor: Colors.black,
+                      //focusColor: Colors.black,
+                      fillColor: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 70,
+            ),
+            GestureDetector(
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Icon(
                         Icons.email,
                         color: Colors.black,
                         size: MediaQuery.of(context).size.width / 15,
@@ -269,7 +320,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                   Row(
                     children: <Widget>[
                       Icon(
-                        Icons.person_pin,
+                        Icons.work,
                         color: Colors.black,
                         size: MediaQuery.of(context).size.width / 15,
                       ),
@@ -277,7 +328,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                         width: MediaQuery.of(context).size.width / 30,
                       ),
                       Text(
-                        'Position',
+                        'Company ID',
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: MediaQuery.of(context).size.width / 20,
@@ -289,7 +340,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                     height: MediaQuery.of(context).size.height / 70,
                   ),
                   TextField(
-                    controller: signUpPositionController,
+                    controller: signUpCompanyIDController,
                     keyboardType: TextInputType.emailAddress,
                     textCapitalization: TextCapitalization.words,
                     style: TextStyle(
@@ -431,16 +482,23 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
 
   void _onSignUpButtonPress() async {
     String firstName = signUpFirstNameController.text;
-    String lastName = signUpLastNameController.text;
-    String email = signUpEmailController.text;
-    String password = signUpPasswordController.text;
-    String phoneNo = signUpPhoneNumberController.text;
+    String lastName  = signUpLastNameController.text;
+    String email     = signUpEmailController.text;
+    String password  = signUpPasswordController.text;
+    String phoneNo   = signUpPhoneNumberController.text;
     String companyID = signUpCompanyIDController.text;
-    String position = signUpPositionController.text;
+    String position  = signUpPositionController.text;
 
-    _saveData(new Employee(companyID, firstName, lastName, email, password, phoneNo,
-        companyID, position, "User", false));
-    _loadData();
+    DBRef.child('employees').child(companyID).set({
+      "employeeFirstName": firstName,
+      "employeeLastName": lastName,
+      "employeePhoneNumber": phoneNo,
+      "employeeEmail": email,
+      "employeePassword": password,
+      "employeePosition": position,
+      "employeeAuthority": 'User',
+      "employeeApprovalStatus" : false
+    });
     showInSnackBar("Your data is sent successfully !!");
     showDialog(
         context: context,
@@ -461,31 +519,3 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
   }
 }
 
-//TODO: REVISE CODE
-_reviver(Object key, Object value) {
-  if (key != null && value is Map) return new Employee.fromJson(value);
-  return value;
-}
-
-const jsonCodec = const JsonCodec(reviver: _reviver);
-
-_loadData() async {
-  final url = 'https://employees-benifits-app.firebaseio.com/employees.json';
-  final httpClient = new Client();
-  var response = await httpClient.get(url);
-
-  Map employees = jsonCodec.decode(response.body);
-  List<dynamic> emps = employees.values.toList();
-
-  //TRIALS for debugging
-  print(emps[0].employeeFirstName);
-  print("Employees length: " + employees.length.toString());
-}
-
-_saveData(Employee employee) async {
-  var json = jsonCodec.encode(employee);
-
-  final url = 'https://employees-benifits-app.firebaseio.com/employees.json';
-  final httpClient = new Client();
-  var response = await httpClient.post(url, body: json);
-}
