@@ -125,14 +125,9 @@ class _SignInState extends State<SignIn> {
   }
 
   void _onSignInButtonPress() async {
-    //bool emailValid = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(loginEmailController.text);
-
     if(loginEmailController.text == '' || loginPasswordController.text == ''){
       showInSnackBar('Please enter your email and password !');
     }
-//    else if (!emailValid){
-//      showInSnackBar('Incorrect email format ! Please try again !');
-//    }
     else{
       final url = 'https://employees-benifits-app.firebaseio.com/employees.json';
       final httpClient = new Client();
