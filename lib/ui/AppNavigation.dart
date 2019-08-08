@@ -8,10 +8,10 @@ import 'HomePage.dart';
 import 'Messages.dart';
 import 'More.dart';
 
-class HomeNavigation extends StatelessWidget {
+class AppNavigation extends StatelessWidget {
   final int current;
 
-  HomeNavigation(this.current);
+  AppNavigation(this.current);
 
   @override
   Widget build(BuildContext context) {

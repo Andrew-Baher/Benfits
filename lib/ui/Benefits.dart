@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../main.dart';
 import 'CurrentCategory.dart';
+import 'MainApp.dart';
 
 class Benefits extends StatefulWidget {
   @override
@@ -32,11 +34,8 @@ class _MyAppState1 extends State<Benefits> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CurrentCategory(items[index])));
+                      currentCategory=items[index];
+                      mainAppState.openAnotherTab(0);
                     },
                     child: Image.asset(assets[index],
                         height: MediaQuery.of(context).size.width / 3.5,

@@ -144,7 +144,7 @@ class _SignInState extends State<SignIn> {
         Navigator.push
           (context,
             new MaterialPageRoute(builder:
-                (context) => new MainApplication()));
+                (context) => mainAPP));
       }
       else
         showInSnackBar('Incorrect email or password ! Please try again.');

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../main.dart';
+import 'MainApp.dart';
+
 class CurrentCategory extends StatefulWidget {
   String currentBenefit;
 
@@ -16,24 +19,32 @@ class CurrentCategory extends StatefulWidget {
 }
 
 class CurrentCategoryState extends State<CurrentCategory> {
+  Future<bool> _onBackPressed() {
+    Navigator.push(
+        context, new MaterialPageRoute(builder: (context) => MainApplication()));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: new Text(widget.currentBenefit),
+    return new WillPopScope(
+      onWillPop: _onBackPressed,
+      child: new Scaffold(
+        appBar: AppBar(
+          title: new Text(widget.currentBenefit),
+        ),
+        body: new GridView.extent(
+            maxCrossAxisExtent: MediaQuery.of(context).size.width / 2,
+            mainAxisSpacing: MediaQuery.of(context).size.width / 50,
+            crossAxisSpacing: MediaQuery.of(context).size.width / 50,
+            children: _buildCategorytassets(Categoryassets.length)),
       ),
-      body: new GridView.extent(
-          maxCrossAxisExtent: MediaQuery.of(context).size.width / 2,
-          mainAxisSpacing: MediaQuery.of(context).size.width / 50,
-          crossAxisSpacing: MediaQuery.of(context).size.width / 50,
-          children: _buildCategorytassets(Categoryassets.length)),
     );
   }
 }
 
 List<Widget> _buildCategorytassets(numberOfTiles) {
   List<Container> containers =
-  new List<Container>.generate(numberOfTiles, (int index) {
+      new List<Container>.generate(numberOfTiles, (int index) {
     return new Container(
       child: new Image.asset(
         Categoryassets[index],

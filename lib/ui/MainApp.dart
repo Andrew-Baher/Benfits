@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../main.dart';
 import 'AppNavigation.dart';
+import 'CurrentCategory.dart';
 import 'NewBenefit.dart';
 
 
@@ -9,7 +10,7 @@ class MainApplication extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return MainApplicationState();
+    return mainAppState=new MainApplicationState();
   }
 }
 
@@ -18,15 +19,16 @@ class MainApplicationState extends State<MainApplication> {
   @override
   void initState() {
     super.initState();
+    inNavigation=true;
     NewBenefit();
   }
 
   int _currentIndex = mainCurrentIndex;
   final List<Widget> _children = [
-    HomeNavigation(0),
-    HomeNavigation(1),
-    HomeNavigation(2),
-    HomeNavigation(3)
+    AppNavigation(0),
+    AppNavigation(1),
+    AppNavigation(2),
+    AppNavigation(3)
   ];
 
   @override
@@ -69,8 +71,20 @@ class MainApplicationState extends State<MainApplication> {
   }
 
   void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
+      setState(() {
+        _currentIndex = index;
+      });
+    }
+
+    void openAnotherTab(int index)
+    {
+      if(index==0)
+        {
+          Navigator.of(context).pop();
+          Navigator.push
+            (context,
+              new MaterialPageRoute(builder:
+                  (context) => new CurrentCategory(currentCategory)));
+        }
+    }
 }
