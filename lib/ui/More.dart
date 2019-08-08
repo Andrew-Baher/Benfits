@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../main.dart';
 import 'EditProfile.dart';
+import 'PendingRequests.dart';
+import 'SignIn.dart';
+
+bool hasAuth = false;
 
 class More extends StatefulWidget {
   @override
@@ -83,8 +88,32 @@ class _MyAppState3 extends State<More> {
                   ),
                 ),
               ),
+              Visibility(
+                visible: hasAuth,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => new PendingRequests()));
+                  },
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.assignment_ind,
+                      size: MediaQuery.of(context).size.width / 16,
+                    ),
+
+                    title: Text(
+                      'Pending Requests',
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ), // Appear if user is admin
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignIn()));
+                },
                 child: ListTile(
                   leading: Icon(
                     Icons.power_settings_new,
@@ -102,4 +131,12 @@ class _MyAppState3 extends State<More> {
           )),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+    if(mainEmployee.employeeAuthority == "Manager")
+      hasAuth = true;
+  }
+
 }
