@@ -391,7 +391,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                   SizedBox(
                     height: MediaQuery.of(context).size.height / 70,
                   ),
-                  TextField(
+                  TextFormField(
                     obscureText: true,
                     controller: signUpPasswordController,
                     keyboardType: TextInputType.emailAddress,
@@ -485,6 +485,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
   }
 
   void _onSignUpButtonPress() async {
+
     String firstName = signUpFirstNameController.text;
     String lastName  = signUpLastNameController.text;
     String email     = signUpEmailController.text;
@@ -493,36 +494,58 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
     String companyID = signUpCompanyIDController.text;
     String position  = signUpPositionController.text;
 
-    //TODO: If ID exists -> overwriting happens -> fix bug (check if ID exists)
+    bool emailValid = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
+    bool phoneValid = RegExp(r"^01[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").hasMatch(phoneNo);
+    bool passwordValid = (password.length < 5);
 
-    DBRef.child('employees').child(companyID).set({
-      "employeeFirstName": firstName,
-      "employeeLastName": lastName,
-      "employeePhoneNumber": phoneNo,
-      "employeeEmail": email,
-      "employeePassword": password,
-      "employeePosition": position,
-      "employeeCompanyID": companyID,
-      "employeeAuthority": 'User',
-      "employeeApprovalStatus" : false
-    });
-    showInSnackBar("Your data is sent successfully !!");
-    showDialog(
-        context: context,
-        child: new AlertDialog(
-          title: new Text("Sign Up Done !"),
-          content: new Text("Wait for the admin to approve. "
-              "\n You'll reveice an email as soon as the admin approves."),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignIn()));
-              },
-            ),
-          ],
-        ));
+    if(firstName == '' || lastName == '' || email == '' || password == '' ||
+       phoneNo == '' || companyID == '' || position == '')
+      {
+        showInSnackBar('Please fill all fields');
+      }
+    else if(!emailValid){
+      showInSnackBar('Incorrect email !');
+    }
+    else if(!phoneValid){
+      showInSnackBar('Incorrect phone number !');
+    }
+    else if(!passwordValid){
+      showInSnackBar('Password is too short !');
+    }
+    else {
+
+      //TODO: If ID exists -> overwriting happens -> fix bug (check if ID exists)
+
+      DBRef.child('employees').child(companyID).set({
+        "employeeFirstName": firstName,
+        "employeeLastName": lastName,
+        "employeePhoneNumber": phoneNo,
+        "employeeEmail": email,
+        "employeePassword": password,
+        "employeePosition": position,
+        "employeeCompanyID": companyID,
+        "employeeAuthority": 'User',
+        "employeeApprovalStatus" : false
+      });
+      showInSnackBar("Your data is sent successfully !!");
+      showDialog(
+          context: context,
+          child: new AlertDialog(
+            title: new Text("Sign Up Done !"),
+            content: new Text("Wait for the admin to approve. "
+                "\n You'll reveice an email as soon as the admin approves."),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignIn()));
+                },
+              ),
+            ],
+          ));
+    }
+
   }
 }
 

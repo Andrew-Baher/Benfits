@@ -125,34 +125,45 @@ class _SignInState extends State<SignIn> {
   }
 
   void _onSignInButtonPress() async {
-    final url = 'https://employees-benifits-app.firebaseio.com/employees.json';
-    final httpClient = new Client();
-    var response = await httpClient.get(url);
+    //bool emailValid = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(loginEmailController.text);
 
-    Map employees = jsonCodec.decode(response.body);
-    List<dynamic> emps = employees.values.toList();
+    if(loginEmailController.text == '' || loginPasswordController.text == ''){
+      showInSnackBar('Please enter your email and password !');
+    }
+//    else if (!emailValid){
+//      showInSnackBar('Incorrect email format ! Please try again !');
+//    }
+    else{
+      final url = 'https://employees-benifits-app.firebaseio.com/employees.json';
+      final httpClient = new Client();
+      var response = await httpClient.get(url);
 
-    //TRIALS for debugging
-    print(emps[0].employeeEmail + '\n' + emps[0].employeePassword);
+      Map employees = jsonCodec.decode(response.body);
+      List<dynamic> emps = employees.values.toList();
 
-    //Compare the entered email & pass with db
-    for (int i = 0; i < emps.length; i++)
-      if (emps[i].employeeEmail == loginEmailController.text &&
-          emps[i].employeePassword == loginPasswordController.text &&
-          emps[i].employeeApprovalStatus == true) {
-        mainEmployee = emps[i];
-        mainEmployeeCompanyID = mainEmployee.employeeCompanyID.toString();
-        Navigator.push
-          (context,
-            new MaterialPageRoute(builder:
-                (context) => mainAPP));
-      }
-      else
-        showInSnackBar('Incorrect email or password ! Please try again.');
+      //TRIALS for debugging
+      print(emps[0].employeeEmail + '\n' + emps[0].employeePassword);
 
-    //TRIALS for debugging
-    print(emps[0].employeeFirstName);
-    print("Employees length: " + employees.length.toString());
+      //Compare the entered email & pass with db
+      for (int i = 0; i < emps.length; i++)
+        if (emps[i].employeeEmail == loginEmailController.text &&
+            emps[i].employeePassword == loginPasswordController.text &&
+            emps[i].employeeApprovalStatus == true) {
+          mainEmployee = emps[i];
+          mainEmployeeCompanyID = mainEmployee.employeeCompanyID.toString();
+          Navigator.push
+            (context,
+              new MaterialPageRoute(builder:
+                  (context) => mainAPP));
+        }
+        else
+          showInSnackBar('Incorrect email or password ! Please try again.');
+
+      //TRIALS for debugging
+      print(emps[0].employeeFirstName);
+      print("Employees length: " + employees.length.toString());
+    }
+
   }
 
   void showInSnackBar(String value) {
