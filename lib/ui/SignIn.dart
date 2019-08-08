@@ -138,7 +138,8 @@ class _SignInState extends State<SignIn> {
     //Compare the entered email & pass with db
     for (int i = 0; i < emps.length; i++)
       if (emps[i].employeeEmail == loginEmailController.text &&
-          emps[i].employeePassword == loginPasswordController.text) {
+          emps[i].employeePassword == loginPasswordController.text &&
+          emps[i].employeeApprovalStatus == true) {
         mainEmployee = emps[i];
         mainEmployeeCompanyID = mainEmployee.employeeCompanyID.toString();
         Navigator.push
