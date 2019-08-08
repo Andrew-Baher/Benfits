@@ -1,10 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:swipe_button/swipe_button.dart';
+import 'package:http/http.dart';
+import '../models/Employee.dart';
+import 'PendingRequestsApprovals.dart';
 
 class PendingRequests extends StatefulWidget {
+
   @override
   _PendingRequestsState createState() => new _PendingRequestsState();
 }
+
+List<Employee> pendingEmployees;
 
 class _PendingRequestsState extends State<PendingRequests> {
   //Palette
@@ -15,74 +22,64 @@ class _PendingRequestsState extends State<PendingRequests> {
   static Color loginGradientStart = Color(primaryLight);
   static Color loginGradientEnd = Color(primaryDark);
 
-  final primaryGradient = LinearGradient(
-    colors: [loginGradientStart, loginGradientEnd],
-    stops: [0.0, 1.0],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
+  @override
+  void initState() {
+    super.initState();
+    pendingEmployees = new List<Employee>();
+    getPendingEmps();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return new Card(
-      color: Colors.transparent,
-      elevation: 4.0,
-      child: new Container(
-        width: (MediaQuery.of(context).size.width) / 1.2,
-        height: (MediaQuery.of(context).size.height) / 1.7,
-        decoration: new BoxDecoration(
-          gradient: LinearGradient(
-            colors: [loginGradientStart, loginGradientEnd],
-            stops: [0.0, 1.0],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: new BorderRadius.circular(8.0),
-        ),
-        child: new Column(
-          children: <Widget>[
-            new Container(
-              width: (MediaQuery.of(context).size.width) / 1.2,
-              height: (MediaQuery.of(context).size.height) / 1.7,
-              decoration: new BoxDecoration(
-                borderRadius: new BorderRadius.only(
-                    topLeft: new Radius.circular(8.0),
-                    topRight: new Radius.circular(8.0)),
-                image: DecorationImage(image: AssetImage('assets/BTech.jpeg')),
+    return MaterialApp(
+      home: Scaffold(
+        body: ListView.builder(
+          itemExtent: MediaQuery.of(context).size.height / 15,
+          itemCount: pendingEmployees.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              child: ListTile(
+                leading: Icon(
+                  Icons.account_circle,
+                  size: MediaQuery.of(context).size.width / 12,
+                ),
+                title: Text( //Employee first name + last name
+                    '${pendingEmployees[index].employeeFirstName + ' ' + pendingEmployees[index].employeeLastName}',
+                style: TextStyle(fontSize: MediaQuery.of(context).size.width / 20),),
+                subtitle: Text(pendingEmployees[index].employeePosition),
               ),
-            ),
-            new Container(
-                width: (MediaQuery.of(context).size.width) / 1.2,
-                height: ((MediaQuery.of(context).size.height) / 1.7) -
-                    (MediaQuery.of(context).size.height) / 2.2,
-                child: new Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    new SwipeButton(
-                      content: Text('Decline'),
-                      height: MediaQuery.of(context).size.height / 10,
-                      initialPosition: SwipePosition.SwipeLeft,
-                      onChanged: (result) {
-                        print('onChanged $result');
-                      },
-                      //TODO: OnClick not found
-                    ),
-                    new SwipeButton(
-                        content: Text('Accept'),
-                        height: MediaQuery.of(context).size.height / 10,
-                        initialPosition: SwipePosition.SwipeRight,
-                        onChanged: (result) {
-                          print('onChanged $result');
-                        }
-                        //TODO: OnClick not found
-                        ),
-                  ],
-                ))
-          ],
+              onTap: (){
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => new PendingRequestsApprovals(pendingEmployees[index])));
+              },
+            );
+          },
         ),
       ),
     );
   }
+
+}
+
+getPendingEmps() async {
+
+  //Get all employees from firebase
+  final url = 'https://employees-benifits-app.firebaseio.com/employees.json';
+  final httpClient = new Client();
+  var response = await httpClient.get(url);
+
+  Map employees = jsonCodec.decode(response.body);
+  List<dynamic> emps = employees.values.toList();
+
+  print(emps.length);
+
+  //Check employees with employeeApprovalStatus = false
+  for (int i = 0; i < emps.length; i++)
+    if (emps[i].employeeApprovalStatus.toString() == 'false') {
+      pendingEmployees.add(new Employee(emps[i].employeeID, emps[i].employeeFirstName, emps[i].employeeLastName,
+          emps[i].employeeEmail, emps[i].employeePassword, emps[i].employeePhoneNumber, emps[i].employeeCompanyID,
+          emps[i].employeePosition,  emps[i].employeeAuthority,  emps[i].employeeApprovalStatus));
+    }
 }
 
 hexStringToHexInt(String hex) {
@@ -91,3 +88,10 @@ hexStringToHexInt(String hex) {
   int val = int.parse(hex, radix: 16);
   return val;
 }
+
+_reviver(Object key, Object value) {
+  if (key != null && value is Map) return new Employee.fromJson(value);
+  return value;
+}
+
+const jsonCodec = const JsonCodec(reviver: _reviver);
