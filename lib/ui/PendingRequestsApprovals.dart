@@ -1,14 +1,18 @@
-import 'dart:convert';
-
 import 'package:employees_benefits/models/Employee.dart';
 import 'package:employees_benefits/style/theme.dart' as Theme;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../main.dart';
 import 'MainApp.dart';
+import 'PendingRequests.dart';
 
+Employee employee;
+String pendingEmployeeCompanyID;
+
+// ignore: must_be_immutable
 class PendingRequestsApprovals extends StatefulWidget {
   Employee pendingEmployee;
 
@@ -22,6 +26,7 @@ class PendingRequestsApprovals extends StatefulWidget {
 }
 
 class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
+
   final DBRef = FirebaseDatabase.instance.reference();
   Employee emp = mainEmployee;
 
@@ -99,6 +104,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
                     height: MediaQuery.of(context).size.height / 70,
                   ),
                   TextField(
+                    enabled: false,
                     controller: editedFirstNameController,
                     keyboardType: TextInputType.text,
                     textCapitalization: TextCapitalization.words,
@@ -147,6 +153,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
                     height: MediaQuery.of(context).size.height / 70,
                   ),
                   TextField(
+                    enabled: false,
                     controller: editedLastNameController,
                     keyboardType: TextInputType.text,
                     textCapitalization: TextCapitalization.words,
@@ -194,6 +201,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
                     height: MediaQuery.of(context).size.height / 70,
                   ),
                   TextField(
+                    enabled: false,
                     controller: editedPhoneController,
                     keyboardType: TextInputType.emailAddress,
                     textCapitalization: TextCapitalization.words,
@@ -242,6 +250,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
                     height: MediaQuery.of(context).size.height / 70,
                   ),
                   TextField(
+                    enabled: false,
                     controller: editedPositionController,
                     keyboardType: TextInputType.emailAddress,
                     textCapitalization: TextCapitalization.words,
@@ -290,6 +299,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
                     height: MediaQuery.of(context).size.height / 70,
                   ),
                   TextField(
+                    enabled: false,
                     controller: editedEmailController,
                     keyboardType: TextInputType.emailAddress,
                     textCapitalization: TextCapitalization.words,
@@ -333,9 +343,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
                             fontFamily: "WorkSansBold"),
                       ),
                     ),
-                    onPressed: () {
-                      print('ay 7aga');
-                    },
+                    onPressed: _onAcceptButtonPressed
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width / 15,
@@ -359,9 +367,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
                             fontFamily: "WorkSansBold"),
                       ),
                     ),
-                    onPressed: () {
-                      print('ay 7aga');
-                    },
+                    onPressed: _onDeclineButtonPressed
                   ),
                 ],
               ),
@@ -376,41 +382,36 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
   @override
   initState() {
     super.initState();
-
-    Employee employee = widget.pendingEmployee;
+    employee = widget.pendingEmployee;
 
     //Initialize TextFields with the employee's data
-    editedFirstNameController.text = employee.employeeFirstName;
-    editedLastNameController.text = employee.employeeLastName;
-    editedPhoneController.text = employee.employeePhoneNumber;
-    editedEmailController.text = employee.employeeEmail;
-    editedPositionController.text = employee.employeePosition;
+    editedFirstNameController.text  = employee.employeeFirstName;
+    editedLastNameController.text   = employee.employeeLastName;
+    editedPhoneController.text      = employee.employeePhoneNumber;
+    editedEmailController.text      = employee.employeeEmail;
+    editedPositionController.text   = employee.employeePosition;
   }
 
-  /*void _onSaveButtonPressed() async {
-    String firstName = editedFirstNameController.text;
-    String lastName = editedLastNameController.text;
-    String email = editedEmailController.text;
-    String password = editedPasswordController.text;
-    String phoneNo = editedPhoneController.text;
-    String position = editedPositionController.text;
+  void _onAcceptButtonPressed() async {
 
-    DBRef.child('employees').child(mainEmployeeCompanyID).update({
-      "employeeFirstName": firstName,
-      "employeeLastName": lastName,
-      "employeePhoneNumber": phoneNo,
-      "employeeEmail": email,
-      "employeePassword": password,
-      "employeePosition": position,
-      "employeeAuthority": 'User',
-      "employeeApprovalStatus": false
-    });
+    DBRef.child('employees').child(employee.employeeCompanyID).update({'employeeApprovalStatus':true});
 
-    showInSnackBar('Data saved successfully !');
+    showInSnackBar('Request approved !');
     await Future.delayed(const Duration(seconds: 2), () {});
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => MainApplication()));
-  }*/
+        .push(MaterialPageRoute(builder: (context) => PendingRequests()));
+  }
+
+  void _onDeclineButtonPressed() async {
+
+    DBRef.child('employees').child(employee.employeeCompanyID).remove();
+
+    showInSnackBar('Request declined !');
+    await Future.delayed(const Duration(seconds: 2), () {});
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => PendingRequests()));
+
+  }
 
   void showInSnackBar(String value) {
     FocusScope.of(context).requestFocus(new FocusNode());

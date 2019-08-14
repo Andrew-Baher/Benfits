@@ -1,7 +1,7 @@
 
 class BenefitDetails {
   String _benefitTitle;
-  String _benefitImage; //TODO: Search for storing images
+  String _benefitImage;
   String _benefitDescription;
   List<String> _companiesIDs;
 

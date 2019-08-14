@@ -3,7 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 class Category {
   String _categoryName;
-  String _categoryImage; //TODO: Search about images
+  String _categoryImage;
   List<Category> _subCategories;
   List<BenefitDetails> _benefits;
 
