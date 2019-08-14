@@ -323,14 +323,13 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
                     splashColor: Theme.Colors.loginGradientStart,
                     color: Colors.green,
                     minWidth: MediaQuery.of(context).size.width / 2.5,
-                    height: MediaQuery.of(context).size.height / 30,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
                         "ACCEPT",
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 28.0,
+                            fontSize: 20,
                             fontFamily: "WorkSansBold"),
                       ),
                     ),
@@ -339,7 +338,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
                     },
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width / 12,
+                    width: MediaQuery.of(context).size.width / 15,
                   ),
                   MaterialButton(
                     shape: RoundedRectangleBorder(
@@ -356,7 +355,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
                         "DECLINE",
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 28.0,
+                            fontSize: 20,
                             fontFamily: "WorkSansBold"),
                       ),
                     ),
@@ -367,6 +366,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
                 ],
               ),
             ),
+
           ],
         ),
       ),

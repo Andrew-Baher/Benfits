@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:employees_benefits/ui/AppNavigation.dart';
 import 'package:employees_benefits/ui/Benefits.dart';
 import 'package:employees_benefits/ui/CurrentCategory.dart';
@@ -18,6 +20,11 @@ bool inNavigation=true;
 MainApplication mainAPP=new MainApplication();
 MainApplicationState mainAppState=new MainApplicationState();
 String currentCategory;
+File mainImg;
+int currentBenefitId;
+int nextBenefitId;
+String currentBenefitIdString;
+
 
 void main() => runApp(new MyApp());
 

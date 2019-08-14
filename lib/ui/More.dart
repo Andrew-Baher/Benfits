@@ -3,10 +3,11 @@ import 'package:flutter/widgets.dart';
 
 import '../main.dart';
 import 'EditProfile.dart';
+import 'NewBenefit.dart';
 import 'PendingRequests.dart';
 import 'SignIn.dart';
 
-bool hasAuth = false;
+bool hasAuth;
 
 class More extends StatefulWidget {
   @override
@@ -110,6 +111,31 @@ class _MyAppState3 extends State<More> {
                   ),
                 ),
               ), // Appear if user is admin
+
+              Visibility(
+                visible: hasAuth,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => new NewBenefit()));
+                  },
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.add_a_photo,
+                      size: MediaQuery.of(context).size.width / 16,
+                    ),
+
+                    title: Text(
+                      'Add benefit',
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ), // Appear if user is admin
+
+
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignIn()));
@@ -135,6 +161,7 @@ class _MyAppState3 extends State<More> {
   @override
   void initState() {
     super.initState();
+    hasAuth = false;
     if(mainEmployee.employeeAuthority == "Manager")
       hasAuth = true;
   }
