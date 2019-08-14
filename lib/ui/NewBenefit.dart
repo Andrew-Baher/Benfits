@@ -39,6 +39,7 @@ class _NewBenefit extends State<NewBenefit>
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   bool _isChecked = true;
+  bool progressIndicatorVisible = false;
   var url;
 
   List<DropdownMenuItem<String>> listDrop = [];
@@ -80,6 +81,10 @@ class _NewBenefit extends State<NewBenefit>
     }
 
     Future uploadPic(BuildContext context) async {
+      progressIndicatorVisible=true;
+      setState(() {
+
+      });
       String fileName = Path.basename(mainImg.path);
       StorageReference firebaseStorageRef =
           FirebaseStorage.instance.ref().child(fileName);
@@ -101,6 +106,10 @@ class _NewBenefit extends State<NewBenefit>
       });
       nextBenefitId=currentBenefitId+1;
       DBRef.child('Benefitscount').set({'count' :nextBenefitId});
+      progressIndicatorVisible=false;
+      setState(() {
+
+      });
       showInSnackBar('New benefit picture uploaded successfully !!');
     }
 
@@ -115,8 +124,10 @@ class _NewBenefit extends State<NewBenefit>
                 child: Column(
               children: <Widget>[
                 Center(
-                  child: new CircularProgressIndicator(
-
+                  child: Visibility(
+                      visible: progressIndicatorVisible,
+                      child: new CircularProgressIndicator(
+                      ),
                   ),
                 ),
                 SizedBox(

@@ -24,6 +24,7 @@ File mainImg;
 int currentBenefitId;
 int nextBenefitId;
 String currentBenefitIdString;
+bool loadCurrentCategoryOnce;
 
 
 void main() => runApp(new MyApp());

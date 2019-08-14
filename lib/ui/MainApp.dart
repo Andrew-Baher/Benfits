@@ -80,6 +80,7 @@ class MainApplicationState extends State<MainApplication> {
     {
       if(index==0)
         {
+          loadCurrentCategoryOnce=true;
           Navigator.of(context).pop();
           Navigator.push
             (context,
