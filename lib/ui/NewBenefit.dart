@@ -34,7 +34,8 @@ class _NewBenefit extends State<NewBenefit>
   final FocusNode myFocusNodeBenefitDescription = FocusNode();
 
   TextEditingController benefitTitleController = new TextEditingController();
-  TextEditingController benefitDescriptionController = new TextEditingController();
+  TextEditingController benefitDescriptionController =
+  new TextEditingController();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -43,7 +44,7 @@ class _NewBenefit extends State<NewBenefit>
   var url;
 
   List<DropdownMenuItem<String>> listDrop = [];
-  List<String> drop= [
+  List<String> drop = [
     'Shopping',
     'Transportation',
     'Medical',
@@ -54,11 +55,17 @@ class _NewBenefit extends State<NewBenefit>
     'Dessert'
   ];
   String selected = null;
-  void loadData(){
-    listDrop = [];
-    listDrop = drop.map((val)=>new DropdownMenuItem(child: new Text(val),value: val,)).toList();
-  }
 
+  void loadData() {
+    listDrop = [];
+    listDrop = drop
+        .map((val) =>
+    new DropdownMenuItem(
+      child: new Text(val),
+      value: val,
+    ))
+        .toList();
+  }
 
   //List of companies
   List<String> companies = [
@@ -81,72 +88,90 @@ class _NewBenefit extends State<NewBenefit>
     }
 
     Future uploadPic(BuildContext context) async {
-      progressIndicatorVisible=true;
-      setState(() {
-
-      });
+      progressIndicatorVisible = true;
+      setState(() {});
       String fileName = Path.basename(mainImg.path);
       StorageReference firebaseStorageRef =
-          FirebaseStorage.instance.ref().child(fileName);
+      FirebaseStorage.instance.ref().child(fileName);
       StorageUploadTask uploadTask = firebaseStorageRef.putFile(mainImg);
-      var downloadingurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+      var downloadingurl =
+      await (await uploadTask.onComplete).ref.getDownloadURL();
       url = downloadingurl.toString();
       final DBRef = FirebaseDatabase.instance.reference();
 
-      DBRef.child('Benefitscount').child('count').once().then((DataSnapshot dataSnapShot)
-      {
-        currentBenefitId=dataSnapShot.value;
-        currentBenefitIdString="$currentBenefitId";
+      DBRef.child('Benefitscount')
+          .child('count')
+          .once()
+          .then((DataSnapshot dataSnapShot) {
+        currentBenefitId = dataSnapShot.value;
+        currentBenefitIdString = "$currentBenefitId";
         print(currentBenefitId);
       });
       DBRef.child('benefitsDetails').child(currentBenefitIdString).set({
-        "benefitDescription":benefitDescriptionController.text,
+        "benefitDescription": benefitDescriptionController.text,
+        "benefitTitle": benefitTitleController.text,
         "benefitCategory": selected,
         "benefitImage": url,
       });
-      nextBenefitId=currentBenefitId+1;
-      DBRef.child('Benefitscount').set({'count' :nextBenefitId});
-      progressIndicatorVisible=false;
-      setState(() {
-
-      });
+      nextBenefitId = currentBenefitId + 1;
+      DBRef.child('Benefitscount').set({'count': nextBenefitId});
+      progressIndicatorVisible = false;
+      setState(() {});
       showInSnackBar('New benefit picture uploaded successfully !!');
     }
 
-    return Scaffold(
-      key: _scaffoldKey,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            padding: EdgeInsets.all(24),
-            child: Center(
-                child: Column(
-              children: <Widget>[
-                Center(
-                  child: Visibility(
-                      visible: progressIndicatorVisible,
-                      child: new CircularProgressIndicator(
+    Future<bool> _onBackPressed() {
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => MainApplication()));
+    }
+
+    return new WillPopScope(
+      onWillPop: _onBackPressed,
+      child: new Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text('Add new benefit'),
+        ),
+        body: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              color: Colors.white,
+              padding: EdgeInsets.all(24),
+              child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      Center(
+                        child: Visibility(
+                          visible: progressIndicatorVisible,
+                          child: new CircularProgressIndicator(),
+                        ),
                       ),
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 20,
-                ),
-                Center(
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 3,
-                    child: (mainImg != null)
-                        ? Image.file(
+                      SizedBox(
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height / 20,
+                      ),
+                      Center(
+                        child: SizedBox(
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                          height: MediaQuery
+                              .of(context)
+                              .size
+                              .height / 3,
+                          child: (mainImg != null)
+                              ? Image.file(
                             mainImg,
                             fit: BoxFit.fill,
                           )
-                        : Image.network(
+                              : Image.network(
                             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHMTdy8vRGufRwCJ1RerUThoTalVNSd0Q3jDGGQ89DrjUiNZeZNw",
                             fit: BoxFit.fill,
                           ),
-                    /*RaisedButton(
+                          /*RaisedButton(
                           color: Colors.transparent,
                           onPressed: () { //TODO: SetState for raised button with picked image
                             getImage();
@@ -159,125 +184,178 @@ class _NewBenefit extends State<NewBenefit>
                              style: TextStyle(fontSize: 20.0, color: Colors.white),
                         ),
                       ),*/
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 25,
-                ),
-                Container (
-                    width: 300.0,
-                    child: DropdownButtonHideUnderline(
-                      child: ButtonTheme(
-                          alignedDropdown: true,
-                          child: DropdownButton(
-                            value: selected,
-                            items: listDrop,
-                            hint: new Text('Select Category of Benefit'),
-                            onChanged: (value){
-                              selected = value;
-                              setState(() {
-
-                              });
-                            },
-                          ),
-                      ),
-                    )
-                ),
-
-                  SizedBox(
-                  height: MediaQuery.of(context).size.height / 30,
-                ),
-                TextField(
-                  autofocus: false,
-                  focusNode: myFocusNodeBenefitDescription,
-                  controller: benefitDescriptionController,
-                  keyboardType: TextInputType.multiline,
-                  style: TextStyle(
-                      fontFamily: "WorkSansSemiBold",
-                      fontSize: 22.0,
-                      color: Color.fromRGBO(19, 46, 99, 10)),
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                      labelText: "BenefitDescription",
-                      hintText: "Benefit Description",
-                      alignLabelWithHint: true,
-                      labelStyle: TextStyle(
-                        color: Color.fromRGBO(48, 51, 86, 10),
-                        fontSize: 16,
-                      ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(4)),
-                          borderSide: BorderSide(
-                              width: 1,
-                              color: Colors.green,
-                              style: BorderStyle.solid))),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 25,
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 500,
-                ),
-                Center(
-                  child: Row(
-                    children: <Widget>[
-                      MaterialButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
                         ),
-                        highlightColor: Colors.black,
-                        splashColor: Theme.Colors.loginGradientStart,
-                        color: Colors.green,
-                        minWidth: MediaQuery.of(context).size.width / 2.5,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            "Save",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontFamily: "WorkSansBold"),
-                          ),
-                        ),
-                        onPressed: () {
-                          uploadPic(context);
-                        },
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width / 15,
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height / 25,
                       ),
-                      MaterialButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                      Container(
+                          width: 300.0,
+                          child: DropdownButtonHideUnderline(
+                            child: ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton(
+                                value: selected,
+                                items: listDrop,
+                                hint: new Text('Select Category of Benefit'),
+                                onChanged: (value) {
+                                  selected = value;
+                                  setState(() {});
+                                },
+                              ),
+                            ),
+                          )),
+                      SizedBox(
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height / 30,
+                      ),
+                      TextField(
+                        autofocus: false,
+                        focusNode: myFocusNodeBenefitTitle,
+                        controller: benefitTitleController,
+                        keyboardType: TextInputType.multiline,
+                        style: TextStyle(
+                            fontFamily: "WorkSansSemiBold",
+                            fontSize: 22.0,
+                            color: Color.fromRGBO(19, 46, 99, 10)),
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                            labelText: "Benefit Title",
+                            hintText: "Benefit Title",
+                            alignLabelWithHint: true,
+                            labelStyle: TextStyle(
+                              color: Color.fromRGBO(48, 51, 86, 10),
+                              fontSize: 16,
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(4)),
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: Colors.green,
+                                    style: BorderStyle.solid))),
+                      ),
+                      SizedBox(
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height / 30,
+                      ),
+                      TextField(
+                        autofocus: false,
+                        focusNode: myFocusNodeBenefitDescription,
+                        controller: benefitDescriptionController,
+                        keyboardType: TextInputType.multiline,
+                        style: TextStyle(
+                            fontFamily: "WorkSansSemiBold",
+                            fontSize: 22.0,
+                            color: Color.fromRGBO(19, 46, 99, 10)),
+                        maxLines: 5,
+                        decoration: InputDecoration(
+                            labelText: "Benefit Description",
+                            hintText: "Benefit Description",
+                            alignLabelWithHint: true,
+                            labelStyle: TextStyle(
+                              color: Color.fromRGBO(48, 51, 86, 10),
+                              fontSize: 16,
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(4)),
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: Colors.green,
+                                    style: BorderStyle.solid))),
+                      ),
+                      SizedBox(
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height / 25,
+                      ),
+                      SizedBox(
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height / 500,
+                      ),
+                      Center(
+                        child: Row(
+                          children: <Widget>[
+                            MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              highlightColor: Colors.black,
+                              splashColor: Theme.Colors.loginGradientStart,
+                              color: Colors.green,
+                              minWidth: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width / 2.5,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  "Upload pic",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontFamily: "WorkSansBold"),
+                                ),
+                              ),
+                              onPressed: () {
+                                uploadPic(context);
+                              },
+                            ),
+                            SizedBox(
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width / 20,
+                            ),
+                            MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              highlightColor: Colors.black,
+                              splashColor: Theme.Colors.loginGradientStart,
+                              color: Colors.green,
+                              minWidth: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width / 2.5,
+                              height: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .height / 30,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  "Attach pic",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontFamily: "WorkSansBold"),
+                                ),
+                              ),
+                              onPressed: () {
+                                getImage();
+                              },
+                            ),
+                          ],
                         ),
-                        highlightColor: Colors.black,
-                        splashColor: Theme.Colors.loginGradientStart,
-                        color: Colors.green,
-                        minWidth: MediaQuery.of(context).size.width / 2.5,
-                        height: MediaQuery.of(context).size.height / 30,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            "Upload",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontFamily: "WorkSansBold"),
-                          ),
-                        ),
-                        onPressed: () {
-                          getImage();
-                        },
                       ),
                     ],
-                  ),
-                ),
-              ],
-            )),
+                  )),
+            ),
           ),
         ),
       ),
-
     );
   }
 
@@ -297,47 +375,6 @@ class _NewBenefit extends State<NewBenefit>
       duration: Duration(seconds: 3),
     ));
   }
-
-  void _onSaveNewBenefitPress() async {
-    String newBenefitTitle = benefitTitleController.text;
-    String newBenefitDescription = benefitDescriptionController.text;
-    List<String> newBenefitCompaniesIDs = null; //TODO: Get from listview
-
-    _saveData(new BenefitDetails(
-        newBenefitTitle, "", newBenefitDescription, newBenefitCompaniesIDs));
-    _loadData();
-    showInSnackBar("Your data is sent successfully !!");
-    await new Future.delayed(const Duration(seconds: 3));
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MainApplication()),
-    );
-  }
-}
-
-_reviver(Object key, Object value) {
-  if (key != null && value is Map) return new BenefitDetails.fromJson(value);
-  return value;
-}
-
-const jsonCodec = const JsonCodec(reviver: _reviver);
-
-_saveData(BenefitDetails newBenefit) async {
-  var json = jsonCodec.encode(newBenefit);
-
-  final url =
-      'https://employees-benifits-app.firebaseio.com/benefitsDetails.json';
-  final httpClient = new Client();
-  var response = await httpClient.post(url, body: json);
-}
-
-_loadData() async {
-  final url =
-      'https://employees-benifits-app.firebaseio.com/benefitsDetails.json';
-  final httpClient = new Client();
-  var response = await httpClient.get(url);
-
-  Map benefits = jsonCodec.decode(response.body);
 }
 
 hexStringToHexInt(String hex) {

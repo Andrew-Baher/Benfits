@@ -4,44 +4,51 @@ import 'package:flutter/widgets.dart';
 
 import '../main.dart';
 import 'MainApp.dart';
+import 'CurrentBenefit.dart';
+
 String globalCurrentBenefit;
-List<String> Categoryassets ;
-bool once ;
+List<String> categoryImages;
+
+List<String> categoryDescription;
+
+List<String> categoryTitle;
+
 class CurrentCategory extends StatefulWidget {
   String currentBenefit;
 
   CurrentCategory(String item) {
     this.currentBenefit = item;
-    globalCurrentBenefit=item;
-    once=true;
-    Categoryassets=[];
+    globalCurrentBenefit = item;
+    categoryImages = [];
+    categoryDescription = [];
+    categoryTitle = [];
   }
 
   @override
   State<StatefulWidget> createState() {
     final DBRef = FirebaseDatabase.instance.reference();
 
-    DBRef.child('Benefitscount').child('count').once().then((DataSnapshot dataSnapShot)
-    {
-      currentBenefitId=dataSnapShot.value;
+    DBRef.child('Benefitscount')
+        .child('count')
+        .once()
+        .then((DataSnapshot dataSnapShot) {
+      currentBenefitId = dataSnapShot.value;
       print(currentBenefitId);
     });
 
-
-    DBRef.child('benefitsDetails').once().then((DataSnapshot dataSnapShot)
-    {
+    DBRef.child('benefitsDetails').once().then((DataSnapshot dataSnapShot) {
       print(dataSnapShot.value[1]["benefitImage"]);
       print(dataSnapShot.value[1]["benefitCategory"]);
-      int count=0;
-      for(int i=1;i<currentBenefitId;++i)
-      {
-        if(dataSnapShot.value[i]["benefitCategory"]==globalCurrentBenefit) {
-          Categoryassets.add(dataSnapShot.value[i]["benefitImage"]);
+      int count = 0;
+      for (int i = 1; i < currentBenefitId; ++i) {
+        if (dataSnapShot.value[i]["benefitCategory"] == globalCurrentBenefit) {
+          categoryImages.add(dataSnapShot.value[i]["benefitImage"]);
+          categoryDescription.add(dataSnapShot.value[i]["benefitDescription"]);
+          categoryTitle.add(dataSnapShot.value[i]["benefitTitle"]);
           count++;
         }
       }
       print(count);
-
     });
     return new CurrentCategoryState();
   }
@@ -49,15 +56,13 @@ class CurrentCategory extends StatefulWidget {
 
 class CurrentCategoryState extends State<CurrentCategory> {
   Future<bool> _onBackPressed() {
-    Navigator.push(
-        context, new MaterialPageRoute(builder: (context) => MainApplication()));
+    Navigator.push(context,
+        new MaterialPageRoute(builder: (context) => MainApplication()));
   }
 
   Future getData() async {
     await new Future.delayed(const Duration(seconds: 0));
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
@@ -69,26 +74,42 @@ class CurrentCategoryState extends State<CurrentCategory> {
         appBar: AppBar(
           title: new Text(widget.currentBenefit),
         ),
-        body: new GridView.extent(
-            maxCrossAxisExtent: MediaQuery.of(context).size.width / 2,
-            mainAxisSpacing: MediaQuery.of(context).size.width / 50,
-            crossAxisSpacing: MediaQuery.of(context).size.width / 50,
-            children: _buildCategorytassets(Categoryassets.length)),
+        body: (categoryImages.length == 0)
+            ? Text(
+                "No Benefits to display in this category",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: MediaQuery.of(context).size.width / 15,
+                    fontFamily: "WorkSansBold",
+                    fontWeight: FontWeight.bold),
+              )
+            : new GridView.extent(
+                maxCrossAxisExtent: MediaQuery.of(context).size.width / 2,
+                mainAxisSpacing: MediaQuery.of(context).size.width / 50,
+                crossAxisSpacing: MediaQuery.of(context).size.width / 50,
+                children: new List<Container>.generate(categoryImages.length,
+                    (int index) {
+                  return new Container(
+                    child: GestureDetector(
+                      onTap: () {
+                        mainCurrentBenefitImage = categoryImages[index];
+                        mainCurrentBenefitDescription =
+                            categoryDescription[index];
+                        mainCurrentBenefitTitle = categoryTitle[index];
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => new CurrentBenefit()));
+                      },
+                      child: new Image.network(
+                        categoryImages[index],
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  );
+                }),
+              ),
       ),
     );
   }
 }
-
-List<Widget> _buildCategorytassets(numberOfTiles) {
-  List<Container> containers =
-      new List<Container>.generate(numberOfTiles, (int index) {
-    return new Container(
-      child: new Image.network(
-        Categoryassets[index],
-        fit: BoxFit.fill,
-      ),
-    );
-  });
-  return containers;
-}
-

@@ -116,8 +116,7 @@ class _MyAppState3 extends State<More> {
                 visible: hasAuth,
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => new NewBenefit()));
+                    mainAppState.openAnotherTab(1);
                   },
                   child: ListTile(
                     leading: Icon(
@@ -135,6 +134,27 @@ class _MyAppState3 extends State<More> {
                 ),
               ), // Appear if user is admin
 
+              Visibility(
+                visible: hasAuth,
+                child: GestureDetector(
+                  onTap: () {
+                    mainAppState.openAnotherTab(2);
+                  },
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.message,
+                      size: MediaQuery.of(context).size.width / 16,
+                    ),
+
+                    title: Text(
+                      'Send a message',
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ), // Appear if user is admin
 
               GestureDetector(
                 onTap: () {

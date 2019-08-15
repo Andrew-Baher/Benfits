@@ -4,6 +4,7 @@ import '../main.dart';
 import 'AppNavigation.dart';
 import 'CurrentCategory.dart';
 import 'NewBenefit.dart';
+import 'NewMessage.dart';
 
 
 class MainApplication extends StatefulWidget {
@@ -80,12 +81,23 @@ class MainApplicationState extends State<MainApplication> {
     {
       if(index==0)
         {
-          loadCurrentCategoryOnce=true;
           Navigator.of(context).pop();
           Navigator.push
             (context,
               new MaterialPageRoute(builder:
                   (context) => new CurrentCategory(currentCategory)));
         }
+      else if(index==1)
+        {
+          Navigator.of(context).pop();
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => new NewBenefit()));
+        }
+      else if(index==2)
+      {
+        Navigator.of(context).pop();
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => new NewMessage()));
+      }
     }
 }

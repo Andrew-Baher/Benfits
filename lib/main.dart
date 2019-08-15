@@ -22,9 +22,14 @@ MainApplicationState mainAppState=new MainApplicationState();
 String currentCategory;
 File mainImg;
 int currentBenefitId;
+int currentMessageId;
 int nextBenefitId;
+int nextMessageId;
 String currentBenefitIdString;
-bool loadCurrentCategoryOnce;
+String currentMessageIdString;
+String mainCurrentBenefitImage;
+String mainCurrentBenefitDescription;
+String mainCurrentBenefitTitle;
 
 
 void main() => runApp(new MyApp());
