@@ -93,8 +93,7 @@ class _MyAppState3 extends State<More> {
                 visible: hasAuth,
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => new PendingRequests()));
+                    mainAppState.openAnotherTab(3);
                   },
                   child: ListTile(
                     leading: Icon(

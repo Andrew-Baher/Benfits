@@ -7,6 +7,7 @@ import 'AppNavigation.dart';
 import 'CurrentCategory.dart';
 import 'NewBenefit.dart';
 import 'NewMessage.dart';
+import 'PendingRequests.dart';
 
 class MainApplication extends StatefulWidget {
   @override
@@ -101,6 +102,10 @@ class MainApplicationState extends State<MainApplication> {
       Navigator.of(context).pop();
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => new NewMessage()));
+    } else if (index == 3) {
+      Navigator.of(context).pop();
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new PendingRequests()));
     }
   }
 }

@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import '../models/Employee.dart';
+import 'MainApp.dart';
 import 'PendingRequestsApprovals.dart';
 
 class PendingRequests extends StatefulWidget {
-
   @override
   _PendingRequestsState createState() => new _PendingRequestsState();
 }
@@ -22,6 +22,8 @@ class _PendingRequestsState extends State<PendingRequests> {
   static Color loginGradientStart = Color(primaryLight);
   static Color loginGradientEnd = Color(primaryDark);
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -29,40 +31,62 @@ class _PendingRequestsState extends State<PendingRequests> {
     getPendingEmps();
   }
 
+  Future getData() async {
+    await new Future.delayed(const Duration(seconds: 0));
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: ListView.builder(
-          itemExtent: MediaQuery.of(context).size.height / 15,
-          itemCount: pendingEmployees.length,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              child: ListTile(
-                leading: Icon(
-                  Icons.account_circle,
-                  size: MediaQuery.of(context).size.width / 12,
-                ),
-                title: Text( //Employee first name + last name
-                    '${pendingEmployees[index].employeeFirstName + ' ' + pendingEmployees[index].employeeLastName}',
-                style: TextStyle(fontSize: MediaQuery.of(context).size.width / 20),),
-                subtitle: Text(pendingEmployees[index].employeePosition),
-              ),
-              onTap: (){
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => new PendingRequestsApprovals(pendingEmployees[index])));
+    getData();
+    Future<bool> _onBackPressed() {
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => MainApplication()));
+    }
+
+    return new WillPopScope(
+      onWillPop: _onBackPressed,
+      child: new Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text('Show pending requests'),
+        ),
+        body: new MaterialApp(
+          home: Scaffold(
+            body: ListView.builder(
+              itemExtent: MediaQuery.of(context).size.height / 15,
+              itemCount: pendingEmployees.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.account_circle,
+                      size: MediaQuery.of(context).size.width / 12,
+                    ),
+                    title: Text(
+                      //Employee first name + last name
+                      '${pendingEmployees[index].employeeFirstName + ' ' + pendingEmployees[index].employeeLastName}',
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 20),
+                    ),
+                    subtitle: Text(pendingEmployees[index].employeePosition),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => new PendingRequestsApprovals(
+                            pendingEmployees[index])));
+                  },
+                );
               },
-            );
-          },
+            ),
+          ),
         ),
       ),
     );
   }
-
 }
 
 getPendingEmps() async {
-
   //Get all employees from firebase
   final url = 'https://employees-benifits-app.firebaseio.com/employees.json';
   final httpClient = new Client();
@@ -76,9 +100,17 @@ getPendingEmps() async {
   //Check employees with employeeApprovalStatus = false
   for (int i = 0; i < emps.length; i++)
     if (emps[i].employeeApprovalStatus.toString() == 'false') {
-      pendingEmployees.add(new Employee(emps[i].employeeID, emps[i].employeeFirstName, emps[i].employeeLastName,
-          emps[i].employeeEmail, emps[i].employeePassword, emps[i].employeePhoneNumber, emps[i].employeeCompanyID,
-          emps[i].employeePosition,  emps[i].employeeAuthority,  emps[i].employeeApprovalStatus));
+      pendingEmployees.add(new Employee(
+          emps[i].employeeID,
+          emps[i].employeeFirstName,
+          emps[i].employeeLastName,
+          emps[i].employeeEmail,
+          emps[i].employeePassword,
+          emps[i].employeePhoneNumber,
+          emps[i].employeeCompanyID,
+          emps[i].employeePosition,
+          emps[i].employeeAuthority,
+          emps[i].employeeApprovalStatus));
     }
 }
 

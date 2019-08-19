@@ -7,6 +7,7 @@ import 'MainApp.dart';
 import 'CurrentBenefit.dart';
 
 String globalCurrentBenefit;
+
 List<String> categoryImages;
 
 List<String> categoryDescription;
@@ -19,36 +20,11 @@ class CurrentCategory extends StatefulWidget {
   CurrentCategory(String item) {
     this.currentBenefit = item;
     globalCurrentBenefit = item;
-    categoryImages = [];
-    categoryDescription = [];
-    categoryTitle = [];
+
   }
 
   @override
   State<StatefulWidget> createState() {
-
-    DBRef2.child('Benefitscount')
-        .child('count')
-        .once()
-        .then((DataSnapshot dataSnapShot) {
-      currentBenefitId = dataSnapShot.value;
-      print(currentBenefitId);
-    });
-
-    DBRef2.child('benefitsDetails').once().then((DataSnapshot dataSnapShot) {
-      print(dataSnapShot.value[1]["benefitImage"]);
-      print(dataSnapShot.value[1]["benefitCategory"]);
-      int count = 0;
-      for (int i = 1; i < currentBenefitId; ++i) {
-        if (dataSnapShot.value[i]["benefitCategory"] == globalCurrentBenefit) {
-          categoryImages.add(dataSnapShot.value[i]["benefitImage"]);
-          categoryDescription.add(dataSnapShot.value[i]["benefitDescription"]);
-          categoryTitle.add(dataSnapShot.value[i]["benefitTitle"]);
-          count++;
-        }
-      }
-      print(count);
-    });
     return new CurrentCategoryState();
   }
 }
@@ -57,6 +33,15 @@ class CurrentCategoryState extends State<CurrentCategory> {
   Future<bool> _onBackPressed() {
     Navigator.push(context,
         new MaterialPageRoute(builder: (context) => MainApplication()));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    categoryImages = new List<String>();
+    categoryDescription = new List<String>();
+    categoryTitle = new List<String>();
+    getImages();
   }
 
   Future getData() async {
@@ -111,4 +96,29 @@ class CurrentCategoryState extends State<CurrentCategory> {
       ),
     );
   }
+}
+
+void getImages() {
+  DBRef2.child('Benefitscount')
+      .child('count')
+      .once()
+      .then((DataSnapshot dataSnapShot) {
+    currentBenefitId = dataSnapShot.value;
+    print(currentBenefitId);
+  });
+
+  DBRef2.child('benefitsDetails').once().then((DataSnapshot dataSnapShot) {
+    print(dataSnapShot.value[1]["benefitImage"]);
+    print(dataSnapShot.value[1]["benefitCategory"]);
+    int count = 0;
+    for (int i = 1; i < currentBenefitId; ++i) {
+      if (dataSnapShot.value[i]["benefitCategory"] == globalCurrentBenefit) {
+        categoryImages.add(dataSnapShot.value[i]["benefitImage"]);
+        categoryDescription.add(dataSnapShot.value[i]["benefitDescription"]);
+        categoryTitle.add(dataSnapShot.value[i]["benefitTitle"]);
+        count++;
+      }
+    }
+    print(count);
+  });
 }

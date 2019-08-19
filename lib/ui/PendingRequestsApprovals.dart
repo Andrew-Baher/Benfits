@@ -4,10 +4,13 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:mailer/smtp_server/gmail.dart';
 import '../main.dart';
 import 'MainApp.dart';
 import 'PendingRequests.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server/mailgun.dart';
 
 Employee employee;
 String pendingEmployeeCompanyID;
@@ -26,7 +29,6 @@ class PendingRequestsApprovals extends StatefulWidget {
 }
 
 class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
-
   final DBRef = FirebaseDatabase.instance.reference();
   Employee emp = mainEmployee;
 
@@ -326,53 +328,50 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
               child: Row(
                 children: <Widget>[
                   MaterialButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    highlightColor: Colors.black,
-                    splashColor: Theme.Colors.loginGradientStart,
-                    color: Colors.green,
-                    minWidth: MediaQuery.of(context).size.width / 2.5,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        "ACCEPT",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontFamily: "WorkSansBold"),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                    ),
-                    onPressed: _onAcceptButtonPressed
-                  ),
+                      highlightColor: Colors.black,
+                      splashColor: Theme.Colors.loginGradientStart,
+                      color: Colors.green,
+                      minWidth: MediaQuery.of(context).size.width / 2.5,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          "ACCEPT",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ),
+                      onPressed: _onAcceptButtonPressed),
                   SizedBox(
                     width: MediaQuery.of(context).size.width / 15,
                   ),
                   MaterialButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    highlightColor: Colors.black,
-                    splashColor: Theme.Colors.loginGradientStart,
-                    color: Colors.red,
-                    minWidth: MediaQuery.of(context).size.width / 2.5,
-                    height: MediaQuery.of(context).size.height / 30,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        "DECLINE",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontFamily: "WorkSansBold"),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                    ),
-                    onPressed: _onDeclineButtonPressed
-                  ),
+                      highlightColor: Colors.black,
+                      splashColor: Theme.Colors.loginGradientStart,
+                      color: Colors.red,
+                      minWidth: MediaQuery.of(context).size.width / 2.5,
+                      height: MediaQuery.of(context).size.height / 30,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          "DECLINE",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ),
+                      onPressed: _onDeclineButtonPressed),
                 ],
               ),
             ),
-
           ],
         ),
       ),
@@ -385,32 +384,98 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
     employee = widget.pendingEmployee;
 
     //Initialize TextFields with the employee's data
-    editedFirstNameController.text  = employee.employeeFirstName;
-    editedLastNameController.text   = employee.employeeLastName;
-    editedPhoneController.text      = employee.employeePhoneNumber;
-    editedEmailController.text      = employee.employeeEmail;
-    editedPositionController.text   = employee.employeePosition;
+    editedFirstNameController.text = employee.employeeFirstName;
+    editedLastNameController.text = employee.employeeLastName;
+    editedPhoneController.text = employee.employeePhoneNumber;
+    editedEmailController.text = employee.employeeEmail;
+    editedPositionController.text = employee.employeePosition;
   }
 
   void _onAcceptButtonPressed() async {
+    //Sending Email
 
-    DBRef.child('employees').child(employee.employeeCompanyID).update({'employeeApprovalStatus':true});
+    String username = 'bbbba7785@gmail.com';
+    String password = 'ah67@#nm12';
 
-    showInSnackBar('Request approved !');
+    final smtpServer = gmail(username, password);
+    // Use the SmtpServer class to configure an SMTP server:
+    // final smtpServer = SmtpServer('smtp.domain.com');
+    // See the named arguments of SmtpServer for further configuration
+    // options.
+
+    // Create our message.
+    final message = Message()
+      ..from = Address(username, 'bbbba7785@gmail.com')
+      ..recipients.add(employee.employeeEmail)
+      //..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
+      //..bccRecipients.add(Address('bccAddress@example.com'))
+      ..subject = 'REQUEST APPROVAL'
+      ..text = 'Dear ${employee.employeeFirstName} '
+          '${employee.employeeLastName}\n'
+          '\tYour signup for benefits appllication from evapharma has been approved with\n'
+          'Username: ${employee.employeeEmail},\n'
+          'Password: ${employee.employeePassword}.';
+    //..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
+
+    try {
+      final sendReport = await send(message, smtpServer);
+      DBRef.child('employees')
+          .child(employee.employeeCompanyID)
+          .update({'employeeApprovalStatus': true});
+      showInSnackBar('Request accepted !');
+    } catch (e) {
+      showInSnackBar('email not sent !');
+      print('Message not sent.');
+      for (var p in e.problems) {
+        print('Problem: ${p.code}: ${p.msg}');
+      }
+    }
+
     await Future.delayed(const Duration(seconds: 2), () {});
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => PendingRequests()));
+        .pop();
   }
 
   void _onDeclineButtonPressed() async {
+    String username = 'bbbba7785@gmail.com';
+    String password = 'ah67@#nm12';
 
-    DBRef.child('employees').child(employee.employeeCompanyID).remove();
+    final smtpServer = gmail(username, password);
+    // Use the SmtpServer class to configure an SMTP server:
+    // final smtpServer = SmtpServer('smtp.domain.com');
+    // See the named arguments of SmtpServer for further configuration
+    // options.
+
+    // Create our message.
+    final message = Message()
+      ..from = Address(username, 'bbbba7785@gmail.com')
+      ..recipients.add(employee.employeeEmail)
+    //..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
+    //..bccRecipients.add(Address('bccAddress@example.com'))
+      ..subject = 'REQUEST Decline'
+      ..text = 'Dear ${employee.employeeFirstName} '
+          '${employee.employeeLastName}\n'
+          '\tYour signup for benefits appllication from evapharma has been rejected';
+    //..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
+
+    try {
+      final sendReport = await send(message, smtpServer);
+      DBRef.child('employees').child(employee.employeeCompanyID).remove();
+      showInSnackBar('Request accepted !');
+    } catch (e) {
+      showInSnackBar('email not sent !');
+      print('Message not sent.');
+      for (var p in e.problems) {
+        print('Problem: ${p.code}: ${p.msg}');
+      }
+    }
+
+
 
     showInSnackBar('Request declined !');
     await Future.delayed(const Duration(seconds: 2), () {});
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => PendingRequests()));
-
+        .pop();
   }
 
   void showInSnackBar(String value) {

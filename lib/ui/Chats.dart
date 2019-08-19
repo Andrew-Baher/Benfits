@@ -6,42 +6,11 @@ import '../main.dart';
 import 'ChatMessage.dart';
 
 List<ChatMessage> _messages ;
+String currentText;
 
 class Chats extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    _messages = <ChatMessage>[];
-    DBRef.child('Messagescount')
-        .child('count')
-        .once()
-        .then((DataSnapshot dataSnapShot) {
-      currentMessageId = dataSnapShot.value;
-      print("ID"+currentMessageId.toString());
-    });
-
-    DBRef.child('MessagesDetails').once().then((DataSnapshot dataSnapShot) {
-      print(dataSnapShot.value[1]["EmployeeEmail"]);
-      print(dataSnapShot.value[1]["MessageDescription"]);
-      int count = 0;
-      for (int i = 1; i < currentMessageId; ++i) {
-        if (dataSnapShot.value[i]["EmployeeEmail"] ==
-            mainEmployee.employeeEmail) {
-          ChatMessage chatMessage;
-          if (dataSnapShot.value[i]["Status"] == "Manager")
-            chatMessage = new ChatMessage(
-                text: dataSnapShot.value[i]["MessageDescription"], state: true);
-          else
-            chatMessage = new ChatMessage(
-                text: dataSnapShot.value[i]["MessageDescription"], state: false);
-
-          _messages.insert(0, chatMessage);
-          count++;
-        }
-      }
-      print(count);
-    });
-
-
     return _ChatsState();
   }
 }
@@ -52,23 +21,8 @@ class _ChatsState extends State<Chats> {
   void _handleSubmit(String text) {
     textEditingController.clear();
     ChatMessage chatMessage = new ChatMessage(text: text, state: false);
-
-    DBRef.child('Messagescount')
-        .child('count')
-        .once()
-        .then((DataSnapshot dataSnapShot) {
-      currentMessageId = dataSnapShot.value;
-      currentMessageIdString = "$currentMessageId";
-      print(currentMessageId);
-    });
-    DBRef.child('MessagesDetails').child(currentMessageIdString).set({
-      "MessageDescription": text,
-      "EmployeeEmail": mainEmployee.employeeEmail,
-      "Status":"User"
-    });
-    nextMessageId = currentMessageId + 1;
-    DBRef.child('Messagescount').set({'count': nextMessageId});
-
+    currentText=text;
+    sendMessage();
     setState(() {
       //used to rebuild our widget
       _messages.insert(0, chatMessage);
@@ -108,9 +62,15 @@ class _ChatsState extends State<Chats> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _messages = new List<ChatMessage>();
+    getChatMessages();
+  }
+
+  @override
   Widget build(BuildContext context) {
     getData();
-
     return new Column(
       children: <Widget>[
         new Flexible(
@@ -133,4 +93,56 @@ class _ChatsState extends State<Chats> {
       ],
     );
   }
+}
+
+void sendMessage()
+{
+DBRef.child('Messagescount')
+.child('count')
+.once()
+    .then((DataSnapshot dataSnapShot) {
+currentMessageId = dataSnapShot.value;
+currentMessageIdString = "$currentMessageId";
+print(currentMessageId);
+});
+DBRef.child('MessagesDetails').child(currentMessageIdString).set({
+"MessageDescription": currentText,
+"EmployeeEmail": mainEmployee.employeeEmail,
+"Status":"User"
+});
+nextMessageId = currentMessageId + 1;
+DBRef.child('Messagescount').set({'count': nextMessageId});
+
+}
+
+void getChatMessages() {
+  DBRef.child('Messagescount')
+      .child('count')
+      .once()
+      .then((DataSnapshot dataSnapShot) {
+    currentMessageId = dataSnapShot.value;
+    print("ID"+currentMessageId.toString());
+  });
+
+  DBRef.child('MessagesDetails').once().then((DataSnapshot dataSnapShot) {
+    print(dataSnapShot.value[1]["EmployeeEmail"]);
+    print(dataSnapShot.value[1]["MessageDescription"]);
+    int count = 0;
+    for (int i = 1; i < currentMessageId; ++i) {
+      if (dataSnapShot.value[i]["EmployeeEmail"] ==
+          mainEmployee.employeeEmail) {
+        ChatMessage chatMessage;
+        if (dataSnapShot.value[i]["Status"] == "Manager")
+          chatMessage = new ChatMessage(
+              text: dataSnapShot.value[i]["MessageDescription"], state: true);
+        else
+          chatMessage = new ChatMessage(
+              text: dataSnapShot.value[i]["MessageDescription"], state: false);
+
+        _messages.insert(0, chatMessage);
+        count++;
+      }
+    }
+    print(count);
+  });
 }
