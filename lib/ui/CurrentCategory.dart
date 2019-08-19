@@ -26,9 +26,8 @@ class CurrentCategory extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    final DBRef = FirebaseDatabase.instance.reference();
 
-    DBRef.child('Benefitscount')
+    DBRef2.child('Benefitscount')
         .child('count')
         .once()
         .then((DataSnapshot dataSnapShot) {
@@ -36,7 +35,7 @@ class CurrentCategory extends StatefulWidget {
       print(currentBenefitId);
     });
 
-    DBRef.child('benefitsDetails').once().then((DataSnapshot dataSnapShot) {
+    DBRef2.child('benefitsDetails').once().then((DataSnapshot dataSnapShot) {
       print(dataSnapShot.value[1]["benefitImage"]);
       print(dataSnapShot.value[1]["benefitCategory"]);
       int count = 0;

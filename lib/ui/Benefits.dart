@@ -59,7 +59,8 @@ List<String> items = [
   'Hotels',
   'Restaurants',
   'Grocery',
-  'Dessert'
+  'Dessert',
+  'Education'
 ];
 
 List<String> assets = [
@@ -71,5 +72,6 @@ List<String> assets = [
   'assets/Restaurants.png',
   'assets/Grocery.png',
   'assets/Dessert.png',
+  'assets/Education.png'
 ];
 

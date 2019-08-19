@@ -9,6 +9,7 @@ import 'package:employees_benefits/ui/Messages.dart';
 import 'package:employees_benefits/ui/More.dart';
 import 'package:employees_benefits/ui/SignIn.dart';
 import 'package:employees_benefits/ui/SignUp.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'models/Employee.dart';
@@ -30,6 +31,8 @@ String currentMessageIdString;
 String mainCurrentBenefitImage;
 String mainCurrentBenefitDescription;
 String mainCurrentBenefitTitle;
+final DBRef = FirebaseDatabase.instance.reference();
+final DBRef2 = FirebaseDatabase.instance.reference();
 
 
 void main() => runApp(new MyApp());
@@ -40,6 +43,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    DBRef.child('Messagescount')
+        .child('count')
+        .once()
+        .then((DataSnapshot dataSnapShot) {
+      currentMessageId = dataSnapShot.value;
+      currentMessageIdString = "$currentMessageId";
+      print(currentMessageId);
+    });
+    DBRef2.child('Benefitscount')
+        .child('count')
+        .once()
+        .then((DataSnapshot dataSnapShot) {
+      currentBenefitId = dataSnapShot.value;
+      currentBenefitIdString = "$currentBenefitId";
+      print(currentBenefitId);
+    });
+
     return new MaterialApp(
       title: 'Login | Sign Up',
       theme: new ThemeData(

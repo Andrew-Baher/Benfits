@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -6,22 +8,24 @@ import 'CurrentCategory.dart';
 import 'NewBenefit.dart';
 import 'NewMessage.dart';
 
-
 class MainApplication extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
-    return mainAppState=new MainApplicationState();
+    return mainAppState = new MainApplicationState();
   }
 }
 
 class MainApplicationState extends State<MainApplication> {
-
   @override
   void initState() {
     super.initState();
-    inNavigation=true;
+    inNavigation = true;
     NewBenefit();
+  }
+
+  Future<bool> _onBackPressed() {
+    //TODO: Add message box of exiting app
+    exit(0);
   }
 
   int _currentIndex = mainCurrentIndex;
@@ -34,8 +38,11 @@ class MainApplicationState extends State<MainApplication> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return new WillPopScope(
+      onWillPop: _onBackPressed,
+      child: new Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text('Eva pharma', style: TextStyle(color: Colors.white)),
         ),
         body: _children[_currentIndex],
@@ -68,36 +75,32 @@ class MainApplicationState extends State<MainApplication> {
                   icon: Icon(Icons.more_vert), title: Text('More'))
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   void onTabTapped(int index) {
-      setState(() {
-        _currentIndex = index;
-      });
-    }
+    setState(() {
+      _currentIndex = index;
+    });
+  }
 
-    void openAnotherTab(int index)
-    {
-      if(index==0)
-        {
-          Navigator.of(context).pop();
-          Navigator.push
-            (context,
-              new MaterialPageRoute(builder:
-                  (context) => new CurrentCategory(currentCategory)));
-        }
-      else if(index==1)
-        {
-          Navigator.of(context).pop();
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => new NewBenefit()));
-        }
-      else if(index==2)
-      {
-        Navigator.of(context).pop();
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => new NewMessage()));
-      }
+  void openAnotherTab(int index) {
+    if (index == 0) {
+      Navigator.of(context).pop();
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => new CurrentCategory(currentCategory)));
+    } else if (index == 1) {
+      Navigator.of(context).pop();
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => new NewBenefit()));
+    } else if (index == 2) {
+      Navigator.of(context).pop();
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => new NewMessage()));
     }
+  }
 }

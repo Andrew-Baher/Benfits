@@ -52,7 +52,8 @@ class _NewBenefit extends State<NewBenefit>
     'Hotels',
     'Restaurants',
     'Grocery',
-    'Dessert'
+    'Dessert',
+    'Education'
   ];
   String selected = null;
 
@@ -97,9 +98,8 @@ class _NewBenefit extends State<NewBenefit>
       var downloadingurl =
       await (await uploadTask.onComplete).ref.getDownloadURL();
       url = downloadingurl.toString();
-      final DBRef = FirebaseDatabase.instance.reference();
 
-      DBRef.child('Benefitscount')
+      DBRef2.child('Benefitscount')
           .child('count')
           .once()
           .then((DataSnapshot dataSnapShot) {
@@ -107,14 +107,14 @@ class _NewBenefit extends State<NewBenefit>
         currentBenefitIdString = "$currentBenefitId";
         print(currentBenefitId);
       });
-      DBRef.child('benefitsDetails').child(currentBenefitIdString).set({
+      DBRef2.child('benefitsDetails').child(currentBenefitIdString).set({
         "benefitDescription": benefitDescriptionController.text,
         "benefitTitle": benefitTitleController.text,
         "benefitCategory": selected,
         "benefitImage": url,
       });
       nextBenefitId = currentBenefitId + 1;
-      DBRef.child('Benefitscount').set({'count': nextBenefitId});
+      DBRef2.child('Benefitscount').set({'count': nextBenefitId});
       progressIndicatorVisible = false;
       setState(() {});
       showInSnackBar('New benefit picture uploaded successfully !!');
