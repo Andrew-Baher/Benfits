@@ -1,11 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:employees_benefits/models/Employee.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server/gmail.dart';
 
 import '../main.dart';
+import 'ForgetPassword.dart';
 import 'HomePage.dart';
 import 'MainApp.dart';
 import 'SignUp.dart';
@@ -25,6 +29,10 @@ class _SignInState extends State<SignIn> {
 
   static Employee neededEmployee;
 
+  Future<bool> _onBackPressed() {
+    //TODO: Add message box of exiting app
+    exit(0);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +90,9 @@ class _SignInState extends State<SignIn> {
         'Forgot password?',
         style: TextStyle(color: Color.fromRGBO(19, 46, 99, 10), fontSize: 18),
       ),
-      onPressed: (){},
+      onPressed: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ForgetPassword()));
+      },
     );
 
     final dontHaveAnAccount = FlatButton(
@@ -99,7 +109,9 @@ class _SignInState extends State<SignIn> {
 
     return Padding(
       padding: const EdgeInsets.all(1.0),
-      child: Scaffold(
+      child: new WillPopScope(
+      onWillPop: _onBackPressed,
+      child: new Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
         body: Center(
@@ -121,7 +133,7 @@ class _SignInState extends State<SignIn> {
         ),
 
       ),
-    );
+    ),);
   }
 
   void _onSignInButtonPress() async {

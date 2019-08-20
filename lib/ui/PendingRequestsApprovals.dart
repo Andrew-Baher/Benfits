@@ -409,12 +409,17 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
       ..recipients.add(employee.employeeEmail)
       //..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
       //..bccRecipients.add(Address('bccAddress@example.com'))
-      ..subject = 'REQUEST APPROVAL'
+      ..subject = 'Approved Evapharma signup'
       ..text = 'Dear ${employee.employeeFirstName} '
-          '${employee.employeeLastName}\n'
-          '\tYour signup for benefits appllication from evapharma has been approved with\n'
-          'Username: ${employee.employeeEmail},\n'
-          'Password: ${employee.employeePassword}.';
+          '${employee.employeeLastName},\n\n'
+          'Thank you for signing up for Evapharma mobile application.\n\n'
+          'Congratulations,your signup request has been accepted.\n\n'
+          'You can now login using the following credentials:\n\n'
+          'Username: ${employee.employeeEmail}\n'
+          'Password: ${employee.employeePassword}\n\n'
+          'Thank you,\n\n'
+          'Regards\n\n'
+          'Evapharma H.R.';
     //..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
 
     try {
@@ -452,10 +457,15 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
       ..recipients.add(employee.employeeEmail)
     //..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
     //..bccRecipients.add(Address('bccAddress@example.com'))
-      ..subject = 'REQUEST Decline'
+      ..subject = 'Declined Evapharma signup'
       ..text = 'Dear ${employee.employeeFirstName} '
-          '${employee.employeeLastName}\n'
-          '\tYour signup for benefits appllication from evapharma has been rejected';
+          '${employee.employeeLastName},\n\n'
+          'Thank you for signing up for Evapharma mobile application.\n\n'
+          'We are very sorry, your signup request has been rejected.\n\n'
+          'Kindly, please contact the benefits team-HR department.\n\n'
+          'Thank you,\n\n'
+          'Regards\n\n'
+          'Evapharma H.R.';
     //..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
 
     try {
