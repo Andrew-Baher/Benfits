@@ -36,10 +36,21 @@ class _AddQuetionsToSurveyState extends State<AddQuetionsToSurvey>
   String _now;
   Timer _everySecond;
 
+  List<String> countries = <String>[
+    'Belgium',
+    'France',
+    'Italy',
+    'Germany',
+    'Spain',
+    'Portugal'
+  ];
+  var _selectedChoiceIndex = 0;
+
   Widget singleItemList(int index) {
     //Item item = itemList[index];
 
     return Container(
+      color: Colors.transparent,
       child: Row(
         children: [
           GestureDetector(
@@ -65,11 +76,27 @@ class _AddQuetionsToSurveyState extends State<AddQuetionsToSurvey>
                   ],
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height / 70,
+                  height: MediaQuery.of(context).size.height / 100,
                 ),
-                (!questions[index].questionType)
-                    ? Text('text')
-                    : Text('Choices'),
+                TextFormField(
+                  obscureText: true,
+                  keyboardType: TextInputType.emailAddress,
+                  textCapitalization: TextCapitalization.words,
+                  cursorColor: Colors.red,
+                  style: TextStyle(
+                      fontFamily: "WorkSansSemiBold",
+                      backgroundColor: Colors.red,
+                      fontSize: MediaQuery.of(context).size.width / 20,
+                      color: Color.fromRGBO(19, 46, 99, 10)),
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(8),
+                    hasFloatingPlaceholder: false,
+                    border: UnderlineInputBorder(),
+                    //hoverColor: Colors.black,
+                    //focusColor: Colors.black,
+                    fillColor: Colors.black,
+                  ),
+                ),
               ],
             ),
           ),
@@ -80,29 +107,84 @@ class _AddQuetionsToSurveyState extends State<AddQuetionsToSurvey>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(MediaQuery.of(context).size.width / 500),
-      color: Colors.white,
-      child: Scaffold(
-        key: _scaffoldKey,
+    return MaterialApp(
+      home: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(19, 46, 99, 10),
           title: new Text(widget.surveyTitle),
+          backgroundColor: Color.fromRGBO(19, 46, 99, 10),
         ),
-        backgroundColor: Colors.transparent,
-        body: ListView(
-            padding:
-                EdgeInsets.only(top: MediaQuery.of(context).size.width / 200),
+        body: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
             children: <Widget>[
-              ListView.builder(
+              Expanded(
+                flex: 1,
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
                   shrinkWrap: true,
+                  itemExtent: MediaQuery.of(context).size.height / 7,
                   itemCount: questions.length,
                   itemBuilder: (context, index) {
-                    return singleItemList(index);
-                  }),
-            ]),
+                    return Container(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            questions[index].questionTitle,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.width / 30),
+                          ),
+                          (!questions[index].questionType)
+                              ? TextField(
+                                  autofocus: false,
+                                  keyboardType: TextInputType.multiline,
+                                  maxLines: 3,
+                                  style: TextStyle(
+                                    fontFamily: "WorkSansSemiBold",
+                                    color: Color.fromRGBO(19, 46, 99, 10),
+                                    fontSize:
+                                        MediaQuery.of(context).size.width / 35,
+                                  ),
+                                  decoration: InputDecoration(
+                                      labelText: "Benefit Description",
+                                      hintText: "Benefit Description",
+                                      alignLabelWithHint: true,
+                                      labelStyle: TextStyle(
+                                        color: Color.fromRGBO(48, 51, 86, 10),
+                                        fontSize: 16,
+                                      ),
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(4)),
+                                          borderSide: BorderSide(
+                                              width: 1,
+                                              color: Color.fromRGBO(
+                                                  19, 46, 99, 10),
+                                              style: BorderStyle.solid))))
+                              : RadioListTile<int>(
+                                  value: index,
+                                  groupValue: _selectedChoiceIndex,
+                                  title: new Text(countries[index]),
+                                  onChanged: (int value) {
+                                    setState(() {
+                                      _selectedChoiceIndex = value;
+                                    });
+                                  },
+                                )
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
+            backgroundColor: Color.fromRGBO(19, 46, 99, 10),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => new AddQuetionToSurvey()));
