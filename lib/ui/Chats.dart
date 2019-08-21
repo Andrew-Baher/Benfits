@@ -18,7 +18,7 @@ class Chats extends StatefulWidget {
 
 class _ChatsState extends State<Chats> {
   final TextEditingController textEditingController =
-      new TextEditingController();
+  new TextEditingController();
   void _handleSubmit(String text) {
     textEditingController.clear();
     ChatMessage chatMessage = new ChatMessage(text: text, state: false);
@@ -75,22 +75,12 @@ class _ChatsState extends State<Chats> {
     return new Column(
       children: <Widget>[
         new Flexible(
-          child:
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-          Bubble(
-          message: 'Hi there, this is a message',
-            time: '12:00',
-            delivered: true,
-            isMe: false,
-          ),],),
-          /*new ListView.builder(
+          child: new ListView.builder(
             padding: new EdgeInsets.all(8.0),
             reverse: true,
             itemBuilder: (_, int index) => _messages[index],
             itemCount: _messages.length,
-          ),*/
+          ),
         ),
         new Divider(
           height: 1.0,
@@ -108,21 +98,21 @@ class _ChatsState extends State<Chats> {
 
 void sendMessage()
 {
-DBRef.child('Messagescount')
-.child('count')
-.once()
-    .then((DataSnapshot dataSnapShot) {
-currentMessageId = dataSnapShot.value;
-currentMessageIdString = "$currentMessageId";
-print(currentMessageId);
-});
-DBRef.child('MessagesDetails').child(currentMessageIdString).set({
-"MessageDescription": currentText,
-"EmployeeEmail": mainEmployee.employeeEmail,
-"Status":"User"
-});
-nextMessageId = currentMessageId + 1;
-DBRef.child('Messagescount').set({'count': nextMessageId});
+  DBRef.child('Messagescount')
+      .child('count')
+      .once()
+      .then((DataSnapshot dataSnapShot) {
+    currentMessageId = dataSnapShot.value;
+    currentMessageIdString = "$currentMessageId";
+    print(currentMessageId);
+  });
+  DBRef.child('MessagesDetails').child(currentMessageIdString).set({
+    "MessageDescription": currentText,
+    "EmployeeEmail": mainEmployee.employeeEmail,
+    "Status":"User"
+  });
+  nextMessageId = currentMessageId + 1;
+  DBRef.child('Messagescount').set({'count': nextMessageId});
 
 }
 
