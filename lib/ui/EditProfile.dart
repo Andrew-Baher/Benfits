@@ -17,7 +17,7 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   final DBRef = FirebaseDatabase.instance.reference();
-  Employee emp = mainEmployee; 
+  Employee emp = mainEmployee;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -37,402 +37,414 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController editedPhoneController = new TextEditingController();
   TextEditingController editedPositionController = new TextEditingController();
 
+  Future<bool> _onBackPressed() {
+    Navigator.push(context,
+        new MaterialPageRoute(builder: (context) => MainApplication()));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(MediaQuery.of(context).size.width / 20),
-      color: Colors.white,
-      child: Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: Colors.transparent,
-        body: ListView(
-          padding:
-              EdgeInsets.only(top: MediaQuery.of(context).size.width / 200),
-          children: <Widget>[
-            DrawerHeader(
-              child: Padding(
-                padding: const EdgeInsets.all(1),
-                child: Row(
+    return new WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Container(
+        padding: EdgeInsets.all(MediaQuery.of(context).size.width / 100000),
+        color: Colors.white,
+        child: new Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color.fromRGBO(19, 46, 99, 10),
+            title: new Text("Edit profile"),
+          ),
+          key: _scaffoldKey,
+          backgroundColor: Colors.transparent,
+          body: ListView(
+            padding:
+                EdgeInsets.only(top: MediaQuery.of(context).size.width / 200),
+            children: <Widget>[
+              DrawerHeader(
+                child: Padding(
+                  padding: const EdgeInsets.all(1),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.edit,
+                        color: Color.fromRGBO(19, 46, 99, 10),
+                        size: 40.0,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 70,
+                      ),
+                      Text(
+                        'Edit Profile',
+                        style: TextStyle(
+                            color: Color.fromRGBO(19, 46, 99, 10),
+                            fontSize: MediaQuery.of(context).size.width / 16,
+                            fontFamily: "WorkSansBold"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 50,
+              ),
+              GestureDetector(
+                child: Column(
                   children: <Widget>[
-                    Icon(
-                      Icons.edit,
-                      color: Color.fromRGBO(19, 46, 99, 10),
-                      size: 40.0,
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.person,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Edit First Name',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width / 70,
+                      height: MediaQuery.of(context).size.height / 70,
                     ),
-                    Text(
-                      'Edit Profile',
+                    TextField(
+                      controller: editedFirstNameController,
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.words,
                       style: TextStyle(
-                          color: Color.fromRGBO(19, 46, 99, 10),
-                          fontSize: MediaQuery.of(context).size.width / 16,
-                          fontFamily: "WorkSansBold"),
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: 24.0,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 50,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.person,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'Edit First Name',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextField(
-                    controller: editedFirstNameController,
-                    keyboardType: TextInputType.text,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: 24.0,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
-                    ),
-                  ),
-                ],
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
               ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.person,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'Edit Last Name',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextField(
-                    controller: editedLastNameController,
-                    keyboardType: TextInputType.text,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
+              GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.person,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Edit Last Name',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.phone_iphone,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'Edit Phone Number',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextField(
-                    controller: editedPhoneController,
-                    keyboardType: TextInputType.emailAddress,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
                     ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.person_pin,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
+                    TextField(
+                      controller: editedLastNameController,
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
                       ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'Edit Position',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextField(
-                    controller: editedPositionController,
-                    keyboardType: TextInputType.emailAddress,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
                     ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.person_pin,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'Edit Position',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextField(
-                    controller: editedPositionController,
-                    keyboardType: TextInputType.emailAddress,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.email,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'Edit Email',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextField(
-                    controller: editedEmailController,
-                    keyboardType: TextInputType.emailAddress,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.lock,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'Edit Password',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextField(
-                    obscureText: true,
-                    controller: editedPasswordController,
-                    keyboardType: TextInputType.emailAddress,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            MaterialButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                  ],
                 ),
-                highlightColor: Colors.black,
-                splashColor: Theme.Colors.loginGradientStart,
-                color: Color.fromRGBO(19, 46, 99, 10),
-                minWidth: 70,
-                height: MediaQuery.of(context).size.height / 30,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    "SAVE",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28.0,
-                        fontFamily: "WorkSansBold"),
-                  ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
+              ),
+              GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.phone_iphone,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Edit Phone Number',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
+                    ),
+                    TextField(
+                      controller: editedPhoneController,
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
-                onPressed: _onSaveButtonPressed),
-          ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
+              ),
+              GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.person_pin,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Edit Position',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
+                    ),
+                    TextField(
+                      controller: editedPositionController,
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
+              ),
+              GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.person_pin,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Edit Position',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
+                    ),
+                    TextField(
+                      controller: editedPositionController,
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
+              ),
+              GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.email,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Edit Email',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
+                    ),
+                    TextField(
+                      controller: editedEmailController,
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
+              ),
+              GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.lock,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Edit Password',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
+                    ),
+                    TextField(
+                      obscureText: true,
+                      controller: editedPasswordController,
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
+              ),
+              MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  highlightColor: Colors.black,
+                  splashColor: Theme.Colors.loginGradientStart,
+                  color: Color.fromRGBO(19, 46, 99, 10),
+                  minWidth: 70,
+                  height: MediaQuery.of(context).size.height / 30,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      "SAVE",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28.0,
+                          fontFamily: "WorkSansBold"),
+                    ),
+                  ),
+                  onPressed: _onSaveButtonPressed),
+            ],
+          ),
         ),
       ),
     );
@@ -445,12 +457,12 @@ class _EditProfileState extends State<EditProfile> {
     Employee employee = mainEmployee;
 
     //Initialize TextFields with the employee's data
-    editedFirstNameController.text  = employee.employeeFirstName;
-    editedLastNameController.text   = employee.employeeLastName;
-    editedPhoneController.text      = employee.employeePhoneNumber;
-    editedEmailController.text      = employee.employeeEmail;
-    editedPasswordController.text   = employee.employeePassword;
-    editedPositionController.text   = employee.employeePosition;
+    editedFirstNameController.text = employee.employeeFirstName;
+    editedLastNameController.text = employee.employeeLastName;
+    editedPhoneController.text = employee.employeePhoneNumber;
+    editedEmailController.text = employee.employeeEmail;
+    editedPasswordController.text = employee.employeePassword;
+    editedPositionController.text = employee.employeePosition;
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -460,11 +472,11 @@ class _EditProfileState extends State<EditProfile> {
 
   void _onSaveButtonPressed() async {
     String firstName = editedFirstNameController.text;
-    String lastName  = editedLastNameController.text;
-    String email     = editedEmailController.text;
-    String password  = editedPasswordController.text;
-    String phoneNo   = editedPhoneController.text;
-    String position  = editedPositionController.text;
+    String lastName = editedLastNameController.text;
+    String email = editedEmailController.text;
+    String password = editedPasswordController.text;
+    String phoneNo = editedPhoneController.text;
+    String position = editedPositionController.text;
 
     DBRef.child('employees').child(mainEmployeeCompanyID).update({
       "employeeFirstName": firstName,
@@ -474,12 +486,13 @@ class _EditProfileState extends State<EditProfile> {
       "employeePassword": password,
       "employeePosition": position,
       "employeeAuthority": 'User',
-      "employeeApprovalStatus" : false
+      "employeeApprovalStatus": false
     });
 
     showInSnackBar('Data saved successfully !');
-    await Future.delayed(const Duration(seconds: 2), (){});
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainApplication()));
+    await Future.delayed(const Duration(seconds: 2), () {});
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => MainApplication()));
   }
 
   void showInSnackBar(String value) {

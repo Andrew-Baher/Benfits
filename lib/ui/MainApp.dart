@@ -6,9 +6,11 @@ import '../main.dart';
 import 'AddSurvey.dart';
 import 'AppNavigation.dart';
 import 'CurrentCategory.dart';
+import 'EditProfile.dart';
 import 'NewBenefit.dart';
 import 'NewMessage.dart';
 import 'PendingRequests.dart';
+import 'SignIn.dart';
 
 class MainApplication extends StatefulWidget {
   @override
@@ -112,6 +114,15 @@ class MainApplicationState extends State<MainApplication> {
       Navigator.of(context).pop();
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => new AddSurvey()));
+    }
+    else if (index == 5) {
+      Navigator.of(context).pop();
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new EditProfile()));
+    }else if (index == 6) {
+      Navigator.of(context).pop();
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new SignIn()));
     }
   }
 }

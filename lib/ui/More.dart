@@ -26,8 +26,7 @@ class _MyAppState3 extends State<More> {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => new EditProfile()));
+                  mainAppState.openAnotherTab(5);
                 },
                 child: ListTile(
                   leading: Icon(
@@ -179,7 +178,7 @@ class _MyAppState3 extends State<More> {
 
               GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignIn()));
+                  mainAppState.openAnotherTab(6);
                 },
                 child: ListTile(
                   leading: Icon(
