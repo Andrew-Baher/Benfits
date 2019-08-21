@@ -57,6 +57,8 @@ class CurrentCategoryState extends State<CurrentCategory> {
       child: new Scaffold(
         appBar: AppBar(
           title: new Text(widget.currentBenefit),
+          backgroundColor: Color.fromRGBO(19, 46, 99, 10),
+
         ),
         body: (categoryImages.length == 0)
             ? Text(

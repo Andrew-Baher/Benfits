@@ -18,6 +18,7 @@ class CurrentBenfitState extends State<CurrentBenefit> {
     return Scaffold(
       appBar: AppBar(
         title: new Text(mainCurrentBenefitTitle),
+        backgroundColor: Color.fromRGBO(19, 46, 99, 10),
       ),
       body: Center(
         child: SingleChildScrollView(

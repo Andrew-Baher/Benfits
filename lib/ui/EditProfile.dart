@@ -230,54 +230,7 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(
                 height: MediaQuery.of(context).size.height / 70,
               ),
-              GestureDetector(
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.person_pin,
-                          color: Colors.black,
-                          size: MediaQuery.of(context).size.width / 15,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 30,
-                        ),
-                        Text(
-                          'Edit Position',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: MediaQuery.of(context).size.width / 20,
-                              fontFamily: "WorkSansBold"),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 70,
-                    ),
-                    TextField(
-                      controller: editedPositionController,
-                      keyboardType: TextInputType.emailAddress,
-                      textCapitalization: TextCapitalization.words,
-                      style: TextStyle(
-                          fontFamily: "WorkSansSemiBold",
-                          fontSize: MediaQuery.of(context).size.width / 20,
-                          color: Color.fromRGBO(19, 46, 99, 10)),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(8),
-                        hasFloatingPlaceholder: false,
-                        border: UnderlineInputBorder(),
-                        //hoverColor: Colors.black,
-                        //focusColor: Colors.black,
-                        fillColor: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 70,
-              ),
+
               GestureDetector(
                 child: Column(
                   children: <Widget>[

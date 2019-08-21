@@ -496,7 +496,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
 
     bool emailValid = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
     bool phoneValid = RegExp(r"^01[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").hasMatch(phoneNo);
-    bool passwordValid = (password.length < 5);
+    bool passwordValid = (password.length > 5);
 
     if(firstName == '' || lastName == '' || email == '' || password == '' ||
        phoneNo == '' || companyID == '' || position == '')
