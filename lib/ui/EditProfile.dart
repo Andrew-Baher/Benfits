@@ -507,7 +507,7 @@ class _EditProfileState extends State<EditProfile> {
             fontSize: 16.0,
             fontFamily: "WorkSansSemiBold"),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: Color.fromRGBO(19, 46, 99, 10),
       duration: Duration(seconds: 3),
     ));
   }

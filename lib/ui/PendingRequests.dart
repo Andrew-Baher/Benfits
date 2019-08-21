@@ -50,6 +50,7 @@ class _PendingRequestsState extends State<PendingRequests> {
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text('Show pending requests'),
+          backgroundColor: Color.fromRGBO(19, 46, 99, 10),
         ),
         body: new MaterialApp(
           home: Scaffold(

@@ -48,11 +48,12 @@ class MainApplicationState extends State<MainApplication> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text('Eva pharma', style: TextStyle(color: Colors.white)),
+          backgroundColor: Color.fromRGBO(19, 46, 99, 10),
         ),
         body: _children[_currentIndex],
         bottomNavigationBar: new Theme(
           data: Theme.of(context).copyWith(
-              canvasColor: Colors.blue,
+              canvasColor: Color.fromRGBO(19, 46, 99, 10),
               primaryColor: Colors.yellow,
               textTheme: Theme.of(context)
                   .textTheme

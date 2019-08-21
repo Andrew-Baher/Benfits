@@ -131,6 +131,7 @@ class _NewBenefit extends State<NewBenefit>
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text('Add new benefit'),
+          backgroundColor: Color.fromRGBO(19, 46, 99, 10),
         ),
         body: Center(
           child: SingleChildScrollView(
@@ -237,7 +238,7 @@ class _NewBenefit extends State<NewBenefit>
                                     Radius.circular(4)),
                                 borderSide: BorderSide(
                                     width: 1,
-                                    color: Colors.green,
+                                    color: Color.fromRGBO(19, 46, 99, 10),
                                     style: BorderStyle.solid))),
                       ),
                       SizedBox(
@@ -269,7 +270,7 @@ class _NewBenefit extends State<NewBenefit>
                                     Radius.circular(4)),
                                 borderSide: BorderSide(
                                     width: 1,
-                                    color: Colors.green,
+                                    color: Color.fromRGBO(19, 46, 99, 10),
                                     style: BorderStyle.solid))),
                       ),
                       SizedBox(
@@ -293,7 +294,7 @@ class _NewBenefit extends State<NewBenefit>
                               ),
                               highlightColor: Colors.black,
                               splashColor: Theme.Colors.loginGradientStart,
-                              color: Colors.green,
+                              color: Color.fromRGBO(19, 46, 99, 10),
                               minWidth: MediaQuery
                                   .of(context)
                                   .size
@@ -301,7 +302,7 @@ class _NewBenefit extends State<NewBenefit>
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Text(
-                                  "Upload pic",
+                                  "Publish Benefit",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -316,7 +317,7 @@ class _NewBenefit extends State<NewBenefit>
                               width: MediaQuery
                                   .of(context)
                                   .size
-                                  .width / 20,
+                                  .width / 7.5,
                             ),
                             MaterialButton(
                               shape: RoundedRectangleBorder(
@@ -324,7 +325,7 @@ class _NewBenefit extends State<NewBenefit>
                               ),
                               highlightColor: Colors.black,
                               splashColor: Theme.Colors.loginGradientStart,
-                              color: Colors.green,
+                              color: Color.fromRGBO(19, 46, 99, 10),
                               minWidth: MediaQuery
                                   .of(context)
                                   .size
@@ -336,7 +337,7 @@ class _NewBenefit extends State<NewBenefit>
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Text(
-                                  "Attach pic",
+                                  "Upload Picture",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,

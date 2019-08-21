@@ -109,7 +109,7 @@ class _NewMessage extends State<NewMessage>
                                     Radius.circular(4)),
                                 borderSide: BorderSide(
                                     width: 1,
-                                    color: Colors.green,
+                                    color: Color.fromRGBO(19, 46, 99, 10),
                                     style: BorderStyle.solid))),
                       ),
                       SizedBox(
@@ -141,7 +141,7 @@ class _NewMessage extends State<NewMessage>
                                     Radius.circular(4)),
                                 borderSide: BorderSide(
                                     width: 1,
-                                    color: Colors.green,
+                                    color: Color.fromRGBO(19, 46, 99, 10),
                                     style: BorderStyle.solid))),
                       ),
                       SizedBox(
@@ -165,7 +165,7 @@ class _NewMessage extends State<NewMessage>
                               ),
                               highlightColor: Colors.black,
                               splashColor: Theme.Colors.loginGradientStart,
-                              color: Colors.green,
+                              color: Color.fromRGBO(19, 46, 99, 10),
                               minWidth: MediaQuery
                                   .of(context)
                                   .size

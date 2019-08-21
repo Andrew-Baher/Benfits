@@ -47,7 +47,7 @@ class _ChatsState extends State<Chats> {
             new Container(
               margin: const EdgeInsets.symmetric(horizontal: 8.0),
               child: new IconButton(
-                icon: new Icon(Icons.send),
+                icon: new Icon(Icons.send, color: Color.fromRGBO(19, 46, 99, 10)),
                 onPressed: () => _handleSubmit(textEditingController.text),
               ),
             )
