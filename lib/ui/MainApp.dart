@@ -7,6 +7,7 @@ import 'AddSurvey.dart';
 import 'AppNavigation.dart';
 import 'CurrentCategory.dart';
 import 'EditProfile.dart';
+import 'ManagerChat.dart';
 import 'NewBenefit.dart';
 import 'NewMessage.dart';
 import 'PendingRequests.dart';
@@ -124,6 +125,11 @@ class MainApplicationState extends State<MainApplication> {
       Navigator.of(context).pop();
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => new SignIn()));
+    }
+    else if (index == 7) {
+      Navigator.of(context).pop();
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new ManagerChat()));
     }
   }
 }

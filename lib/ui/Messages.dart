@@ -15,7 +15,6 @@ class Messages extends StatefulWidget {
 }
 
 class _MyAppState2 extends State<Messages> {
-
   @override
   void initState() {
     super.initState();
@@ -34,48 +33,51 @@ class _MyAppState2 extends State<Messages> {
     getData();
     return MaterialApp(
       home: Scaffold(
-          body: ListView.builder(
-            itemExtent: MediaQuery.of(context).size.height / 15,
-            itemCount: names.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                child: ListTile(
-                  leading: Icon(
-                    Icons.person,
-                    size: MediaQuery.of(context).size.width / 14,
-                  ),
-                  title: Text( //Employee first name + last name
-                    names[index],
-                    style: TextStyle(fontSize: MediaQuery.of(context).size.width / 20),),
-                  subtitle: Text(messages[index]),
+        body: ListView.builder(
+          itemExtent: MediaQuery.of(context).size.height / 15,
+          itemCount: names.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              child: ListTile(
+                leading: Icon(
+                  Icons.person,
+                  size: MediaQuery.of(context).size.width / 14,
                 ),
-                onTap: (){
-                  //Navigator.of(context).push(
-                    //  MaterialPageRoute(builder: (context) => new PendingRequestsApprovals(pendingEmployees[index])));
-                },
-              );
-            },
-          ),
+                title: Text(
+                  //Employee first name + last name
+                  names[index],
+                  style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width / 20),
+                ),
+                subtitle: Text(messages[index]),
+              ),
+              onTap: () {
+                currentChat = names[index];
+                mainAppState.openAnotherTab(7);
+              },
+            );
+          },
+        ),
       ),
     );
   }
 }
 
-void getmessage() async{
+void getmessage() async {
   DBRef.child('Messagescount')
       .child('count')
       .once()
       .then((DataSnapshot dataSnapShot) {
     currentMessageId = dataSnapShot.value;
-    print("ID"+currentMessageId.toString());
+    print("ID" + currentMessageId.toString());
   });
 
   DBRef.child('MessagesDetails').once().then((DataSnapshot dataSnapShot) {
     print(dataSnapShot.value[1]["EmployeeEmail"]);
     print(dataSnapShot.value[1]["MessageDescription"]);
     int count = 0;
-    for (int i = currentMessageId-1; i >0; --i) {
-      if(!names.contains(dataSnapShot.value[i]["EmployeeEmail"])){
+    for (int i = currentMessageId - 1; i > 0; --i) {
+      if (!names.contains(dataSnapShot.value[i]["EmployeeEmail"])) {
         names.add(dataSnapShot.value[i]["EmployeeEmail"]);
         messages.add(dataSnapShot.value[i]["MessageDescription"]);
         count++;
@@ -83,5 +85,4 @@ void getmessage() async{
     }
     print(count);
   });
-
 }

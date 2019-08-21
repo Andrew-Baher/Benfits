@@ -302,10 +302,13 @@ class _NewBenefit extends State<NewBenefit>
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Text(
-                                  "Publish Benefit",
+                                  "Publish\nBenefit",
                                   style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 20,
+                                      fontSize: MediaQuery
+                                          .of(context)
+                                          .size
+                                          .width / 20,
                                       fontFamily: "WorkSansBold"),
                                 ),
                               ),
@@ -317,7 +320,7 @@ class _NewBenefit extends State<NewBenefit>
                               width: MediaQuery
                                   .of(context)
                                   .size
-                                  .width / 7.5,
+                                  .width / 15,
                             ),
                             MaterialButton(
                               shape: RoundedRectangleBorder(
@@ -337,10 +340,13 @@ class _NewBenefit extends State<NewBenefit>
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Text(
-                                  "Upload Picture",
+                                  "Upload\nPicture",
                                   style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 20,
+                                      fontSize: MediaQuery
+                                          .of(context)
+                                          .size
+                                          .width / 20,
                                       fontFamily: "WorkSansBold"),
                                 ),
                               ),

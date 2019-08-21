@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import '../main.dart';
 
 const String _hr = "EVA HR";
-final String _you = mainEmployee.employeeFirstName+' '+mainEmployee.employeeLastName;
+
+String _you = mainEmployee.employeeFirstName+' '+mainEmployee.employeeLastName;
 
 class ChatMessage extends StatelessWidget {
   final String text ;
   final bool state;
   ChatMessage({this.text,this.state});
+
   @override
   Widget build(BuildContext context) {
+    setUser();
     return new Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
       child: new Row(
@@ -38,4 +41,9 @@ class ChatMessage extends StatelessWidget {
       ),
     );
   }
+}
+
+void setUser() {
+  if(mainEmployee.employeeAuthority=='Manager')
+    _you=currentChat;
 }

@@ -4,25 +4,27 @@ import 'package:flutter/widgets.dart';
 
 import '../main.dart';
 import 'ChatMessage.dart';
-import 'ChatTest.dart';
+import 'MainApp.dart';
 
-List<ChatMessage> _messages ;
+List<ChatMessage> _messages;
+
 String currentText;
 
-class Chats extends StatefulWidget {
+class ManagerChat extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _ChatsState();
+    return _ManagerChatState();
   }
 }
 
-class _ChatsState extends State<Chats> {
+class _ManagerChatState extends State<ManagerChat> {
   final TextEditingController textEditingController =
       new TextEditingController();
+
   void _handleSubmit(String text) {
     textEditingController.clear();
     ChatMessage chatMessage = new ChatMessage(text: text, state: false);
-    currentText=text;
+    currentText = text;
     sendMessage();
     setState(() {
       //used to rebuild our widget
@@ -48,7 +50,8 @@ class _ChatsState extends State<Chats> {
             new Container(
               margin: const EdgeInsets.symmetric(horizontal: 8.0),
               child: new IconButton(
-                icon: new Icon(Icons.send, color: Color.fromRGBO(19, 46, 99, 10)),
+                icon:
+                    new Icon(Icons.send, color: Color.fromRGBO(19, 46, 99, 10)),
                 onPressed: () => _handleSubmit(textEditingController.text),
               ),
             )
@@ -57,6 +60,7 @@ class _ChatsState extends State<Chats> {
       ),
     );
   }
+
   Future getData() async {
     await new Future.delayed(const Duration(seconds: 1));
     setState(() {});
@@ -72,58 +76,60 @@ class _ChatsState extends State<Chats> {
   @override
   Widget build(BuildContext context) {
     getData();
-    return new Column(
-      children: <Widget>[
-        new Flexible(
-          child:
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-          Bubble(
-          message: 'Hi there, this is a message',
-            time: '12:00',
-            delivered: true,
-            isMe: false,
-          ),],),
-          /*new ListView.builder(
-            padding: new EdgeInsets.all(8.0),
-            reverse: true,
-            itemBuilder: (_, int index) => _messages[index],
-            itemCount: _messages.length,
-          ),*/
+    Future<bool> _onBackPressed() {
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => MainApplication()));
+    }
+
+    return new WillPopScope(
+      onWillPop: _onBackPressed,
+      child: new Scaffold(
+        appBar: AppBar(
+          title: Text(currentChat),
+          backgroundColor: Color.fromRGBO(19, 46, 99, 10),
         ),
-        new Divider(
-          height: 1.0,
+        body: new Column(
+          children: <Widget>[
+            new Flexible(
+              child: new ListView.builder(
+                padding: new EdgeInsets.all(8.0),
+                reverse: true,
+                itemBuilder: (_, int index) => _messages[index],
+                itemCount: _messages.length,
+              ),
+            ),
+            new Divider(
+              height: 1.0,
+            ),
+            new Container(
+              decoration: new BoxDecoration(
+                color: Theme.of(context).cardColor,
+              ),
+              child: _textComposerWidget(),
+            )
+          ],
         ),
-        new Container(
-          decoration: new BoxDecoration(
-            color: Theme.of(context).cardColor,
-          ),
-          child: _textComposerWidget(),
-        )
-      ],
+      ),
     );
   }
 }
 
-void sendMessage()
-{
-DBRef.child('Messagescount')
-.child('count')
-.once()
-    .then((DataSnapshot dataSnapShot) {
-currentMessageId = dataSnapShot.value;
-currentMessageIdString = "$currentMessageId";
-print(currentMessageId);
-});
-DBRef.child('MessagesDetails').child(currentMessageIdString).set({
-"MessageDescription": currentText,
-"EmployeeEmail": mainEmployee.employeeEmail,
-"Status":"User"
-});
-nextMessageId = currentMessageId + 1;
-DBRef.child('Messagescount').set({'count': nextMessageId});
-
+void sendMessage() {
+  DBRef.child('Messagescount')
+      .child('count')
+      .once()
+      .then((DataSnapshot dataSnapShot) {
+    currentMessageId = dataSnapShot.value;
+    currentMessageIdString = "$currentMessageId";
+    print(currentMessageId);
+  });
+  DBRef.child('MessagesDetails').child(currentMessageIdString).set({
+    "MessageDescription": currentText,
+    "EmployeeEmail": mainEmployee.employeeEmail,
+    "Status": "User"
+  });
+  nextMessageId = currentMessageId + 1;
+  DBRef.child('Messagescount').set({'count': nextMessageId});
 }
 
 void getChatMessages() {
@@ -132,7 +138,7 @@ void getChatMessages() {
       .once()
       .then((DataSnapshot dataSnapShot) {
     currentMessageId = dataSnapShot.value;
-    print("ID"+currentMessageId.toString());
+    print("ID" + currentMessageId.toString());
   });
 
   DBRef.child('MessagesDetails').once().then((DataSnapshot dataSnapShot) {
@@ -140,8 +146,7 @@ void getChatMessages() {
     print(dataSnapShot.value[1]["MessageDescription"]);
     int count = 0;
     for (int i = 1; i < currentMessageId; ++i) {
-      if (dataSnapShot.value[i]["EmployeeEmail"] ==
-          mainEmployee.employeeEmail) {
+      if (dataSnapShot.value[i]["EmployeeEmail"] == currentChat) {
         ChatMessage chatMessage;
         if (dataSnapShot.value[i]["Status"] == "Manager")
           chatMessage = new ChatMessage(

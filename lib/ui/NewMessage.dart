@@ -13,6 +13,7 @@ import 'package:path/path.dart' as Path;
 
 import '../main.dart';
 import 'MainApp.dart';
+import 'SignIn.dart';
 
 class NewMessage extends StatefulWidget {
   @override
@@ -34,19 +35,32 @@ class _NewMessage extends State<NewMessage>
   final FocusNode myFocusNodeMessageDescription = FocusNode();
 
   TextEditingController EmployeeEmailController = new TextEditingController();
-  TextEditingController MessageDescriptionController =  new TextEditingController();
+  TextEditingController MessageDescriptionController =
+      new TextEditingController();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  List<DropdownMenuItem<String>> listDrop = [];
 
+  List<String> drop = [
+    'Send to specific Employee',
+    'Send to all Employees',
+  ];
+  String selected = null;
 
-
+  void loadData() {
+    listDrop = [];
+    listDrop = drop
+        .map((val) => new DropdownMenuItem(
+              child: new Text(val),
+              value: val,
+            ))
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    Future sendMessage(BuildContext context) async {
-      final DBRef = FirebaseDatabase.instance.reference();
-
+    loadData();
+    Future senddata(BuildContext context, String email) async {
       DBRef.child('Messagescount')
           .child('count')
           .once()
@@ -57,13 +71,53 @@ class _NewMessage extends State<NewMessage>
       });
       DBRef.child('MessagesDetails').child(currentMessageIdString).set({
         "MessageDescription": MessageDescriptionController.text,
-        "EmployeeEmail": EmployeeEmailController.text,
-        "Status":"Manager"
+        "EmployeeEmail": email,
+        "Status": "Manager"
       });
       nextMessageId = currentMessageId + 1;
       DBRef.child('Messagescount').set({'count': nextMessageId});
+    }
 
-      showInSnackBar('New Message uploaded successfully !!');
+    Future sendMessage(BuildContext context) async {
+      if (selected == 'Send to specific Employee') {
+        DBRef.child('Messagescount')
+            .child('count')
+            .once()
+            .then((DataSnapshot dataSnapShot) {
+          currentMessageId = dataSnapShot.value;
+          currentMessageIdString = "$currentMessageId";
+          print(currentMessageId);
+        });
+        DBRef.child('MessagesDetails').child(currentMessageIdString).set({
+          "MessageDescription": MessageDescriptionController.text,
+          "EmployeeEmail": EmployeeEmailController.text,
+          "Status": "Manager"
+        });
+        nextMessageId = currentMessageId + 1;
+        DBRef.child('Messagescount').set({'count': nextMessageId});
+
+        showInSnackBar('New Message uploaded successfully !!');
+      } else {
+        final url =
+            'https://employees-benifits-app.firebaseio.com/employees.json';
+        final httpClient = new Client();
+        var response = await httpClient.get(url);
+
+        Map employees = jsonCodec.decode(response.body);
+        List<dynamic> emps = employees.values.toList();
+
+        //TRIALS for debugging
+        print(emps[0].employeeEmail + '\n' + emps[0].employeePassword);
+        showInSnackBar('Wait till finish');
+        //Compare the entered email & pass with db
+        for (int i = 0; i < emps.length; i++)
+          if (emps[i].employeeEmail != mainEmployee.employeeEmail &&
+              emps[i].employeeApprovalStatus == true) {
+            await new Future.delayed(const Duration(seconds: 1));
+            await senddata(context, emps[i].employeeEmail);
+          }
+        showInSnackBar('All Messages uploaded successfully !!');
+      }
     }
 
     Future<bool> _onBackPressed() {
@@ -77,6 +131,7 @@ class _NewMessage extends State<NewMessage>
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text('Add new Message'),
+          backgroundColor: Color.fromRGBO(19, 46, 99, 10),
         ),
         body: Center(
           child: SingleChildScrollView(
@@ -85,114 +140,116 @@ class _NewMessage extends State<NewMessage>
               padding: EdgeInsets.all(24),
               child: Center(
                   child: Column(
-                    children: <Widget>[
-                      TextField(
-                        autofocus: false,
-                        focusNode: myFocusNodeEmployeeEmail,
-                        controller: EmployeeEmailController,
-                        keyboardType: TextInputType.multiline,
-                        style: TextStyle(
-                            fontFamily: "WorkSansSemiBold",
-                            fontSize: 22.0,
-                            color: Color.fromRGBO(19, 46, 99, 10)),
-                        maxLines: 1,
-                        decoration: InputDecoration(
-                            labelText: "Employee Email",
-                            hintText: "Enter Employee Email",
-                            alignLabelWithHint: true,
-                            labelStyle: TextStyle(
-                              color: Color.fromRGBO(48, 51, 86, 10),
-                              fontSize: 16,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(4)),
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Color.fromRGBO(19, 46, 99, 10),
-                                    style: BorderStyle.solid))),
-                      ),
-                      SizedBox(
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height / 30,
-                      ),
-                      TextField(
-                        autofocus: false,
-                        focusNode: myFocusNodeMessageDescription,
-                        controller: MessageDescriptionController,
-                        keyboardType: TextInputType.multiline,
-                        style: TextStyle(
-                            fontFamily: "WorkSansSemiBold",
-                            fontSize: 22.0,
-                            color: Color.fromRGBO(19, 46, 99, 10)),
-                        maxLines: 5,
-                        decoration: InputDecoration(
-                            labelText: "Your message",
-                            hintText: "Enter message",
-                            alignLabelWithHint: true,
-                            labelStyle: TextStyle(
-                              color: Color.fromRGBO(48, 51, 86, 10),
-                              fontSize: 16,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(4)),
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Color.fromRGBO(19, 46, 99, 10),
-                                    style: BorderStyle.solid))),
-                      ),
-                      SizedBox(
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height / 25,
-                      ),
-                      SizedBox(
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height / 500,
-                      ),
-                      Center(
-                        child: Row(
-                          children: <Widget>[
-                            MaterialButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              highlightColor: Colors.black,
-                              splashColor: Theme.Colors.loginGradientStart,
-                              color: Color.fromRGBO(19, 46, 99, 10),
-                              minWidth: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width / 2.5,
-                              height: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height / 30,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  "Send message",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontFamily: "WorkSansBold"),
-                                ),
-                              ),
-                              onPressed: () {
-                                sendMessage(context);
-                              },
-                            ),
-                          ],
+                children: <Widget>[
+                  Container(
+                      width: 300.0,
+                      child: DropdownButtonHideUnderline(
+                        child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton(
+                            value: selected,
+                            items: listDrop,
+                            hint: new Text('Send to'),
+                            onChanged: (value) {
+                              selected = value;
+                              setState(() {});
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  )),
+                      )),
+                  (selected == 'Send to specific Employee')
+                      ? TextField(
+                          autofocus: false,
+                          focusNode: myFocusNodeEmployeeEmail,
+                          controller: EmployeeEmailController,
+                          keyboardType: TextInputType.multiline,
+                          style: TextStyle(
+                              fontFamily: "WorkSansSemiBold",
+                              fontSize: 22.0,
+                              color: Color.fromRGBO(19, 46, 99, 10)),
+                          maxLines: 1,
+                          decoration: InputDecoration(
+                              labelText: "Employee Email",
+                              hintText: "Enter Employee Email",
+                              alignLabelWithHint: true,
+                              labelStyle: TextStyle(
+                                color: Color.fromRGBO(48, 51, 86, 10),
+                                fontSize: 16,
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(4)),
+                                  borderSide: BorderSide(
+                                      width: 1,
+                                      color: Color.fromRGBO(19, 46, 99, 10),
+                                      style: BorderStyle.solid))),
+                        )
+                      : Text(''),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 30,
+                  ),
+                  TextField(
+                    autofocus: false,
+                    focusNode: myFocusNodeMessageDescription,
+                    controller: MessageDescriptionController,
+                    keyboardType: TextInputType.multiline,
+                    style: TextStyle(
+                        fontFamily: "WorkSansSemiBold",
+                        fontSize: 22.0,
+                        color: Color.fromRGBO(19, 46, 99, 10)),
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                        labelText: "Your message",
+                        hintText: "Enter message",
+                        alignLabelWithHint: true,
+                        labelStyle: TextStyle(
+                          color: Color.fromRGBO(48, 51, 86, 10),
+                          fontSize: 16,
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: Color.fromRGBO(19, 46, 99, 10),
+                                style: BorderStyle.solid))),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 25,
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 500,
+                  ),
+                  Center(
+                    child: Row(
+                      children: <Widget>[
+                        MaterialButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          highlightColor: Colors.black,
+                          splashColor: Theme.Colors.loginGradientStart,
+                          color: Color.fromRGBO(19, 46, 99, 10),
+                          minWidth: MediaQuery.of(context).size.width / 2.5,
+                          height: MediaQuery.of(context).size.height / 30,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              "Send message",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontFamily: "WorkSansBold"),
+                            ),
+                          ),
+                          onPressed: () {
+                            sendMessage(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
             ),
           ),
         ),

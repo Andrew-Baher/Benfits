@@ -31,6 +31,7 @@ String currentMessageIdString;
 String mainCurrentBenefitImage;
 String mainCurrentBenefitDescription;
 String mainCurrentBenefitTitle;
+String currentChat;
 final DBRef = FirebaseDatabase.instance.reference();
 final DBRef2 = FirebaseDatabase.instance.reference();
 final DBRef3 = FirebaseDatabase.instance.reference();
