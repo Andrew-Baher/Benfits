@@ -14,7 +14,7 @@ import 'package:mailer/smtp_server/gmail.dart';
 import 'AddQuetionToSurvey.dart';
 import 'AddSurvey.dart';
 import 'SignIn.dart';
-
+List<String> Control = List<String>.generate(10000, (i) => "");
 class AddQuetionsToSurvey extends StatefulWidget {
   String surveyTitle;
 
@@ -122,25 +122,35 @@ class _AddQuetionsToSurveyState extends State<AddQuetionsToSurvey>
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  itemExtent: MediaQuery.of(context).size.height / 7,
+                  //itemExtent: MediaQuery.of(context).size.height / 4,
                   itemCount: questions.length,
                   itemBuilder: (context, index) {
                     return Container(
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                        //mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
                             questions[index].questionTitle,
                             textAlign: TextAlign.left,
                             style: TextStyle(
+                              color: Colors.red,
+                                fontWeight: FontWeight.bold,
                                 fontSize:
-                                    MediaQuery.of(context).size.width / 30),
+                                    MediaQuery.of(context).size.width / 15),
+
+                          ),
+                          SizedBox(
+                            height: MediaQuery
+                                .of(context)
+                                .size
+                                .height / 40,
                           ),
                           (!questions[index].questionType)
                               ? TextField(
                                   autofocus: false,
                                   keyboardType: TextInputType.multiline,
-                                  maxLines: 3,
+                                  maxLines: 5,
                                   style: TextStyle(
                                     fontFamily: "WorkSansSemiBold",
                                     color: Color.fromRGBO(19, 46, 99, 10),
@@ -148,8 +158,8 @@ class _AddQuetionsToSurveyState extends State<AddQuetionsToSurvey>
                                         MediaQuery.of(context).size.width / 35,
                                   ),
                                   decoration: InputDecoration(
-                                      labelText: "Benefit Description",
-                                      hintText: "Benefit Description",
+                                      labelText: "Answer the question",
+                                      hintText: "Answer the question",
                                       alignLabelWithHint: true,
                                       labelStyle: TextStyle(
                                         color: Color.fromRGBO(48, 51, 86, 10),
@@ -163,16 +173,20 @@ class _AddQuetionsToSurveyState extends State<AddQuetionsToSurvey>
                                               color: Color.fromRGBO(
                                                   19, 46, 99, 10),
                                               style: BorderStyle.solid))))
-                              : RadioListTile<int>(
-                                  value: index,
-                                  groupValue: _selectedChoiceIndex,
-                                  title: new Text(countries[index]),
-                                  onChanged: (int value) {
-                                    setState(() {
-                                      _selectedChoiceIndex = value;
-                                    });
-                                  },
-                                )
+                              : Column (
+                            children: questions[index].questionChoice
+                                .map((t) => RadioListTile(
+                              title: Text("$t"),
+                              value: t,
+                              groupValue: Control[index],
+                              onChanged: (val) {
+                                setState(() {
+                                  Control[index] = val;
+                                });
+                              },
+                            ))
+                                .toList(),
+                          ),
                         ],
                       ),
                     );
