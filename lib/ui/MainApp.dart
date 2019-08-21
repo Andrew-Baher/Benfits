@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
+import 'AddSurvey.dart';
 import 'AppNavigation.dart';
 import 'CurrentCategory.dart';
 import 'NewBenefit.dart';
@@ -106,6 +107,11 @@ class MainApplicationState extends State<MainApplication> {
       Navigator.of(context).pop();
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => new PendingRequests()));
+    }
+    else if (index == 4) {
+      Navigator.of(context).pop();
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new AddSurvey()));
     }
   }
 }

@@ -418,7 +418,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
           'Username: ${employee.employeeEmail}\n'
           'Password: ${employee.employeePassword}\n\n'
           'Thank you,\n\n'
-          'Regards\n\n'
+          'Regards,\n\n'
           'Evapharma H.R.';
     //..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
 
@@ -464,7 +464,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
           'We are very sorry, your signup request has been rejected.\n\n'
           'Kindly, please contact the benefits team-HR department.\n\n'
           'Thank you,\n\n'
-          'Regards\n\n'
+          'Regards,\n\n'
           'Evapharma H.R.';
     //..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
 

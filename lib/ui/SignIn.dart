@@ -20,7 +20,6 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   //Controllers
@@ -50,7 +49,9 @@ class _SignInState extends State<SignIn> {
       controller: loginEmailController,
       autofocus: false,
       style: TextStyle(
-          fontFamily: "WorkSansSemiBold", fontSize: 24.0, color: Color.fromRGBO(19, 46, 99, 10)),
+          fontFamily: "WorkSansSemiBold",
+          fontSize: 24.0,
+          color: Color.fromRGBO(19, 46, 99, 10)),
       decoration: InputDecoration(
         hintText: 'Email',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -63,7 +64,9 @@ class _SignInState extends State<SignIn> {
       obscureText: true,
       controller: loginPasswordController,
       style: TextStyle(
-          fontFamily: "WorkSansSemiBold", fontSize: 24.0, color: Color.fromRGBO(19, 46, 99, 10)),
+          fontFamily: "WorkSansSemiBold",
+          fontSize: 24.0,
+          color: Color.fromRGBO(19, 46, 99, 10)),
       decoration: InputDecoration(
         hintText: 'Password',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -81,7 +84,7 @@ class _SignInState extends State<SignIn> {
         padding: EdgeInsets.all(12),
         color: Color.fromRGBO(19, 46, 99, 10),
         child:
-        Text('Log In', style: TextStyle(color: Colors.white, fontSize: 24)),
+            Text('Log In', style: TextStyle(color: Colors.white, fontSize: 24)),
       ),
     );
 
@@ -90,8 +93,9 @@ class _SignInState extends State<SignIn> {
         'Forgot password?',
         style: TextStyle(color: Color.fromRGBO(19, 46, 99, 10), fontSize: 18),
       ),
-      onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ForgetPassword()));
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ForgetPassword()));
       },
     );
 
@@ -100,48 +104,47 @@ class _SignInState extends State<SignIn> {
         'Don\'t\ have an account',
         style: TextStyle(color: Color.fromRGBO(19, 46, 99, 10), fontSize: 18),
       ),
-      onPressed: () =>
-      {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()))
+      onPressed: () => {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SignUp()))
       },
     );
-
 
     return Padding(
       padding: const EdgeInsets.all(1.0),
       child: new WillPopScope(
-      onWillPop: _onBackPressed,
-      child: new Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: Colors.white,
-        body: Center(
-          child: ListView(
-            shrinkWrap: true,
-            padding: EdgeInsets.only(left: 24.0, right: 24.0),
-            children: <Widget>[
-              logo,
-              SizedBox(height: MediaQuery.of(context).size.height / 25),
-              email,
-              SizedBox(height: MediaQuery.of(context).size.height / 50),
-              password,
-              SizedBox(height: MediaQuery.of(context).size.height / 30),
-              loginButton,
-              forgotLabel,
-              dontHaveAnAccount,
-            ],
+        onWillPop: _onBackPressed,
+        child: new Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: Colors.white,
+          body: Center(
+            child: ListView(
+              shrinkWrap: true,
+              padding: EdgeInsets.only(left: 24.0, right: 24.0),
+              children: <Widget>[
+                logo,
+                SizedBox(height: MediaQuery.of(context).size.height / 25),
+                email,
+                SizedBox(height: MediaQuery.of(context).size.height / 50),
+                password,
+                SizedBox(height: MediaQuery.of(context).size.height / 30),
+                loginButton,
+                forgotLabel,
+                dontHaveAnAccount,
+              ],
+            ),
           ),
         ),
-
       ),
-    ),);
+    );
   }
 
   void _onSignInButtonPress() async {
-    if(loginEmailController.text == '' || loginPasswordController.text == ''){
+    if (loginEmailController.text == '' || loginPasswordController.text == '') {
       showInSnackBar('Please enter your email and password !');
-    }
-    else{
-      final url = 'https://employees-benifits-app.firebaseio.com/employees.json';
+    } else {
+      final url =
+          'https://employees-benifits-app.firebaseio.com/employees.json';
       final httpClient = new Client();
       var response = await httpClient.get(url);
 
@@ -158,19 +161,15 @@ class _SignInState extends State<SignIn> {
             emps[i].employeeApprovalStatus == true) {
           mainEmployee = emps[i];
           mainEmployeeCompanyID = mainEmployee.employeeCompanyID.toString();
-          Navigator.push
-            (context,
-              new MaterialPageRoute(builder:
-                  (context) => mainAPP));
-        }
-        else
+          Navigator.push(
+              context, new MaterialPageRoute(builder: (context) => mainAPP));
+        } else
           showInSnackBar('Incorrect email or password ! Please try again.');
 
       //TRIALS for debugging
       print(emps[0].employeeFirstName);
       print("Employees length: " + employees.length.toString());
     }
-
   }
 
   void showInSnackBar(String value) {
@@ -189,7 +188,6 @@ class _SignInState extends State<SignIn> {
       duration: Duration(seconds: 3),
     ));
   }
-
 }
 
 _reviver(Object key, Object value) {

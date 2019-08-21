@@ -155,6 +155,28 @@ class _MyAppState3 extends State<More> {
                 ),
               ), // Appear if user is admin
 
+              Visibility(
+                visible: hasAuth,
+                child: GestureDetector(
+                  onTap: () {
+                    mainAppState.openAnotherTab(4);
+                  },
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.announcement,
+                      size: MediaQuery.of(context).size.width / 16,
+                    ),
+
+                    title: Text(
+                      'Add a survey',
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ), // Appear if user is admin
+
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignIn()));
