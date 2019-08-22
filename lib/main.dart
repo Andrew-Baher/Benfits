@@ -26,8 +26,11 @@ int currentBenefitId;
 int currentMessageId;
 int nextBenefitId;
 int nextMessageId;
+int currentComplaintIndex;
+int nextComplaintIndex;
 String currentBenefitIdString;
 String currentMessageIdString;
+String currentComplaintIndexString;
 String mainCurrentBenefitImage;
 String mainCurrentBenefitDescription;
 String mainCurrentBenefitTitle;
@@ -35,6 +38,7 @@ String currentChat;
 final DBRef = FirebaseDatabase.instance.reference();
 final DBRef2 = FirebaseDatabase.instance.reference();
 final DBRef3 = FirebaseDatabase.instance.reference();
+final DBRef5 = FirebaseDatabase.instance.reference();
 
 
 void main() => runApp(new MyApp());
@@ -46,6 +50,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    DBRef5.child('ComplaintsCount')
+        .child('count')
+        .once()
+        .then((DataSnapshot dataSnapShot) {
+    });
     DBRef.child('Messagescount')
         .child('count')
         .once()

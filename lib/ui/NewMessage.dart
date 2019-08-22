@@ -269,7 +269,7 @@ class _NewMessage extends State<NewMessage>
             fontSize: 16.0,
             fontFamily: "WorkSansSemiBold"),
       ),
-      backgroundColor:  Color.fromRGBO(19, 46, 99, 10),
+      backgroundColor: Color.fromRGBO(19, 46, 99, 10),
       duration: Duration(seconds: 3),
     ));
   }

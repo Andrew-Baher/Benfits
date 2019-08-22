@@ -57,7 +57,14 @@ class _MyAppState3 extends State<More> {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  if(mainEmployee.employeeAuthority.toString() == "User"){
+                    mainAppState.openAnotherTab(8);
+                  }
+                  else {
+                    mainAppState.openAnotherTab(9);
+                  }
+                },
                 child: ListTile(
                   leading: Icon(
                     Icons.priority_high,

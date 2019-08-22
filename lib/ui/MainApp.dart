@@ -8,7 +8,9 @@ import 'AppNavigation.dart';
 import 'CurrentCategory.dart';
 import 'EditProfile.dart';
 import 'ManagerChat.dart';
+import 'ManagerComplaints.dart';
 import 'NewBenefit.dart';
+import 'NewComplaint.dart';
 import 'NewMessage.dart';
 import 'PendingRequests.dart';
 import 'SignIn.dart';
@@ -130,6 +132,16 @@ class MainApplicationState extends State<MainApplication> {
       Navigator.of(context).pop();
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => new ManagerChat()));
+    }
+    else if (index == 8) {
+      Navigator.of(context).pop();
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new NewComplaint()));
+    }
+    else if (index == 9) {
+      Navigator.of(context).pop();
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new ManagerComplaints()));
     }
   }
 }
