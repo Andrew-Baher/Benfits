@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -8,6 +9,7 @@ import 'PendingRequests.dart';
 import 'SignIn.dart';
 
 bool hasAuth;
+bool IsSurvey=false;
 
 class More extends StatefulWidget {
   @override
@@ -18,8 +20,14 @@ class More extends StatefulWidget {
 
 class _MyAppState3 extends State<More> {
 
+  Future getData() async {
+    await new Future.delayed(const Duration(seconds: 0));
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    getData();
     return MaterialApp(
       home: Scaffold(
           body: ListView(
@@ -95,6 +103,28 @@ class _MyAppState3 extends State<More> {
                   ),
                 ),
               ),
+              Visibility(
+                visible: IsSurvey,
+                child: GestureDetector(
+                  onTap: () {
+                    mainAppState.openAnotherTab(7);
+                  },
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.assignment,
+                      size: MediaQuery.of(context).size.width / 16,
+                    ),
+
+                    title: Text(
+                      'Make a survey',
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ), // Appear if user is admin
+
               Visibility(
                 visible: hasAuth,
                 child: GestureDetector(
@@ -208,6 +238,12 @@ class _MyAppState3 extends State<More> {
   @override
   void initState() {
     super.initState();
+    DBRef.child('surveydetails')
+        .child('IsSurvey')
+        .once()
+        .then((DataSnapshot dataSnapShot) {
+      IsSurvey = dataSnapShot.value;
+    });
     hasAuth = false;
     if(mainEmployee.employeeAuthority == "Manager")
       hasAuth = true;

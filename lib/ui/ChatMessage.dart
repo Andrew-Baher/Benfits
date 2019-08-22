@@ -30,7 +30,7 @@ class ChatMessage extends StatelessWidget {
                   children: <Widget>[
                     new Text((state) ? _hr : _you,
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width / 40,
+                          fontSize: MediaQuery.of(context).size.width / 20,
                           decoration: TextDecoration.none,
                           color: Colors.red,
                         )),
@@ -39,7 +39,7 @@ class ChatMessage extends StatelessWidget {
                       child: new Text(
                         text,
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width / 50,
+                          fontSize: MediaQuery.of(context).size.width / 25,
                           decoration: TextDecoration.none,
                           color: Colors.blueGrey,
                         ),
@@ -80,7 +80,7 @@ class ChatMessage extends StatelessWidget {
                   children: <Widget>[
                     new Text((state) ? _hr : _you,
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width / 40,
+                          fontSize: MediaQuery.of(context).size.width / 20,
                           decoration: TextDecoration.none,
                           color: Colors.black,
                         )),
@@ -88,7 +88,7 @@ class ChatMessage extends StatelessWidget {
                       margin: const EdgeInsets.only(top: 5.0),
                       child: new Text(text,
                           style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width / 50,
+                            fontSize: MediaQuery.of(context).size.width / 25,
                             decoration: TextDecoration.none,
                             color: Colors.blueGrey,
                           )),
