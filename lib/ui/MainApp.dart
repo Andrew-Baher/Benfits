@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
+import 'AboutUs.dart';
 import 'AddSurvey.dart';
 import 'AppNavigation.dart';
 import 'CurrentCategory.dart';
 import 'EditProfile.dart';
+import 'MakeSurvey.dart';
 import 'ManagerChat.dart';
 import 'ManagerComplaints.dart';
 import 'NewBenefit.dart';
@@ -142,6 +144,16 @@ class MainApplicationState extends State<MainApplication> {
       Navigator.of(context).pop();
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => new ManagerComplaints()));
+    }
+    else if (index == 10) {
+      Navigator.of(context).pop();
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new MakeSurvey()));
+    }
+    else if (index == 11) {
+      Navigator.of(context).pop();
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new AboutUs()));
     }
   }
 }
