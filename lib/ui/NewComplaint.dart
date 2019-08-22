@@ -2,8 +2,11 @@ import 'package:employees_benefits/style/theme.dart' as Theme;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server/gmail.dart';
 
 import '../main.dart';
+import 'More.dart';
 
 class NewComplaint extends StatefulWidget {
   @override
@@ -48,7 +51,78 @@ class _NewComplaint extends State<NewComplaint>
         nextComplaintIndex = currentComplaintIndex + 1;
         DBRef5.child('ComplaintsCount').set({'count': nextComplaintIndex});
         showInSnackBar('Your complaint is sent successfully !');
+
+        //Sending email to HR Manager
+        bool registered = false;
+        String username = 'bbbba7785@gmail.com';
+        String password = 'ah67@#nm12';
+
+        final smtpServer = gmail(username, password);
+        String employeeFullName = mainEmployee.employeeFirstName + ' ' +
+            mainEmployee.employeeLastName;
+
+        final message = Message()
+          ..from = Address(mainEmployee.employeeEmail)
+          ..recipients.add('bbbba7785@gmail.com')
+        //..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
+        //..bccRecipients.add(Address('bccAddress@example.com'))
+          ..subject = 'Complaint from ' + employeeFullName
+          ..text = 'Dear Benefits Manager,'
+              '\n\n'
+              'You have a complaint from ' + employeeFullName + '.' + '\n\n'
+              'The details of the complaint are as follows:\n\n'
+              '${ComplaintDetailsController.text}\n\n'
+              'Thankyou,\n\n'
+              'Regards,\n\n'
+              '$employeeFullName';
+        try {
+          final sendReport = await send(message, smtpServer);
+          showDialog(
+            context: context,
+            // ignore: deprecated_member_use
+            child: new AlertDialog(
+              title: new Text("Done"),
+              content:
+              new Text("Your complaint is sent successfully to benefits manager!"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => More()));
+                  },
+                ),
+              ],
+            ),
+          );
+        } catch (e) {
+          showDialog(
+            context: context,
+            // ignore: deprecated_member_use
+            child: new AlertDialog(
+              title: new Text("Complaint sending Failed !"),
+              content: new Text(
+                  "There is an error in sending an Email, try again later"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => More()));
+                  },
+                ),
+              ],
+            ),
+          );
+          print('Message not sent.');
+          for (var p in e.problems) {
+            print('Problem: ${p.code}: ${p.msg}');
+          }
+        }
       }
+
     }
 
     return new WillPopScope(
