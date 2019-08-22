@@ -14,7 +14,9 @@ import 'package:mailer/smtp_server/gmail.dart';
 import 'AddQuetionToSurvey.dart';
 import 'AddSurvey.dart';
 import 'SignIn.dart';
+
 List<String> Control = List<String>.generate(10000, (i) => "");
+
 class AddQuetionsToSurvey extends StatefulWidget {
   String surveyTitle;
 
@@ -117,82 +119,103 @@ class _AddQuetionsToSurveyState extends State<AddQuetionsToSurvey>
           padding: const EdgeInsets.all(32.0),
           child: Column(
             children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  //itemExtent: MediaQuery.of(context).size.height / 4,
-                  itemCount: questions.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      child: Column(
-                        //mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            questions[index].questionTitle,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
+              ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                //itemExtent: MediaQuery.of(context).size.height / 4,
+                itemCount: questions.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    child: Column(
+                      //mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          questions[index].questionTitle,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
                               color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize:
-                                    MediaQuery.of(context).size.width / 15),
-
-                          ),
-                          SizedBox(
-                            height: MediaQuery
-                                .of(context)
-                                .size
-                                .height / 40,
-                          ),
-                          (!questions[index].questionType)
-                              ? TextField(
-                                  autofocus: false,
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: 5,
-                                  style: TextStyle(
-                                    fontFamily: "WorkSansSemiBold",
-                                    color: Color.fromRGBO(19, 46, 99, 10),
-                                    fontSize:
-                                        MediaQuery.of(context).size.width / 35,
-                                  ),
-                                  decoration: InputDecoration(
-                                      labelText: "Answer the question",
-                                      hintText: "Answer the question",
-                                      alignLabelWithHint: true,
-                                      labelStyle: TextStyle(
-                                        color: Color.fromRGBO(48, 51, 86, 10),
-                                        fontSize: 16,
-                                      ),
-                                      border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4)),
-                                          borderSide: BorderSide(
-                                              width: 1,
-                                              color: Color.fromRGBO(
-                                                  19, 46, 99, 10),
-                                              style: BorderStyle.solid))))
-                              : Column (
-                            children: questions[index].questionChoice
-                                .map((t) => RadioListTile(
-                              title: Text("$t"),
-                              value: t,
-                              groupValue: Control[index],
-                              onChanged: (val) {
-                                setState(() {
-                                  Control[index] = val;
-                                });
-                              },
-                            ))
-                                .toList(),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                              fontWeight: FontWeight.bold,
+                              fontSize: MediaQuery.of(context).size.width / 15),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 40,
+                        ),
+                        (!questions[index].questionType)
+                            ? TextField(
+                            autofocus: false,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: 5,
+                            style: TextStyle(
+                              fontFamily: "WorkSansSemiBold",
+                              color: Color.fromRGBO(19, 46, 99, 10),
+                              fontSize:
+                              MediaQuery.of(context).size.width / 35,
+                            ),
+                            decoration: InputDecoration(
+                                labelText: "Answer the question",
+                                hintText: "Answer the question",
+                                alignLabelWithHint: true,
+                                labelStyle: TextStyle(
+                                  color: Color.fromRGBO(48, 51, 86, 10),
+                                  fontSize: 16,
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(4)),
+                                    borderSide: BorderSide(
+                                        width: 1,
+                                        color:
+                                        Color.fromRGBO(19, 46, 99, 10),
+                                        style: BorderStyle.solid))))
+                            : Column(
+                          children: questions[index]
+                              .questionChoice
+                              .map((t) => RadioListTile(
+                            title: Text("$t"),
+                            value: t,
+                            groupValue: Control[index],
+                            onChanged: (val) {
+                              setState(() {
+                                Control[index] = val;
+                              });
+                            },
+                          ))
+                              .toList(),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 50,
+              ),
+              (questions.length >= 2 )?
+              MaterialButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                highlightColor: Colors.black,
+                splashColor: Theme.Colors.loginGradientStart,
+                color: Color.fromRGBO(19, 46, 99, 10),
+                minWidth: MediaQuery.of(context).size.width / 2.5,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "Save",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: MediaQuery.of(context).size.width / 20,
+                        fontFamily: "WorkSansBold"),
+                  ),
+                ),
+                onPressed: () {
+                  print('ay 7aga');
+                },
+              ) : (questions.length == 1 )?
+              Text('You have to add at least 2 questions .. !') :
+              Text('Add questions here ... ')
             ],
           ),
         ),
