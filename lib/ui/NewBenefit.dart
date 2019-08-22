@@ -378,7 +378,7 @@ class _NewBenefit extends State<NewBenefit>
             fontSize: 16.0,
             fontFamily: "WorkSansSemiBold"),
       ),
-      backgroundColor: Theme.Colors.loginGradientStart,
+      backgroundColor:  Color.fromRGBO(19, 46, 99, 10),
       duration: Duration(seconds: 3),
     ));
   }

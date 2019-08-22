@@ -496,7 +496,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-            color: Color.fromRGBO(48, 51, 86, 10),
+            color: Colors.white,
             fontSize: 16.0,
             fontFamily: "WorkSansSemiBold"),
       ),
