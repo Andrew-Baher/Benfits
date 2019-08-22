@@ -79,7 +79,10 @@ class _NewMessage extends State<NewMessage>
     }
 
     Future sendMessage(BuildContext context) async {
-      if (selected == 'Send to specific Employee') {
+      if(MessageDescriptionController.text == '') {
+        showInSnackBar('Please enter a message body !');
+      }
+      else if (selected == 'Send to specific Employee') {
         DBRef.child('Messagescount')
             .child('count')
             .once()

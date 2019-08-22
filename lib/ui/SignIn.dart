@@ -163,7 +163,11 @@ class _SignInState extends State<SignIn> {
           mainEmployeeCompanyID = mainEmployee.employeeCompanyID.toString();
           Navigator.push(
               context, new MaterialPageRoute(builder: (context) => mainAPP));
-        } else
+        } else if (emps[i].employeeEmail == loginEmailController.text &&
+            emps[i].employeePassword == loginPasswordController.text &&
+            emps[i].employeeApprovalStatus == false)
+          showInSnackBar("You haven't been approved yet !");
+        else
           showInSnackBar('Incorrect email or password ! Please try again.');
 
       //TRIALS for debugging

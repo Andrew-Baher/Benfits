@@ -1,13 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:employees_benefits/models/BenefitDetails.dart';
 import 'package:employees_benefits/style/theme.dart' as Theme;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 
@@ -35,7 +32,7 @@ class _NewBenefit extends State<NewBenefit>
 
   TextEditingController benefitTitleController = new TextEditingController();
   TextEditingController benefitDescriptionController =
-  new TextEditingController();
+      new TextEditingController();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -60,11 +57,10 @@ class _NewBenefit extends State<NewBenefit>
   void loadData() {
     listDrop = [];
     listDrop = drop
-        .map((val) =>
-    new DropdownMenuItem(
-      child: new Text(val),
-      value: val,
-    ))
+        .map((val) => new DropdownMenuItem(
+              child: new Text(val),
+              value: val,
+            ))
         .toList();
   }
 
@@ -88,36 +84,42 @@ class _NewBenefit extends State<NewBenefit>
       });
     }
 
-    Future uploadPic(BuildContext context) async {
-      progressIndicatorVisible = true;
-      setState(() {});
-      String fileName = Path.basename(mainImg.path);
-      StorageReference firebaseStorageRef =
-      FirebaseStorage.instance.ref().child(fileName);
-      StorageUploadTask uploadTask = firebaseStorageRef.putFile(mainImg);
-      var downloadingurl =
-      await (await uploadTask.onComplete).ref.getDownloadURL();
-      url = downloadingurl.toString();
+    Future saveBenefit(BuildContext context) async {
+      if (mainImg == null || selected == null ||
+          benefitTitleController.text == '' ||
+          benefitDescriptionController.text == '') {
+        showInSnackBar('Please fill all fields !');
+      } else {
+        progressIndicatorVisible = true;
+        setState(() {});
+        String fileName = Path.basename(mainImg.path);
+        StorageReference firebaseStorageRef =
+            FirebaseStorage.instance.ref().child(fileName);
+        StorageUploadTask uploadTask = firebaseStorageRef.putFile(mainImg);
+        var downloadingurl =
+            await (await uploadTask.onComplete).ref.getDownloadURL();
+        url = downloadingurl.toString();
 
-      DBRef2.child('Benefitscount')
-          .child('count')
-          .once()
-          .then((DataSnapshot dataSnapShot) {
-        currentBenefitId = dataSnapShot.value;
-        currentBenefitIdString = "$currentBenefitId";
-        print(currentBenefitId);
-      });
-      DBRef2.child('benefitsDetails').child(currentBenefitIdString).set({
-        "benefitDescription": benefitDescriptionController.text,
-        "benefitTitle": benefitTitleController.text,
-        "benefitCategory": selected,
-        "benefitImage": url,
-      });
-      nextBenefitId = currentBenefitId + 1;
-      DBRef2.child('Benefitscount').set({'count': nextBenefitId});
-      progressIndicatorVisible = false;
-      setState(() {});
-      showInSnackBar('New benefit picture uploaded successfully !!');
+        DBRef2.child('Benefitscount')
+            .child('count')
+            .once()
+            .then((DataSnapshot dataSnapShot) {
+          currentBenefitId = dataSnapShot.value;
+          currentBenefitIdString = "$currentBenefitId";
+          print(currentBenefitId);
+        });
+        DBRef2.child('benefitsDetails').child(currentBenefitIdString).set({
+          "benefitDescription": benefitDescriptionController.text,
+          "benefitTitle": benefitTitleController.text,
+          "benefitCategory": selected,
+          "benefitImage": url,
+        });
+        nextBenefitId = currentBenefitId + 1;
+        DBRef2.child('Benefitscount').set({'count': nextBenefitId});
+        progressIndicatorVisible = false;
+        setState(() {});
+        showInSnackBar('New benefit picture uploaded successfully !!');
+      }
     }
 
     Future<bool> _onBackPressed() {
@@ -140,39 +142,30 @@ class _NewBenefit extends State<NewBenefit>
               padding: EdgeInsets.all(24),
               child: Center(
                   child: Column(
-                    children: <Widget>[
-                      Center(
-                        child: Visibility(
-                          visible: progressIndicatorVisible,
-                          child: new CircularProgressIndicator(),
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height / 20,
-                      ),
-                      Center(
-                        child: SizedBox(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
-                          height: MediaQuery
-                              .of(context)
-                              .size
-                              .height / 3,
-                          child: (mainImg != null)
-                              ? Image.file(
-                            mainImg,
-                            fit: BoxFit.fill,
-                          )
-                              : Image.network(
-                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHMTdy8vRGufRwCJ1RerUThoTalVNSd0Q3jDGGQ89DrjUiNZeZNw",
-                            fit: BoxFit.fill,
-                          ),
-                          /*RaisedButton(
+                children: <Widget>[
+                  Center(
+                    child: Visibility(
+                      visible: progressIndicatorVisible,
+                      child: new CircularProgressIndicator(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 20,
+                  ),
+                  Center(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height / 3,
+                      child: (mainImg != null)
+                          ? Image.file(
+                              mainImg,
+                              fit: BoxFit.fill,
+                            )
+                          : Image.network(
+                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHMTdy8vRGufRwCJ1RerUThoTalVNSd0Q3jDGGQ89DrjUiNZeZNw",
+                              fit: BoxFit.fill,
+                            ),
+                      /*RaisedButton(
                           color: Colors.transparent,
                           onPressed: () { //TODO: SetState for raised button with picked image
                             getImage();
@@ -185,180 +178,147 @@ class _NewBenefit extends State<NewBenefit>
                              style: TextStyle(fontSize: 20.0, color: Colors.white),
                         ),
                       ),*/
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 25,
+                  ),
+                  Container(
+                      width: 300.0,
+                      child: DropdownButtonHideUnderline(
+                        child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton(
+                            value: selected,
+                            items: listDrop,
+                            hint: new Text('Select Category of Benefit'),
+                            onChanged: (value) {
+                              selected = value;
+                              setState(() {});
+                            },
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height / 25,
-                      ),
-                      Container(
-                          width: 300.0,
-                          child: DropdownButtonHideUnderline(
-                            child: ButtonTheme(
-                              alignedDropdown: true,
-                              child: DropdownButton(
-                                value: selected,
-                                items: listDrop,
-                                hint: new Text('Select Category of Benefit'),
-                                onChanged: (value) {
-                                  selected = value;
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                          )),
-                      SizedBox(
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height / 30,
-                      ),
-                      TextField(
-                        autofocus: false,
-                        focusNode: myFocusNodeBenefitTitle,
-                        controller: benefitTitleController,
-                        keyboardType: TextInputType.multiline,
-                        style: TextStyle(
-                            fontFamily: "WorkSansSemiBold",
-                            fontSize: 22.0,
-                            color: Color.fromRGBO(19, 46, 99, 10)),
-                        maxLines: 1,
-                        decoration: InputDecoration(
-                            labelText: "Benefit Title",
-                            hintText: "Benefit Title",
-                            alignLabelWithHint: true,
-                            labelStyle: TextStyle(
-                              color: Color.fromRGBO(48, 51, 86, 10),
-                              fontSize: 16,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(4)),
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Color.fromRGBO(19, 46, 99, 10),
-                                    style: BorderStyle.solid))),
-                      ),
-                      SizedBox(
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height / 30,
-                      ),
-                      TextField(
-                        autofocus: false,
-                        focusNode: myFocusNodeBenefitDescription,
-                        controller: benefitDescriptionController,
-                        keyboardType: TextInputType.multiline,
-                        style: TextStyle(
-                            fontFamily: "WorkSansSemiBold",
-                            fontSize: 22.0,
-                            color: Color.fromRGBO(19, 46, 99, 10)),
-                        maxLines: 5,
-                        decoration: InputDecoration(
-                            labelText: "Benefit Description",
-                            hintText: "Benefit Description",
-                            alignLabelWithHint: true,
-                            labelStyle: TextStyle(
-                              color: Color.fromRGBO(48, 51, 86, 10),
-                              fontSize: 16,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(4)),
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Color.fromRGBO(19, 46, 99, 10),
-                                    style: BorderStyle.solid))),
-                      ),
-                      SizedBox(
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height / 25,
-                      ),
-                      SizedBox(
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height / 500,
-                      ),
-                      Center(
-                        child: Row(
-                          children: <Widget>[
-                            MaterialButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              highlightColor: Colors.black,
-                              splashColor: Theme.Colors.loginGradientStart,
-                              color: Color.fromRGBO(19, 46, 99, 10),
-                              minWidth: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width / 2.5,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  "Publish\nBenefit",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: MediaQuery
-                                          .of(context)
-                                          .size
-                                          .width / 20,
-                                      fontFamily: "WorkSansBold"),
-                                ),
-                              ),
-                              onPressed: () {
-                                uploadPic(context);
-                              },
-                            ),
-                            SizedBox(
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width / 15,
-                            ),
-                            MaterialButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              highlightColor: Colors.black,
-                              splashColor: Theme.Colors.loginGradientStart,
-                              color: Color.fromRGBO(19, 46, 99, 10),
-                              minWidth: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width / 2.5,
-                              height: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height / 30,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  "Upload\nPicture",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: MediaQuery
-                                          .of(context)
-                                          .size
-                                          .width / 20,
-                                      fontFamily: "WorkSansBold"),
-                                ),
-                              ),
-                              onPressed: () {
-                                getImage();
-                              },
-                            ),
-                          ],
+                      )),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 30,
+                  ),
+                  TextField(
+                    autofocus: false,
+                    focusNode: myFocusNodeBenefitTitle,
+                    controller: benefitTitleController,
+                    keyboardType: TextInputType.multiline,
+                    style: TextStyle(
+                        fontFamily: "WorkSansSemiBold",
+                        fontSize: 22.0,
+                        color: Color.fromRGBO(19, 46, 99, 10)),
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                        labelText: "Benefit Title",
+                        hintText: "Benefit Title",
+                        alignLabelWithHint: true,
+                        labelStyle: TextStyle(
+                          color: Color.fromRGBO(48, 51, 86, 10),
+                          fontSize: 16,
                         ),
-                      ),
-                    ],
-                  )),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: Color.fromRGBO(19, 46, 99, 10),
+                                style: BorderStyle.solid))),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 30,
+                  ),
+                  TextField(
+                    autofocus: false,
+                    focusNode: myFocusNodeBenefitDescription,
+                    controller: benefitDescriptionController,
+                    keyboardType: TextInputType.multiline,
+                    style: TextStyle(
+                        fontFamily: "WorkSansSemiBold",
+                        fontSize: 22.0,
+                        color: Color.fromRGBO(19, 46, 99, 10)),
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                        labelText: "Benefit Description",
+                        hintText: "Benefit Description",
+                        alignLabelWithHint: true,
+                        labelStyle: TextStyle(
+                          color: Color.fromRGBO(48, 51, 86, 10),
+                          fontSize: 16,
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: Color.fromRGBO(19, 46, 99, 10),
+                                style: BorderStyle.solid))),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 25,
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 500,
+                  ),
+                  Center(
+                    child: Row(
+                      children: <Widget>[
+                        MaterialButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          highlightColor: Colors.black,
+                          splashColor: Theme.Colors.loginGradientStart,
+                          color: Color.fromRGBO(19, 46, 99, 10),
+                          minWidth: MediaQuery.of(context).size.width / 2.5,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              "Publish\nBenefit",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      MediaQuery.of(context).size.width / 20,
+                                  fontFamily: "WorkSansBold"),
+                            ),
+                          ),
+                          onPressed: () {
+                            saveBenefit(context);
+                          },
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 15,
+                        ),
+                        MaterialButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          highlightColor: Colors.black,
+                          splashColor: Theme.Colors.loginGradientStart,
+                          color: Color.fromRGBO(19, 46, 99, 10),
+                          minWidth: MediaQuery.of(context).size.width / 2.5,
+                          height: MediaQuery.of(context).size.height / 30,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              "Upload\nPicture",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      MediaQuery.of(context).size.width / 20,
+                                  fontFamily: "WorkSansBold"),
+                            ),
+                          ),
+                          onPressed: () {
+                            getImage();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
             ),
           ),
         ),
@@ -378,7 +338,7 @@ class _NewBenefit extends State<NewBenefit>
             fontSize: 16.0,
             fontFamily: "WorkSansSemiBold"),
       ),
-      backgroundColor:  Color.fromRGBO(19, 46, 99, 10),
+      backgroundColor: Color.fromRGBO(19, 46, 99, 10),
       duration: Duration(seconds: 3),
     ));
   }

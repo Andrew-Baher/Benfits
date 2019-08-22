@@ -28,20 +28,27 @@ class _NewComplaint extends State<NewComplaint>
   @override
   Widget build(BuildContext context) {
     Future sendComplaint(BuildContext context) async {
-      DBRef5.child('ComplaintsCount')
-          .child('count')
-          .once()
-          .then((DataSnapshot dataSnapShot) {
-        currentComplaintIndex = dataSnapShot.value;
-        currentComplaintIndexString = "$currentComplaintIndex";
-        print(currentComplaintIndex);
-      });
-      DBRef5.child('ComplaintsDetails').child(currentComplaintIndexString).set({
-        "ComplaintDescription": ComplaintDetailsController.text,
-        "EmployeeEmail": mainEmployee.employeeEmail.toString(),
-      });
-      nextComplaintIndex = currentComplaintIndex + 1;
-      DBRef5.child('ComplaintsCount').set({'count': nextComplaintIndex});
+      if (ComplaintDetailsController.text == '') {
+        showInSnackBar('Please fill this field !');
+      } else {
+        DBRef5.child('ComplaintsCount')
+            .child('count')
+            .once()
+            .then((DataSnapshot dataSnapShot) {
+          currentComplaintIndex = dataSnapShot.value;
+          currentComplaintIndexString = "$currentComplaintIndex";
+          print(currentComplaintIndex);
+        });
+        DBRef5.child('ComplaintsDetails')
+            .child(currentComplaintIndexString)
+            .set({
+          "ComplaintDescription": ComplaintDetailsController.text,
+          "EmployeeEmail": mainEmployee.employeeEmail.toString(),
+        });
+        nextComplaintIndex = currentComplaintIndex + 1;
+        DBRef5.child('ComplaintsCount').set({'count': nextComplaintIndex});
+        showInSnackBar('Your complaint is sent successfully !');
+      }
     }
 
     return new WillPopScope(
@@ -113,8 +120,6 @@ class _NewComplaint extends State<NewComplaint>
                           ),
                           onPressed: () {
                             sendComplaint(context);
-                            showInSnackBar(
-                                'Your complaint is sent successfully !');
                           },
                         ),
                       ],
