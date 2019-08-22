@@ -1,18 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:employees_benefits/models/ColorLoader.dart';
 import 'package:employees_benefits/models/Employee.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server/gmail.dart';
 
 import '../main.dart';
 import 'ForgetPassword.dart';
-import 'HomePage.dart';
-import 'MainApp.dart';
 import 'SignUp.dart';
+
+final List<Color> colors = new List<Color>();
+bool colorLoaderVisible;
 
 class SignIn extends StatefulWidget {
   @override
@@ -27,6 +27,16 @@ class _SignInState extends State<SignIn> {
   TextEditingController loginPasswordController = new TextEditingController();
 
   static Employee neededEmployee;
+
+  @override
+  void initState() {
+    super.initState();
+    colors.add(Colors.blue);
+    colors.add(Colors.yellow);
+    colors.add(Colors.blue);
+    colors.add(Colors.yellow);
+    colorLoaderVisible = false;
+  }
 
   Future<bool> _onBackPressed() {
     //TODO: Add message box of exiting app
@@ -122,6 +132,11 @@ class _SignInState extends State<SignIn> {
               shrinkWrap: true,
               padding: EdgeInsets.only(left: 24.0, right: 24.0),
               children: <Widget>[
+                Visibility(
+                  visible: colorLoaderVisible,
+                  child: ColorLoader(
+                      colors: colors, duration: Duration(milliseconds: 3000)),
+                ),
                 logo,
                 SizedBox(height: MediaQuery.of(context).size.height / 25),
                 email,
@@ -140,6 +155,9 @@ class _SignInState extends State<SignIn> {
   }
 
   void _onSignInButtonPress() async {
+    colorLoaderVisible = true;
+    setState(() {
+    });
     if (loginEmailController.text == '' || loginPasswordController.text == '') {
       showInSnackBar('Please enter your email and password !');
     } else {

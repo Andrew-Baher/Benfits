@@ -1,4 +1,5 @@
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:employees_benefits/models/ColorLoader.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import '../main.dart';
 
 List<String> LastImages;
+List<Color> colors = new List<Color>();
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,6 +22,10 @@ class _MyAppState0 extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    colors.add(Colors.blue);
+    colors.add(Colors.yellow);
+    colors.add(Colors.blue);
+    colors.add(Colors.yellow);
     LastImages = new List<String>();
     getLastImages();
   }
@@ -39,17 +45,9 @@ class _MyAppState0 extends State<HomePage> {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height / 2,
             child:(LastImages.length == 0)
-                ? Text(
-              "Loading",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: MediaQuery.of(context).size.width / 15,
-                  fontFamily: "WorkSansBold",
-                  fontWeight: FontWeight.bold),
-            )
+                ? ColorLoader(colors: colors, duration: Duration(milliseconds: 3000))
                 :  Carousel(
               images: [
-                //TODO: Get the 3/4 latest benefits from db
                 Image.network(LastImages[0], fit: BoxFit.fill),
                 Image.network(LastImages[1], fit: BoxFit.fill),
                 Image.network(LastImages[2], fit: BoxFit.fill),
