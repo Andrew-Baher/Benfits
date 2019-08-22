@@ -86,7 +86,7 @@ class _MyAppState3 extends State<More> {
           ),
           GestureDetector(
             onTap: () {
-              mainAppState.openAnotherTab(10);
+              mainAppState.openAnotherTab(11);
             },
             child: ListTile(
               leading: Icon(

@@ -24,6 +24,7 @@ dependencies:
   font_awesome_flutter: ^8.5.0
   http: ^0.12.0+2
   cloud_firestore: ^0.12.9
+  url_launcher: ^4.2.0+3
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -73,6 +74,7 @@ flutter:
     - assets/Shopping_AlFady.jpeg
     - assets/Shopping_BlueEyes.jpeg
     - assets/Shopping_BTech.jpeg
+    - assets/AboutUs.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-assets/#resolution-aware.
