@@ -14,6 +14,7 @@ import 'package:mailer/smtp_server/gmail.dart';
 import '../main.dart';
 import 'AddQuetionToSurvey.dart';
 import 'AddSurvey.dart';
+import 'MainApp.dart';
 import 'SignIn.dart';
 
 List<String> Control = List<String>.generate(10000, (i) => "");
@@ -337,4 +338,7 @@ Future _saveSurvey(BuildContext context) async {
     }
   }
   Navigator.of(context).pop();
+  mainCurrentIndex = 3;
+  Navigator.push(context,
+      new MaterialPageRoute(builder: (context) => MainApplication()));
 }

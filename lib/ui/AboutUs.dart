@@ -3,12 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../main.dart';
+import 'MainApp.dart';
+
 List<Complaint> complaints;
 
 class AboutUs extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+    Future<bool> _onBackPressed() {
+      mainCurrentIndex = 3;
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => MainApplication()));
+    }
+
+
+    return  new WillPopScope(
+        onWillPop: _onBackPressed,
+        child: Scaffold(
       appBar: AppBar(
         title: Text('About us'),
         backgroundColor: Color.fromRGBO(19, 46, 99, 10),
@@ -138,7 +152,7 @@ class AboutUs extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ),);
   }
 
   _launchURL() async {

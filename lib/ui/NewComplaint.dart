@@ -7,6 +7,7 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 
 import '../main.dart';
+import 'MainApp.dart';
 import 'More.dart';
 
 final List<Color> colors = new List<Color>();
@@ -109,8 +110,9 @@ class _NewComplaint extends State<NewComplaint>
                   child: Text('Ok'),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => More()));
+                    mainCurrentIndex=3;
+                    Navigator.push(context,
+                        new MaterialPageRoute(builder: (context) => MainApplication()));
                   },
                 ),
               ],
@@ -129,8 +131,9 @@ class _NewComplaint extends State<NewComplaint>
                   child: Text('Ok'),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => More()));
+                    mainCurrentIndex=3;
+                    Navigator.push(context,
+                        new MaterialPageRoute(builder: (context) => MainApplication()));
                   },
                 ),
               ],
@@ -145,7 +148,16 @@ class _NewComplaint extends State<NewComplaint>
       ComplaintDetailsController.text = '';
     }
 
+    Future<bool> _onBackPressed() {
+      mainCurrentIndex=3;
+      Navigator.of(context).pop();
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => MainApplication()));
+    }
+
+
     return new WillPopScope(
+      onWillPop: _onBackPressed,
       child: new Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(

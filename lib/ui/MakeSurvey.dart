@@ -14,6 +14,7 @@ import 'package:mailer/smtp_server/gmail.dart';
 import '../main.dart';
 import 'AddQuetionToSurvey.dart';
 import 'AddSurvey.dart';
+import 'MainApp.dart';
 import 'SignIn.dart';
 
 List<String> Control = List<String>.generate(10000, (i) => "");
@@ -118,15 +119,23 @@ class _MakeSurveyState extends State<MakeSurvey>
     );
   }
 
+  Future<bool> _onBackPressed() {
+    mainCurrentIndex = 3;
+    Navigator.push(context,
+        new MaterialPageRoute(builder: (context) => MainApplication()));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return new WillPopScope(
+        onWillPop: _onBackPressed,
+        child: MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: new Text(globalTitle),
+          title: new Text('UnderConstruction'),//new Text(globalTitle),
           backgroundColor: Color.fromRGBO(19, 46, 99, 10),
         ),
-        body: SingleChildScrollView(
+        body: Text("Under construction") /*SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Padding(
             padding: const EdgeInsets.all(10.0),
@@ -252,9 +261,9 @@ class _MakeSurveyState extends State<MakeSurvey>
             ),
 
           ),
-        ),
+        ),*/
       ),
-    );
+    ),);
   }
 
   @override

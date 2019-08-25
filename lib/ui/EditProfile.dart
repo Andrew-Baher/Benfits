@@ -38,6 +38,7 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController editedPositionController = new TextEditingController();
 
   Future<bool> _onBackPressed() {
+    mainCurrentIndex = 3;
     Navigator.push(context,
         new MaterialPageRoute(builder: (context) => MainApplication()));
   }
@@ -438,12 +439,13 @@ class _EditProfileState extends State<EditProfile> {
       "employeeEmail": email,
       "employeePassword": password,
       "employeePosition": position,
-      "employeeAuthority": 'User',
-      "employeeApprovalStatus": false
+      "employeeAuthority": mainEmployee.employeeAuthority,
+      "employeeApprovalStatus": mainEmployee.employeeApprovalStatus
     });
 
     showInSnackBar('Data saved successfully !');
     await Future.delayed(const Duration(seconds: 2), () {});
+    mainCurrentIndex = 3;
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => MainApplication()));
   }

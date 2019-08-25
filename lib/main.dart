@@ -56,6 +56,9 @@ class MyApp extends StatelessWidget {
         .child('count')
         .once()
         .then((DataSnapshot dataSnapShot) {
+      currentComplaintIndex = dataSnapShot.value;
+      currentComplaintIndexString = "$currentComplaintIndex";
+      print(currentComplaintIndex);
     });
     DBRef.child('Messagescount')
         .child('count')

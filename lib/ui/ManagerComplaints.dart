@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart';
 
 import '../main.dart';
+import 'MainApp.dart';
 
 List<Complaint> complaints;
 
@@ -32,11 +33,19 @@ class _ManagerComplaintsState extends State<ManagerComplaints> {
     setState(() {});
   }
 
+  Future<bool> _onBackPressed() {
+    mainCurrentIndex=3;
+    Navigator.of(context).pop();
+    Navigator.push(context,
+        new MaterialPageRoute(builder: (context) => MainApplication()));
+  }
+
   @override
   Widget build(BuildContext context) {
     getData();
-    return MaterialApp(
-      home: Scaffold(
+    return new WillPopScope(
+      onWillPop: _onBackPressed,
+      child: new  Scaffold(
         appBar: AppBar(
           title: Text('Complaints'),
           backgroundColor: Color.fromRGBO(19, 46, 99, 10),
