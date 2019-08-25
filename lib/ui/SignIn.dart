@@ -31,11 +31,13 @@ class _SignInState extends State<SignIn> {
   @override
   void initState() {
     super.initState();
-    colors.add(Colors.blue);
+    colors.add(Color.fromRGBO(19, 46, 99, 10));
     colors.add(Colors.yellow);
-    colors.add(Colors.blue);
+    colors.add(Color.fromRGBO(19, 46, 99, 10));
     colors.add(Colors.yellow);
     colorLoaderVisible = false;
+    loginEmailController.text = '';
+    loginPasswordController.text = '';
   }
 
   Future<bool> _onBackPressed() {
@@ -192,6 +194,9 @@ class _SignInState extends State<SignIn> {
       print(emps[0].employeeFirstName);
       print("Employees length: " + employees.length.toString());
     }
+
+    loginEmailController.text = '';
+    loginPasswordController.text = '';
   }
 
   void showInSnackBar(String value) {

@@ -23,10 +23,15 @@ class _NewComplaint extends State<NewComplaint>
   static Color loginGradientStart = Color(primaryLight);
   static Color loginGradientEnd = Color(primaryDark);
 
-  TextEditingController ComplaintDetailsController =
-      new TextEditingController();
+  TextEditingController ComplaintDetailsController = new TextEditingController();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    ComplaintDetailsController.text = '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +77,7 @@ class _NewComplaint extends State<NewComplaint>
               'You have a complaint from ' + employeeFullName + '.' + '\n\n'
               'The details of the complaint are as follows:\n\n'
               '${ComplaintDetailsController.text}\n\n'
-              'Thankyou,\n\n'
+              'Thank you,\n\n'
               'Regards,\n\n'
               '$employeeFullName';
         try {
@@ -122,7 +127,7 @@ class _NewComplaint extends State<NewComplaint>
           }
         }
       }
-
+      ComplaintDetailsController.text = '';
     }
 
     return new WillPopScope(
