@@ -123,6 +123,7 @@ class _NewBenefit extends State<NewBenefit>
     }
 
     Future<bool> _onBackPressed() {
+      mainCurrentIndex=3;
       Navigator.push(context,
           new MaterialPageRoute(builder: (context) => MainApplication()));
     }

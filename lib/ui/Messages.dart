@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import '../main.dart';
 
 List<String> names;
+List<String> mails;
 List<String> messages;
 
 class Messages extends StatefulWidget {
@@ -19,6 +20,7 @@ class _MyAppState2 extends State<Messages> {
   void initState() {
     super.initState();
     names = new List<String>();
+    mails = new List<String>();
     messages = new List<String>();
     getmessage();
   }
@@ -52,7 +54,8 @@ class _MyAppState2 extends State<Messages> {
                 subtitle: Text(messages[index]),
               ),
               onTap: () {
-                currentChat = names[index];
+                currentChatName = names[index];
+                currentChatMail = mails[index];
                 mainAppState.openAnotherTab(7);
               },
             );
@@ -77,8 +80,9 @@ void getmessage() async {
     print(dataSnapShot.value[1]["MessageDescription"]);
     int count = 0;
     for (int i = currentMessageId - 1; i > 0; --i) {
-      if (!names.contains(dataSnapShot.value[i]["EmployeeEmail"])) {
-        names.add(dataSnapShot.value[i]["EmployeeEmail"]);
+      if (!mails.contains(dataSnapShot.value[i]["EmployeeEmail"])) {
+        names.add(dataSnapShot.value[i]["EmployeeName"]);
+        mails.add(dataSnapShot.value[i]["EmployeeEmail"]);
         messages.add(dataSnapShot.value[i]["MessageDescription"]);
         count++;
       }

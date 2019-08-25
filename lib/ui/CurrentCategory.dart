@@ -31,6 +31,7 @@ class CurrentCategory extends StatefulWidget {
 
 class CurrentCategoryState extends State<CurrentCategory> {
   Future<bool> _onBackPressed() {
+    mainCurrentIndex=1;
     Navigator.push(context,
         new MaterialPageRoute(builder: (context) => MainApplication()));
   }

@@ -17,8 +17,7 @@ class ChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     setUser();
-    return (!state &&
-            mainEmployee.employeeAuthority.toString() != state.toString())
+    return (!state)
         ? new Container(
             width: MediaQuery.of(context).size.width,
             alignment: Alignment.bottomRight,
@@ -30,18 +29,25 @@ class ChatMessage extends StatelessWidget {
                   children: <Widget>[
                     new Text((state) ? _hr : _you,
                         style: TextStyle(
+                          fontFamily: '.SF UI Text',
+                          fontWeight: FontWeight.w500,
                           fontSize: MediaQuery.of(context).size.width / 20,
                           decoration: TextDecoration.none,
-                          color: Colors.red,
+                          color: Colors.black,
                         )),
                     new Container(
-                      margin: const EdgeInsets.only(left: 16.0),
+                      width: MediaQuery.of(context).size.width / 1.3,
+                      alignment: Alignment.centerRight,
+                      padding: EdgeInsets.all(4),
                       child: new Text(
                         text,
+                        maxLines: 10,
                         style: TextStyle(
+                          fontFamily: '.SF UI Display',
                           fontSize: MediaQuery.of(context).size.width / 25,
                           decoration: TextDecoration.none,
                           color: Colors.blueGrey,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                     )
@@ -49,9 +55,9 @@ class ChatMessage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                 ),
                 new Container(
-                  margin: const EdgeInsets.only(left: 16.0),
+                  margin: const EdgeInsets.only(left: 8.0),
                   child: new CircleAvatar(
-                    radius: MediaQuery.of(context).size.width / 40,
+                    radius: MediaQuery.of(context).size.width / 20,
                     backgroundColor: Color.fromRGBO(19, 46, 99, 10),
                     foregroundColor: Colors.white,
                     child: new Text((state) ? _hr[0] : _you[0]),
@@ -67,9 +73,9 @@ class ChatMessage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 new Container(
-                  margin: const EdgeInsets.only(right: 16.0),
+                  margin: const EdgeInsets.only(right: 8.0),
                   child: new CircleAvatar(
-                    radius: MediaQuery.of(context).size.width / 40,
+                    radius: MediaQuery.of(context).size.width / 20,
                     backgroundColor: Color.fromRGBO(19, 46, 99, 10),
                     foregroundColor: Colors.white,
                     child: new Text((state) ? _hr[0] : _you[0]),
@@ -80,16 +86,23 @@ class ChatMessage extends StatelessWidget {
                   children: <Widget>[
                     new Text((state) ? _hr : _you,
                         style: TextStyle(
+                          fontFamily: '.SF UI Text',
+                          fontWeight: FontWeight.w500,
                           fontSize: MediaQuery.of(context).size.width / 20,
                           decoration: TextDecoration.none,
-                          color: Colors.black,
+                          color: Color.fromRGBO(19, 46, 99, 10),
                         )),
                     new Container(
-                      margin: const EdgeInsets.only(top: 5.0),
+                      width: MediaQuery.of(context).size.width / 1.3,
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.all(4),
                       child: new Text(text,
+                          maxLines: 10,
                           style: TextStyle(
+                            fontFamily: '.SF UI Display',
                             fontSize: MediaQuery.of(context).size.width / 25,
                             decoration: TextDecoration.none,
+                            fontWeight: FontWeight.normal,
                             color: Colors.blueGrey,
                           )),
                     )
@@ -102,5 +115,5 @@ class ChatMessage extends StatelessWidget {
 }
 
 void setUser() {
-  if (mainEmployee.employeeAuthority == 'Manager') _you = currentChat;
+  if (mainEmployee.employeeAuthority == 'Manager') _you = currentChatName;
 }

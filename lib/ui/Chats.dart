@@ -109,6 +109,7 @@ void sendMessage()
   DBRef.child('MessagesDetails').child(currentMessageIdString).set({
     "MessageDescription": currentText,
     "EmployeeEmail": mainEmployee.employeeEmail,
+    "EmployeeName": mainEmployee.employeeFirstName+' '+mainEmployee.employeeLastName,
     "Status":"User"
   });
   nextMessageId = currentMessageId + 1;

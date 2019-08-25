@@ -23,7 +23,7 @@ class _ManagerChatState extends State<ManagerChat> {
 
   void _handleSubmit(String text) {
     textEditingController.clear();
-    ChatMessage chatMessage = new ChatMessage(text: text, state: false);
+    ChatMessage chatMessage = new ChatMessage(text: text, state: true);
     currentText = text;
     sendMessage();
     setState(() {
@@ -77,6 +77,7 @@ class _ManagerChatState extends State<ManagerChat> {
   Widget build(BuildContext context) {
     getData();
     Future<bool> _onBackPressed() {
+      mainCurrentIndex=2;
       Navigator.push(context,
           new MaterialPageRoute(builder: (context) => MainApplication()));
     }
@@ -85,7 +86,7 @@ class _ManagerChatState extends State<ManagerChat> {
       onWillPop: _onBackPressed,
       child: new Scaffold(
         appBar: AppBar(
-          title: Text(currentChat),
+          title: Text(currentChatName),
           backgroundColor: Color.fromRGBO(19, 46, 99, 10),
         ),
         body: new Column(
@@ -125,8 +126,9 @@ void sendMessage() {
   });
   DBRef.child('MessagesDetails').child(currentMessageIdString).set({
     "MessageDescription": currentText,
-    "EmployeeEmail": currentChat,
-    "Status": "User"
+    "EmployeeEmail": currentChatMail,
+    "EmployeeName": currentChatName,
+    "Status": "Manager"
   });
   nextMessageId = currentMessageId + 1;
   DBRef.child('Messagescount').set({'count': nextMessageId});
@@ -146,7 +148,7 @@ void getChatMessages() {
     print(dataSnapShot.value[1]["MessageDescription"]);
     int count = 0;
     for (int i = 1; i < currentMessageId; ++i) {
-      if (dataSnapShot.value[i]["EmployeeEmail"] == currentChat) {
+      if (dataSnapShot.value[i]["EmployeeEmail"] == currentChatMail) {
         ChatMessage chatMessage;
         if (dataSnapShot.value[i]["Status"] == "Manager")
           chatMessage = new ChatMessage(

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import '../main.dart';
 import '../models/Employee.dart';
 import 'MainApp.dart';
 import 'PendingRequestsApprovals.dart';
@@ -40,6 +41,7 @@ class _PendingRequestsState extends State<PendingRequests> {
   Widget build(BuildContext context) {
     getData();
     Future<bool> _onBackPressed() {
+      mainCurrentIndex=3;
       Navigator.push(context,
           new MaterialPageRoute(builder: (context) => MainApplication()));
     }

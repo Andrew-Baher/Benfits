@@ -40,6 +40,7 @@ class _NewMessage extends State<NewMessage>
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   List<DropdownMenuItem<String>> listDrop = [];
+  String sendToName;
 
   List<String> drop = [
     'Send to specific Employee',
@@ -60,7 +61,7 @@ class _NewMessage extends State<NewMessage>
   @override
   Widget build(BuildContext context) {
     loadData();
-    Future senddata(BuildContext context, String email) async {
+    Future senddata(BuildContext context, String email,String name) async {
       DBRef.child('Messagescount')
           .child('count')
           .once()
@@ -72,6 +73,7 @@ class _NewMessage extends State<NewMessage>
       DBRef.child('MessagesDetails').child(currentMessageIdString).set({
         "MessageDescription": MessageDescriptionController.text,
         "EmployeeEmail": email,
+        "EmployeeName": name,
         "Status": "Manager"
       });
       nextMessageId = currentMessageId + 1;
@@ -79,10 +81,25 @@ class _NewMessage extends State<NewMessage>
     }
 
     Future sendMessage(BuildContext context) async {
+      final url =
+          'https://employees-benifits-app.firebaseio.com/employees.json';
+      final httpClient = new Client();
+      var response = await httpClient.get(url);
+
+      Map employees = jsonCodec.decode(response.body);
+      List<dynamic> emps = employees.values.toList();
+
+      //TRIALS for debugging
+      print(emps[0].employeeEmail + '\n' + emps[0].employeePassword);
+
       if(MessageDescriptionController.text == '') {
         showInSnackBar('Please enter a message body !');
       }
       else if (selected == 'Send to specific Employee') {
+        for (int i = 0; i < emps.length; i++)
+          if (emps[i].employeeEmail == EmployeeEmailController.text) {
+            sendToName=emps[i].employeeFirstName+' '+emps[i].employeeLastName;
+          }
         DBRef.child('Messagescount')
             .child('count')
             .once()
@@ -94,6 +111,7 @@ class _NewMessage extends State<NewMessage>
         DBRef.child('MessagesDetails').child(currentMessageIdString).set({
           "MessageDescription": MessageDescriptionController.text,
           "EmployeeEmail": EmployeeEmailController.text,
+          "EmployeeName": sendToName,
           "Status": "Manager"
         });
         nextMessageId = currentMessageId + 1;
@@ -101,29 +119,21 @@ class _NewMessage extends State<NewMessage>
 
         showInSnackBar('New Message uploaded successfully !!');
       } else {
-        final url =
-            'https://employees-benifits-app.firebaseio.com/employees.json';
-        final httpClient = new Client();
-        var response = await httpClient.get(url);
 
-        Map employees = jsonCodec.decode(response.body);
-        List<dynamic> emps = employees.values.toList();
-
-        //TRIALS for debugging
-        print(emps[0].employeeEmail + '\n' + emps[0].employeePassword);
         showInSnackBar('Wait till finish');
         //Compare the entered email & pass with db
         for (int i = 0; i < emps.length; i++)
           if (emps[i].employeeEmail != mainEmployee.employeeEmail &&
               emps[i].employeeApprovalStatus == true) {
             await new Future.delayed(const Duration(seconds: 1));
-            await senddata(context, emps[i].employeeEmail);
+            await senddata(context, emps[i].employeeEmail,emps[i].employeeFirstName+' '+emps[i].employeeLastName );
           }
         showInSnackBar('All Messages uploaded successfully !!');
       }
     }
 
     Future<bool> _onBackPressed() {
+      mainCurrentIndex=3;
       Navigator.push(context,
           new MaterialPageRoute(builder: (context) => MainApplication()));
     }

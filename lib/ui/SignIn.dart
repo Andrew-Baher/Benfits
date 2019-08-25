@@ -38,6 +38,8 @@ class _SignInState extends State<SignIn> {
     colorLoaderVisible = false;
     loginEmailController.text = '';
     loginPasswordController.text = '';
+    setState(() {
+    });
   }
 
   Future<bool> _onBackPressed() {
@@ -187,8 +189,12 @@ class _SignInState extends State<SignIn> {
             emps[i].employeePassword == loginPasswordController.text &&
             emps[i].employeeApprovalStatus == false)
           showInSnackBar("You haven't been approved yet !");
-        else
+        else {
           showInSnackBar('Incorrect email or password ! Please try again.');
+          colorLoaderVisible = false;
+          setState(() {
+          });
+        }
 
       //TRIALS for debugging
       print(emps[0].employeeFirstName);
