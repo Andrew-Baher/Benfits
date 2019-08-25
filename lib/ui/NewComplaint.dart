@@ -1,3 +1,4 @@
+import 'package:employees_benefits/models/ColorLoader.dart';
 import 'package:employees_benefits/style/theme.dart' as Theme;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,9 @@ import 'package:mailer/smtp_server/gmail.dart';
 
 import '../main.dart';
 import 'More.dart';
+
+final List<Color> colors = new List<Color>();
+bool colorLoaderVisible;
 
 class NewComplaint extends StatefulWidget {
   @override
@@ -30,15 +34,25 @@ class _NewComplaint extends State<NewComplaint>
   @override
   void initState() {
     super.initState();
+    colors.add(Color.fromRGBO(19, 46, 99, 10));
+    colors.add(Colors.yellow);
+    colors.add(Color.fromRGBO(19, 46, 99, 10));
+    colors.add(Colors.yellow);
     ComplaintDetailsController.text = '';
+    colorLoaderVisible = false;
   }
 
   @override
   Widget build(BuildContext context) {
     Future sendComplaint(BuildContext context) async {
+      colorLoaderVisible = true;
+      setState(() {
+      });
+
       if (ComplaintDetailsController.text == '') {
         showInSnackBar('Please fill this field !');
       } else {
+        String empFullName = mainEmployee.employeeFirstName + ' ' + mainEmployee.employeeLastName;
         DBRef5.child('ComplaintsCount')
             .child('count')
             .once()
@@ -52,6 +66,7 @@ class _NewComplaint extends State<NewComplaint>
             .set({
           "ComplaintDescription": ComplaintDetailsController.text,
           "EmployeeEmail": mainEmployee.employeeEmail.toString(),
+          "EmployeeName": empFullName,
         });
         nextComplaintIndex = currentComplaintIndex + 1;
         DBRef5.child('ComplaintsCount').set({'count': nextComplaintIndex});
@@ -145,6 +160,11 @@ class _NewComplaint extends State<NewComplaint>
               child: Center(
                   child: Column(
                 children: <Widget>[
+                  Visibility(
+                    visible: colorLoaderVisible,
+                    child: ColorLoader(
+                        colors: colors, duration: Duration(milliseconds: 3000)),
+                  ),
                   TextField(
                     autofocus: false,
                     controller: ComplaintDetailsController,
