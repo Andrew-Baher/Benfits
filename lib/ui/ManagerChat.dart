@@ -1,13 +1,13 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
+import 'package:intl/intl.dart';
 import '../main.dart';
 import 'ChatMessage.dart';
 import 'MainApp.dart';
 
 List<ChatMessage> _messages;
-
+String formattedDate;
 String currentText;
 
 class ManagerChat extends StatefulWidget {
@@ -18,12 +18,14 @@ class ManagerChat extends StatefulWidget {
 }
 
 class _ManagerChatState extends State<ManagerChat> {
+  static DateTime now = DateTime.now();
+  String Date = DateFormat('EEE d MMM, kk:mm ').format(now);
   final TextEditingController textEditingController =
       new TextEditingController();
 
   void _handleSubmit(String text) {
     textEditingController.clear();
-    ChatMessage chatMessage = new ChatMessage(text: text, state: true);
+    ChatMessage chatMessage = new ChatMessage(text: text, state: true, messageTime: Date);
     currentText = text;
     sendMessage();
     setState(() {
@@ -116,6 +118,10 @@ class _ManagerChatState extends State<ManagerChat> {
 }
 
 void sendMessage() {
+  DateTime now = DateTime.now();
+  formattedDate = DateFormat('EEE d MMM, kk:mm ').format(now);
+  print(formattedDate);
+
   DBRef.child('Messagescount')
       .child('count')
       .once()
@@ -128,7 +134,8 @@ void sendMessage() {
     "MessageDescription": currentText,
     "EmployeeEmail": currentChatMail,
     "EmployeeName": currentChatName,
-    "Status": "Manager"
+    "Status": "Manager",
+    "MessageTiming": formattedDate
   });
   nextMessageId = currentMessageId + 1;
   DBRef.child('Messagescount').set({'count': nextMessageId});
@@ -152,10 +159,10 @@ void getChatMessages() {
         ChatMessage chatMessage;
         if (dataSnapShot.value[i]["Status"] == "Manager")
           chatMessage = new ChatMessage(
-              text: dataSnapShot.value[i]["MessageDescription"], state: true);
+              text: dataSnapShot.value[i]["MessageDescription"], state: true, messageTime: dataSnapShot.value[i]["MessageTiming"]);
         else
           chatMessage = new ChatMessage(
-              text: dataSnapShot.value[i]["MessageDescription"], state: false);
+              text: dataSnapShot.value[i]["MessageDescription"], state: false, messageTime: dataSnapShot.value[i]["MessageTiming"]);
 
         _messages.insert(0, chatMessage);
         count++;

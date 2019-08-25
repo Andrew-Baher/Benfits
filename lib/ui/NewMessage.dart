@@ -1,19 +1,15 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:employees_benefits/models/BenefitDetails.dart';
 import 'package:employees_benefits/style/theme.dart' as Theme;
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as Path;
+import 'package:intl/intl.dart';
 
 import '../main.dart';
 import 'MainApp.dart';
 import 'SignIn.dart';
+
+String formattedDate;
 
 class NewMessage extends StatefulWidget {
   @override
@@ -61,7 +57,7 @@ class _NewMessage extends State<NewMessage>
   @override
   Widget build(BuildContext context) {
     loadData();
-    Future senddata(BuildContext context, String email,String name) async {
+    Future senddata(BuildContext context, String email, String name) async {
       DBRef.child('Messagescount')
           .child('count')
           .once()
@@ -74,13 +70,18 @@ class _NewMessage extends State<NewMessage>
         "MessageDescription": MessageDescriptionController.text,
         "EmployeeEmail": email,
         "EmployeeName": name,
-        "Status": "Manager"
+        "Status": "Manager",
+        "MessageTiming": formattedDate
       });
       nextMessageId = currentMessageId + 1;
       DBRef.child('Messagescount').set({'count': nextMessageId});
     }
 
     Future sendMessage(BuildContext context) async {
+      DateTime now = DateTime.now();
+      formattedDate = DateFormat('EEE d MMM, kk:mm ').format(now);
+      print(formattedDate);
+
       final url =
           'https://employees-benifits-app.firebaseio.com/employees.json';
       final httpClient = new Client();
@@ -92,13 +93,13 @@ class _NewMessage extends State<NewMessage>
       //TRIALS for debugging
       print(emps[0].employeeEmail + '\n' + emps[0].employeePassword);
 
-      if(MessageDescriptionController.text == '') {
+      if (MessageDescriptionController.text == '') {
         showInSnackBar('Please enter a message body !');
-      }
-      else if (selected == 'Send to specific Employee') {
+      } else if (selected == 'Send to specific Employee') {
         for (int i = 0; i < emps.length; i++)
           if (emps[i].employeeEmail == EmployeeEmailController.text) {
-            sendToName=emps[i].employeeFirstName+' '+emps[i].employeeLastName;
+            sendToName =
+                emps[i].employeeFirstName + ' ' + emps[i].employeeLastName;
           }
         DBRef.child('Messagescount')
             .child('count')
@@ -112,28 +113,29 @@ class _NewMessage extends State<NewMessage>
           "MessageDescription": MessageDescriptionController.text,
           "EmployeeEmail": EmployeeEmailController.text,
           "EmployeeName": sendToName,
-          "Status": "Manager"
+          "Status": "Manager",
+          "MessageTiming": formattedDate
         });
         nextMessageId = currentMessageId + 1;
         DBRef.child('Messagescount').set({'count': nextMessageId});
 
         showInSnackBar('New Message uploaded successfully !!');
       } else {
-
         showInSnackBar('Wait till finish');
         //Compare the entered email & pass with db
         for (int i = 0; i < emps.length; i++)
           if (emps[i].employeeEmail != mainEmployee.employeeEmail &&
               emps[i].employeeApprovalStatus == true) {
             await new Future.delayed(const Duration(seconds: 1));
-            await senddata(context, emps[i].employeeEmail,emps[i].employeeFirstName+' '+emps[i].employeeLastName );
+            await senddata(context, emps[i].employeeEmail,
+                emps[i].employeeFirstName + ' ' + emps[i].employeeLastName);
           }
         showInSnackBar('All Messages uploaded successfully !!');
       }
     }
 
     Future<bool> _onBackPressed() {
-      mainCurrentIndex=3;
+      mainCurrentIndex = 3;
       Navigator.push(context,
           new MaterialPageRoute(builder: (context) => MainApplication()));
     }

@@ -3,9 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../main.dart';
 import 'Benefits.dart';
-import 'ChatTest.dart';
 import 'Chats.dart';
-import 'EditProfile.dart';
 import 'HomePage.dart';
 import 'Messages.dart';
 import 'More.dart';

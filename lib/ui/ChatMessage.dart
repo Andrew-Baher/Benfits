@@ -9,10 +9,9 @@ String _you =
 
 class ChatMessage extends StatelessWidget {
   final String text;
-
   final bool state;
-
-  ChatMessage({this.text, this.state});
+  final String messageTime;
+  ChatMessage({this.text, this.state, this.messageTime});
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +38,34 @@ class ChatMessage extends StatelessWidget {
                       width: MediaQuery.of(context).size.width / 1.3,
                       alignment: Alignment.centerRight,
                       padding: EdgeInsets.all(4),
-                      child: new Text(
-                        text,
-                        maxLines: 10,
-                        style: TextStyle(
-                          fontFamily: '.SF UI Display',
-                          fontSize: MediaQuery.of(context).size.width / 25,
-                          decoration: TextDecoration.none,
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.normal,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          new Text(
+                            text,
+                            textAlign: TextAlign.left,
+                            textDirection: TextDirection.ltr,
+                            maxLines: 10,
+                            style: TextStyle(
+                              fontFamily: '.SF UI Display',
+                              fontSize: MediaQuery.of(context).size.width / 25,
+                              decoration: TextDecoration.none,
+                              color: Colors.blueGrey,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          new Text(
+                            messageTime,
+                            style: TextStyle(
+                              fontFamily: '.SF UI Display',
+                              fontSize: MediaQuery.of(context).size.width / 35,
+                              decoration: TextDecoration.none,
+                              color: Colors.blueGrey,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
                       ),
                     )
                   ],
@@ -60,7 +77,10 @@ class ChatMessage extends StatelessWidget {
                     radius: MediaQuery.of(context).size.width / 20,
                     backgroundColor: Color.fromRGBO(19, 46, 99, 10),
                     foregroundColor: Colors.white,
-                    child: new Text((state) ? _hr[0] : _you[0]),
+                    child: new Text((state) ? _hr[0] : _you[0],
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width / 20
+                    ),),
                   ),
                 ),
               ],
@@ -78,7 +98,10 @@ class ChatMessage extends StatelessWidget {
                     radius: MediaQuery.of(context).size.width / 20,
                     backgroundColor: Color.fromRGBO(19, 46, 99, 10),
                     foregroundColor: Colors.white,
-                    child: new Text((state) ? _hr[0] : _you[0]),
+                    child: new Text((state) ? _hr[0] : _you[0],
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 20
+                      ),),
                   ),
                 ),
                 new Column(
@@ -96,15 +119,36 @@ class ChatMessage extends StatelessWidget {
                       width: MediaQuery.of(context).size.width / 1.3,
                       alignment: Alignment.centerLeft,
                       padding: EdgeInsets.all(4),
-                      child: new Text(text,
-                          maxLines: 10,
-                          style: TextStyle(
-                            fontFamily: '.SF UI Display',
-                            fontSize: MediaQuery.of(context).size.width / 25,
-                            decoration: TextDecoration.none,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.blueGrey,
-                          )),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        textDirection: TextDirection.ltr,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          new Text(
+                              text,
+                              maxLines: 10,
+                              textDirection: TextDirection.ltr,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontFamily: '.SF UI Display',
+                                fontSize: MediaQuery.of(context).size.width / 25,
+                                decoration: TextDecoration.none,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.blueGrey,
+                              )
+                          ),
+                          new Text(
+                            messageTime,
+                            style: TextStyle(
+                              fontFamily: '.SF UI Display',
+                              fontSize: MediaQuery.of(context).size.width / 35,
+                              decoration: TextDecoration.none,
+                              color: Colors.blueGrey,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 )
