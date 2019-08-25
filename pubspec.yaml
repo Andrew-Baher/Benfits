@@ -28,6 +28,8 @@ dependencies:
   modal_progress_hud: ^0.1.3
 
 
+
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -38,11 +40,16 @@ dependencies:
   flutter_email_sender: ^1.2.0
   mailer: ^2.0.2
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.2+1
 
+flutter_icons:
+  ios: true
+  android: true
+  image_path_ios: "icon/icon.png"
+  image_path_android: "icon/icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -76,6 +83,7 @@ flutter:
     - assets/Shopping_BlueEyes.jpeg
     - assets/Shopping_BTech.jpeg
     - assets/AboutUs.jpg
+    - icon/icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-assets/#resolution-aware.
