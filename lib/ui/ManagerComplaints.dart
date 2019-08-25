@@ -54,7 +54,7 @@ class _ManagerComplaintsState extends State<ManagerComplaints> {
                 ),
                 title: Text(
                   //Employee first name + last name
-                  complaints[index].employeeEmail,
+                  complaints[index].employeeFullName,
                   style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width / 20),
                 ),
@@ -95,7 +95,7 @@ class _ManagerComplaintsState extends State<ManagerComplaints> {
       print(dataSnapShot.value[1]["ComplaintDescription"]);
       for (int i = 1; i < currentComplaintIndex; i++) {
         complaints.add(new Complaint(dataSnapShot.value[i]["EmployeeEmail"],
-            dataSnapShot.value[i]["ComplaintDescription"]));
+            dataSnapShot.value[i]["ComplaintDescription"], dataSnapShot.value[i]["EmployeeName"] ));
       }
     });
   }
