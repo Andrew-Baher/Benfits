@@ -309,13 +309,13 @@ class _AddQuetionsToSurveyState extends State<AddQuetionsToSurvey>
   }
 
   Future sendChoices(String count, int i,String count2, int j) async {
-    DBRef4.child('survey').child('Questions${count}').child('Choices').child('Choice${count2}').set({
+    DBRef4.child('survey').child(count).child('Choices').child(count2).set({
       "Choice":questions[i].questionChoice[j]
     });
   }
 
   Future sendQuestions(String count, int i) async {
-    DBRef.child('survey').child('Questions${count}').set({
+    DBRef.child('survey').child(count).set({
       "Title": questions[i].questionTitle,
       "Type": questions[i].questionType,
       "NoOfChoices": questions[i].questionChoicesnumber,
