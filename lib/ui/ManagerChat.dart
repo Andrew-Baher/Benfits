@@ -64,7 +64,7 @@ class _ManagerChatState extends State<ManagerChat> {
   }
 
   Future getData() async {
-    await new Future.delayed(const Duration(seconds: 1));
+    await new Future.delayed(const Duration(seconds: 0));
     setState(() {});
   }
 
@@ -75,15 +75,16 @@ class _ManagerChatState extends State<ManagerChat> {
     getChatMessages();
   }
 
+  Future<bool> _onBackPressed() {
+    mainCurrentIndex=2;
+    Navigator.push(context,
+        new MaterialPageRoute(builder: (context) => MainApplication()));
+  }
+
+
   @override
   Widget build(BuildContext context) {
     getData();
-    Future<bool> _onBackPressed() {
-      mainCurrentIndex=2;
-      Navigator.push(context,
-          new MaterialPageRoute(builder: (context) => MainApplication()));
-    }
-
     return new WillPopScope(
       onWillPop: _onBackPressed,
       child: new Scaffold(
