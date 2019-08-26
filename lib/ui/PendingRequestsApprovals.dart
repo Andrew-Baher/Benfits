@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 import '../main.dart';
+import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:flutter/material.dart' hide Key;
 import 'MainApp.dart';
 import 'PendingRequests.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
@@ -392,8 +395,17 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
   }
 
   void _onAcceptButtonPressed() async {
-    //Sending Email
 
+    //Decrypting password
+    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    final iv = encrypt.IV.fromLength(16);
+
+    final encrypter = Encrypter(AES(key));
+
+    final decryptPass = encrypter.decrypt64(employee.employeePassword, iv: iv);
+    print(decryptPass);
+
+    //Sending Email
     String username = 'bbbba7785@gmail.com';
     String password = 'ah67@#nm12';
 
@@ -416,7 +428,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
           'Congratulations,your signup request has been accepted.\n\n'
           'You can now login using the following credentials:\n\n'
           'Username: ${employee.employeeEmail}\n'
-          'Password: ${employee.employeePassword}\n\n'
+          'Password: $decryptPass\n\n'
           'Thank you,\n\n'
           'Regards,\n\n'
           'Evapharma H.R.';

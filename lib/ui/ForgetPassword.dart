@@ -2,16 +2,21 @@ import 'dart:convert';
 
 import 'package:employees_benefits/models/Employee.dart';
 import 'package:employees_benefits/style/theme.dart' as Theme;
+import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Key;
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'SignIn.dart';
-bool _saving=false;
+
+bool _saving = false;
+
 class ForgetPassword extends StatefulWidget {
   @override
   _ForgetPasswordState createState() => new _ForgetPasswordState();
@@ -145,11 +150,12 @@ class _ForgetPasswordState extends State<ForgetPassword>
                           fontFamily: "WorkSansBold"),
                     ),
                   ),
-                  onPressed: _onSignUpButtonPress),
+                  onPressed: _onSendEmailButtonPress),
             ],
           ),
           inAsyncCall: _saving,
-          progressIndicator: CircularProgressIndicator(),),
+          progressIndicator: CircularProgressIndicator(),
+        ),
       ),
     );
   }
@@ -190,7 +196,12 @@ class _ForgetPasswordState extends State<ForgetPassword>
     ));
   }
 
-  void _onSignUpButtonPress() async {
+  void _onSendEmailButtonPress() async {
+    //Decrypting password
+    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    final iv = encrypt.IV.fromLength(16);
+
+    final encrypter = Encrypter(AES(key));
 
     new Future.delayed(new Duration(seconds: 0), () {
       setState(() {
@@ -237,6 +248,9 @@ class _ForgetPasswordState extends State<ForgetPassword>
           // See the named arguments of SmtpServer for further configuration
           // options.
 
+          final decryptPass = encrypter.decrypt64(currentEmployee.employeePassword, iv: iv);
+          print(decryptPass);
+
           // Create our message.
           final message = Message()
             ..from = Address(username, 'bbbba7785@gmail.com')
@@ -249,7 +263,7 @@ class _ForgetPasswordState extends State<ForgetPassword>
                 'Your request for resetting password is succefull.\n\n'
                 'You can now login using the following credentials:\n\n'
                 'Username: ${currentEmployee.employeeEmail}\n'
-                'Password: ${currentEmployee.employeePassword}\n\n'
+                'Password: $decryptPass\n\n'
                 'Thankyou,\n\n'
                 'Regards,\n\n'
                 'Evapharma H.R.';
@@ -302,8 +316,7 @@ class _ForgetPasswordState extends State<ForgetPassword>
             }
           }
         }
-      if (!registered)
-        showInSnackBar('You are not registered');
+      if (!registered) showInSnackBar('You are not registered');
     }
   }
 }

@@ -1,15 +1,16 @@
-import 'dart:convert';
-
-import 'package:employees_benefits/models/Employee.dart';
 import 'package:employees_benefits/style/theme.dart' as Theme;
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart';
+import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Key;
+import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'SignIn.dart';
-bool _saving =false;
+
+bool _saving = false;
+
 class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => new _SignUpState();
@@ -492,13 +493,6 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
   }
 
   void _onSignUpButtonPress() async {
-
-    new Future.delayed(new Duration(seconds: 0), () {
-      setState(() {
-        _saving = true;
-      });
-    });
-
     String firstName = signUpFirstNameController.text;
     String lastName = signUpLastNameController.text;
     String email = signUpEmailController.text;
@@ -506,6 +500,23 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
     String phoneNo = signUpPhoneNumberController.text;
     String companyID = signUpCompanyIDController.text;
     String position = signUpPositionController.text;
+
+    //Encrypting password
+    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    final iv = encrypt.IV.fromLength(16);
+
+    final encrypter = Encrypter(AES(key));
+
+    final encryptedPassword = encrypter.encrypt(password, iv: iv);
+    final decryptPass = encrypter.decrypt(encryptedPassword, iv: iv);
+    print(encryptedPassword.base64);
+    print(decryptPass);
+
+    new Future.delayed(new Duration(seconds: 0), () {
+      setState(() {
+        _saving = true;
+      });
+    });
 
     bool emailValid =
         RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
@@ -536,7 +547,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
         "employeeLastName": lastName,
         "employeePhoneNumber": phoneNo,
         "employeeEmail": email,
-        "employeePassword": password,
+        "employeePassword": encryptedPassword.base64,
         "employeePosition": position,
         "employeeCompanyID": companyID,
         "employeeAuthority": 'User',
@@ -563,7 +574,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
     }
     new Future.delayed(new Duration(seconds: 0), () {
       setState(() {
-        _saving = true;
+        _saving = false;
       });
     });
   }

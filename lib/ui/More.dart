@@ -1,6 +1,11 @@
+import 'dart:io';
+
+import 'package:csv/csv.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:simple_permissions/simple_permissions.dart';
 
 import '../main.dart';
 import 'EditProfile.dart';
@@ -223,9 +228,46 @@ class _MyAppState3 extends State<More> {
               ),
             ),
           ),
+          MaterialButton(
+            onPressed: getCsv,
+            child: Text(
+              'click to create file'
+            ),
+          ),
         ],
       )),
     );
+  }
+
+  getCsv() async {
+    List<List<dynamic>> rows = List<List<dynamic>>();
+    for (int i = 0; i < 2; i++) {
+      List<dynamic> row = List();
+      row.add('Andrew');
+      row.add('male');
+      row.add('22');
+      rows.add(row);
+    }
+    String file;
+    String csv = const ListToCsvConverter().convert(rows);
+    print(csv);
+    /*await SimplePermissions.requestPermission(Permission.WriteExternalStorage);
+    bool checkPermission = await SimplePermissions.checkPermission(
+        Permission.WriteExternalStorage);
+    if (checkPermission) {
+//store file in documents folder
+
+      String dir = (await getExternalStorageDirectory()).absolute.path +
+          "/documents";
+      file = "$dir";
+      File f = new File(file + "filename.csv");
+
+// convert rows to String and write as csv file
+
+      String csv = const ListToCsvConverter().convert(rows);
+      print(csv);
+      f.writeAsString(csv);
+    }*/
   }
 
   @override

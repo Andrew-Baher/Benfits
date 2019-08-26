@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:employees_benefits/models/ColorLoader.dart';
 import 'package:employees_benefits/models/Employee.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' hide Key;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -14,7 +16,6 @@ import 'SignUp.dart';
 
 final List<Color> colors = new List<Color>();
 bool _saving = false;
-
 
 class SignIn extends StatefulWidget {
   @override
@@ -37,10 +38,10 @@ class _SignInState extends State<SignIn> {
     colors.add(Colors.yellow);
     colors.add(Color.fromRGBO(19, 46, 99, 10));
     colors.add(Colors.yellow);
+    _saving = false;
     loginEmailController.text = '';
     loginPasswordController.text = '';
-    setState(() {
-    });
+    setState(() {});
   }
 
   Future<bool> _onBackPressed() {
@@ -151,14 +152,18 @@ class _SignInState extends State<SignIn> {
               ),
             ),
             inAsyncCall: _saving,
-            progressIndicator: CircularProgressIndicator(),),
+            progressIndicator: CircularProgressIndicator(),
+          ),
         ),
       ),
     );
   }
 
   void _onSignInButtonPress() async {
-    mainCurrentIndex=0;
+    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    final iv = encrypt.IV.fromLength(16);
+
+    mainCurrentIndex = 0;
     new Future.delayed(new Duration(seconds: 0), () {
       setState(() {
         _saving = true;
@@ -179,23 +184,35 @@ class _SignInState extends State<SignIn> {
       print(emps[0].employeeEmail + '\n' + emps[0].employeePassword);
 
       //Compare the entered email & pass with db
-      for (int i = 0; i < emps.length; i++)
+      for (int i = 0; i < emps.length; i++) {
+        //Get Encrypted pass from database
+        String empEncriptedPassFromDB = emps[i].employeePassword;
+        print("Encr from db: " + empEncriptedPassFromDB + '\n');
+
+        final encrypter = Encrypter(AES(key));
+
+        //Encrypt entered password
+        String loginPass = loginPasswordController.text;
+        final encrypted = encrypter.encrypt(loginPass, iv: iv);
+        print("Newly Encr: " + encrypted.base64);
+
         if (emps[i].employeeEmail == loginEmailController.text &&
-            emps[i].employeePassword == loginPasswordController.text &&
+            //compare 2 encryption
+            empEncriptedPassFromDB.toString() == encrypted.base64 &&
             emps[i].employeeApprovalStatus == true) {
           mainEmployee = emps[i];
           mainEmployeeCompanyID = mainEmployee.employeeCompanyID.toString();
           Navigator.push(
               context, new MaterialPageRoute(builder: (context) => mainAPP));
         } else if (emps[i].employeeEmail == loginEmailController.text &&
-            emps[i].employeePassword == loginPasswordController.text &&
+            empEncriptedPassFromDB.toString() == encrypted.base64 &&
             emps[i].employeeApprovalStatus == false)
           showInSnackBar("You haven't been approved yet !");
         else {
           showInSnackBar('Incorrect email or password ! Please try again.');
-          setState(() {
-          });
+          setState(() {});
         }
+      }
 
       //TRIALS for debugging
       print(emps[0].employeeFirstName);
