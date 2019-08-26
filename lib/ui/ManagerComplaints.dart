@@ -102,7 +102,7 @@ class _ManagerComplaintsState extends State<ManagerComplaints> {
     DBRef.child('ComplaintsDetails').once().then((DataSnapshot dataSnapShot) {
       print(dataSnapShot.value[1]["EmployeeEmail"]);
       print(dataSnapShot.value[1]["ComplaintDescription"]);
-      for (int i = 1; i < currentComplaintIndex; i++) {
+      for (int i = currentComplaintIndex - 1; i > 0; i--) {
         complaints.add(new Complaint(dataSnapShot.value[i]["EmployeeEmail"],
             dataSnapShot.value[i]["ComplaintDescription"], dataSnapShot.value[i]["EmployeeName"] ));
       }
