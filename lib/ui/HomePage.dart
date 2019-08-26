@@ -18,7 +18,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _MyAppState0 extends State<HomePage> {
-
   @override
   void initState() {
     super.initState();
@@ -44,46 +43,107 @@ class _MyAppState0 extends State<HomePage> {
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height / 2,
-            child:(LastImages.length == 0)
-                ? ColorLoader(colors: colors, duration: Duration(milliseconds: 3000))
-                :  Carousel(
-              images: [
-                Image.network(LastImages[0], fit: BoxFit.fill),
-                Image.network(LastImages[1], fit: BoxFit.fill),
-                Image.network(LastImages[2], fit: BoxFit.fill),
-                Image.network(LastImages[3], fit: BoxFit.fill),
-              ],
-              dotSize: 4.0,
-              dotSpacing: 15.0,
-              dotColor: Colors.white,
-              indicatorBgPadding: 5.0,
-              dotBgColor: Color.fromRGBO(48, 51, 86, 10),
-              borderRadius: true,
-            ),
+            child: (loadingLastFourImages)
+                ? ColorLoader(
+                    colors: colors, duration: Duration(milliseconds: 3000))
+                : Carousel(
+                    images: [
+                      Image.network(
+                        LastImages[0],
+                        fit: BoxFit.fill,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes
+                                  : null,
+                            ),
+                          );
+                        },
+                      ),
+                      Image.network(LastImages[1], fit: BoxFit.fill,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes
+                                  : null,
+                            ),
+                          );
+                        },
+                      ),
+                      Image.network(LastImages[2], fit: BoxFit.fill,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes
+                                  : null,
+                            ),
+                          );
+                        },
+                      ),
+                      Image.network(LastImages[3], fit: BoxFit.fill,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes
+                                  : null,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                    dotSize: 4.0,
+                    dotSpacing: 15.0,
+                    dotColor: Colors.white,
+                    indicatorBgPadding: 5.0,
+                    dotBgColor: Color.fromRGBO(48, 51, 86, 10),
+                    borderRadius: true,
+                  ),
           ),
         ),
       ),
     );
   }
-}
 
-void getLastImages() {
-  DBRef2.child('Benefitscount')
-      .child('count')
-      .once()
-      .then((DataSnapshot dataSnapShot) {
-    currentBenefitId = dataSnapShot.value;
-    print(currentBenefitId);
-  });
+  void getLastImages() {
+    DBRef2.child('Benefitscount')
+        .child('count')
+        .once()
+        .then((DataSnapshot dataSnapShot) {
+      currentBenefitId = dataSnapShot.value;
+      print(currentBenefitId);
+    });
 
-  DBRef2.child('benefitsDetails').once().then((DataSnapshot dataSnapShot) {
-    print(dataSnapShot.value[1]["benefitImage"]);
-    print(dataSnapShot.value[1]["benefitCategory"]);
-    int count = 0;
-    for (int i = currentBenefitId-1; i > currentBenefitId-5; --i) {
+    DBRef2.child('benefitsDetails').once().then((DataSnapshot dataSnapShot) {
+      print(dataSnapShot.value[1]["benefitImage"]);
+      print(dataSnapShot.value[1]["benefitCategory"]);
+      int count = 0;
+      for (int i = currentBenefitId - 1; i > currentBenefitId - 5; --i) {
         LastImages.add(dataSnapShot.value[i]["benefitImage"]);
         count++;
-    }
-    print(count);
-  });
+      }
+      print(count);
+    });
+    loadingLastFourImages=false;
+    setState(() {
+
+    });
+  }
+
 }
+

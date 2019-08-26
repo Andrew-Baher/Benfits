@@ -36,6 +36,7 @@ String mainCurrentBenefitDescription;
 String mainCurrentBenefitTitle;
 String currentChatMail;
 String currentChatName;
+bool loadingLastFourImages=true;
 final DBRef = FirebaseDatabase.instance.reference();
 final DBRef2 = FirebaseDatabase.instance.reference();
 final DBRef3 = FirebaseDatabase.instance.reference();

@@ -8,9 +8,10 @@ import 'package:http/http.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'SignIn.dart';
-
+bool _saving=false;
 class ForgetPassword extends StatefulWidget {
   @override
   _ForgetPasswordState createState() => new _ForgetPasswordState();
@@ -45,107 +46,110 @@ class _ForgetPasswordState extends State<ForgetPassword>
           title: new Text("Forget Password"),
         ),
         backgroundColor: Colors.transparent,
-        body: ListView(
-          padding:
-              EdgeInsets.only(top: MediaQuery.of(context).size.width / 200),
-          children: <Widget>[
-            DrawerHeader(
-              child: Padding(
-                padding: const EdgeInsets.all(2),
-                child: Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.edit,
-                      color: Color.fromRGBO(19, 46, 99, 10),
-                      size: MediaQuery.of(context).size.width / 12,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 70,
-                    ),
-                    Text(
-                      'Please Enter your Email',
-                      style: TextStyle(
-                          color: Color.fromRGBO(19, 46, 99, 10),
-                          fontSize: MediaQuery.of(context).size.width / 16,
-                          fontFamily: "WorkSansBold"),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 30,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
+        body: ModalProgressHUD(
+          child: ListView(
+            padding:
+                EdgeInsets.only(top: MediaQuery.of(context).size.width / 200),
+            children: <Widget>[
+              DrawerHeader(
+                child: Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: Row(
                     children: <Widget>[
                       Icon(
-                        Icons.email,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
+                        Icons.edit,
+                        color: Color.fromRGBO(19, 46, 99, 10),
+                        size: MediaQuery.of(context).size.width / 12,
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
+                        width: MediaQuery.of(context).size.width / 70,
                       ),
                       Text(
-                        'Email',
+                        'Please Enter your Email',
                         style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
+                            color: Color.fromRGBO(19, 46, 99, 10),
+                            fontSize: MediaQuery.of(context).size.width / 16,
                             fontFamily: "WorkSansBold"),
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 30,
+              ),
+              GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.email,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Email',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
+                    ),
+                    TextField(
+                      controller: forgetPasswordController,
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 20,
+              ),
+              MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                  TextField(
-                    controller: forgetPasswordController,
-                    keyboardType: TextInputType.emailAddress,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
+                  highlightColor: Colors.black,
+                  splashColor: Theme.Colors.loginGradientStart,
+                  color: Color.fromRGBO(19, 46, 99, 10),
+                  minWidth: 70,
+                  height: MediaQuery.of(context).size.height / 30,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      "Send me Email with my password",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          fontFamily: "WorkSansBold"),
                     ),
                   ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 20,
-            ),
-            MaterialButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                highlightColor: Colors.black,
-                splashColor: Theme.Colors.loginGradientStart,
-                color: Color.fromRGBO(19, 46, 99, 10),
-                minWidth: 70,
-                height: MediaQuery.of(context).size.height / 30,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    "Send me Email with my password",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        fontFamily: "WorkSansBold"),
-                  ),
-                ),
-                onPressed: _onSignUpButtonPress),
-          ],
-        ),
+                  onPressed: _onSignUpButtonPress),
+            ],
+          ),
+          inAsyncCall: _saving,
+          progressIndicator: CircularProgressIndicator(),),
       ),
     );
   }
@@ -187,6 +191,13 @@ class _ForgetPasswordState extends State<ForgetPassword>
   }
 
   void _onSignUpButtonPress() async {
+
+    new Future.delayed(new Duration(seconds: 0), () {
+      setState(() {
+        _saving = true;
+      });
+    });
+
     String email = forgetPasswordController.text;
     Employee currentEmployee;
     bool registered = false;

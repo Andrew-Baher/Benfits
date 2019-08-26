@@ -20,7 +20,6 @@ class CurrentCategory extends StatefulWidget {
   CurrentCategory(String item) {
     this.currentBenefit = item;
     globalCurrentBenefit = item;
-
   }
 
   @override
@@ -31,7 +30,7 @@ class CurrentCategory extends StatefulWidget {
 
 class CurrentCategoryState extends State<CurrentCategory> {
   Future<bool> _onBackPressed() {
-    mainCurrentIndex=1;
+    mainCurrentIndex = 1;
     Navigator.push(context,
         new MaterialPageRoute(builder: (context) => MainApplication()));
   }
@@ -59,7 +58,6 @@ class CurrentCategoryState extends State<CurrentCategory> {
         appBar: AppBar(
           title: new Text(widget.currentBenefit),
           backgroundColor: Color.fromRGBO(19, 46, 99, 10),
-
         ),
         body: (categoryImages.length == 0)
             ? Text(
@@ -91,6 +89,18 @@ class CurrentCategoryState extends State<CurrentCategory> {
                       child: new Image.network(
                         categoryImages[index],
                         fit: BoxFit.fill,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes
+                                  : null,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   );

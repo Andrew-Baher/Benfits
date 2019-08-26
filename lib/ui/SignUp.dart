@@ -6,9 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'SignIn.dart';
-
+bool _saving =false;
 class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => new _SignUpState();
@@ -29,10 +30,12 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
   TextEditingController signUpEmailController = new TextEditingController();
   TextEditingController signUpFirstNameController = new TextEditingController();
   TextEditingController signUpLastNameController = new TextEditingController();
-  TextEditingController signUpPhoneNumberController = new TextEditingController();
+  TextEditingController signUpPhoneNumberController =
+      new TextEditingController();
   TextEditingController signUpCompanyIDController = new TextEditingController();
   TextEditingController signUpPasswordController = new TextEditingController();
-  TextEditingController signUpConfirmPasswordController = new TextEditingController();
+  TextEditingController signUpConfirmPasswordController =
+      new TextEditingController();
   TextEditingController signUpPositionController = new TextEditingController();
 
   PageController _pageController;
@@ -49,376 +52,378 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
           title: new Text("Sign-Up"),
         ),
         backgroundColor: Colors.transparent,
-        body: ListView(
-          padding: EdgeInsets.only(top: MediaQuery.of(context).size.width / 200),
-          children: <Widget>[
-            DrawerHeader(
-              child: Padding(
-                padding: const EdgeInsets.all(2),
-                child: Row(
+        body: ModalProgressHUD(
+          child: ListView(
+            padding:
+                EdgeInsets.only(top: MediaQuery.of(context).size.width / 200),
+            children: <Widget>[
+              DrawerHeader(
+                child: Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.edit,
+                        color: Color.fromRGBO(19, 46, 99, 10),
+                        size: MediaQuery.of(context).size.width / 12,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 70,
+                      ),
+                      Text(
+                        'Create an account',
+                        style: TextStyle(
+                            color: Color.fromRGBO(19, 46, 99, 10),
+                            fontSize: MediaQuery.of(context).size.width / 16,
+                            fontFamily: "WorkSansBold"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 30,
+              ),
+              GestureDetector(
+                child: Column(
                   children: <Widget>[
-                    Icon(
-                      Icons.edit,
-                      color: Color.fromRGBO(19, 46, 99, 10),
-                      size: MediaQuery.of(context).size.width / 12,
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.person,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'First Name',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width / 70,
+                      height: MediaQuery.of(context).size.height / 70,
                     ),
-                    Text(
-                      'Create an account',
+                    TextField(
+                      controller: signUpFirstNameController,
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.words,
                       style: TextStyle(
-                          color: Color.fromRGBO(19, 46, 99, 10),
-                          fontSize: MediaQuery.of(context).size.width / 16,
-                          fontFamily: "WorkSansBold"),
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 30,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.person,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'First Name',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextField(
-                    controller: signUpFirstNameController,
-                    keyboardType: TextInputType.text,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
-                    ),
-                  ),
-                ],
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
               ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.person,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'Last Name',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextField(
-                    controller: signUpLastNameController,
-                    keyboardType: TextInputType.text,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
+              GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.person,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Last Name',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.phone_iphone,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'Phone Number',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextField(
-                    controller: signUpPhoneNumberController,
-                    keyboardType: TextInputType.emailAddress,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
                     ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.person_pin,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
+                    TextField(
+                      controller: signUpLastNameController,
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
                       ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'Position',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextField(
-                    controller: signUpPositionController,
-                    keyboardType: TextInputType.emailAddress,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
                     ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.email,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'Email',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextField(
-                    controller: signUpEmailController,
-                    keyboardType: TextInputType.emailAddress,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.work,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'Company ID',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextField(
-                    controller: signUpCompanyIDController,
-                    keyboardType: TextInputType.emailAddress,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            GestureDetector(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.lock,
-                        color: Colors.black,
-                        size: MediaQuery.of(context).size.width / 15,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 30,
-                      ),
-                      Text(
-                        'Password',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontFamily: "WorkSansBold"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 70,
-                  ),
-                  TextFormField(
-                    obscureText: true,
-                    controller: signUpPasswordController,
-                    keyboardType: TextInputType.emailAddress,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: MediaQuery.of(context).size.width / 20,
-                        color: Color.fromRGBO(19, 46, 99, 10)),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      hasFloatingPlaceholder: false,
-                      border: UnderlineInputBorder(),
-                      //hoverColor: Colors.black,
-                      //focusColor: Colors.black,
-                      fillColor: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 70,
-            ),
-            MaterialButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                  ],
                 ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
+              ),
+              GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.phone_iphone,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Phone Number',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
+                    ),
+                    TextField(
+                      controller: signUpPhoneNumberController,
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
+              ),
+              GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.person_pin,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Position',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
+                    ),
+                    TextField(
+                      controller: signUpPositionController,
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
+              ),
+              GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.email,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Email',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
+                    ),
+                    TextField(
+                      controller: signUpEmailController,
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
+              ),
+              GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.work,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Company ID',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
+                    ),
+                    TextField(
+                      controller: signUpCompanyIDController,
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
+              ),
+              GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.lock,
+                          color: Colors.black,
+                          size: MediaQuery.of(context).size.width / 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 30,
+                        ),
+                        Text(
+                          'Password',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontFamily: "WorkSansBold"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
+                    ),
+                    TextFormField(
+                      obscureText: true,
+                      controller: signUpPasswordController,
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          color: Color.fromRGBO(19, 46, 99, 10)),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        hasFloatingPlaceholder: false,
+                        border: UnderlineInputBorder(),
+                        //hoverColor: Colors.black,
+                        //focusColor: Colors.black,
+                        fillColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 70,
+              ),
+              MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                   highlightColor: Colors.black,
                   splashColor: Theme.Colors.loginGradientStart,
                   color: Color.fromRGBO(19, 46, 99, 10),
@@ -434,9 +439,11 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                           fontFamily: "WorkSansBold"),
                     ),
                   ),
-                  onPressed: _onSignUpButtonPress
-              ),
-          ],
+                  onPressed: _onSignUpButtonPress),
+            ],
+          ),
+          inAsyncCall: _saving,
+          progressIndicator: CircularProgressIndicator(),
         ),
       ),
     );
@@ -486,34 +493,42 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
 
   void _onSignUpButtonPress() async {
 
-    String firstName = signUpFirstNameController.text;
-    String lastName  = signUpLastNameController.text;
-    String email     = signUpEmailController.text;
-    String password  = signUpPasswordController.text;
-    String phoneNo   = signUpPhoneNumberController.text;
-    String companyID = signUpCompanyIDController.text;
-    String position  = signUpPositionController.text;
+    new Future.delayed(new Duration(seconds: 0), () {
+      setState(() {
+        _saving = true;
+      });
+    });
 
-    bool emailValid = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
-    bool phoneValid = RegExp(r"^01[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").hasMatch(phoneNo);
+    String firstName = signUpFirstNameController.text;
+    String lastName = signUpLastNameController.text;
+    String email = signUpEmailController.text;
+    String password = signUpPasswordController.text;
+    String phoneNo = signUpPhoneNumberController.text;
+    String companyID = signUpCompanyIDController.text;
+    String position = signUpPositionController.text;
+
+    bool emailValid =
+        RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
+    bool phoneValid =
+        RegExp(r"^01[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]")
+            .hasMatch(phoneNo);
     bool passwordValid = (password.length > 5);
 
-    if(firstName == '' || lastName == '' || email == '' || password == '' ||
-       phoneNo == '' || companyID == '' || position == '')
-      {
-        showInSnackBar('Please fill all fields');
-      }
-    else if(!emailValid){
+    if (firstName == '' ||
+        lastName == '' ||
+        email == '' ||
+        password == '' ||
+        phoneNo == '' ||
+        companyID == '' ||
+        position == '') {
+      showInSnackBar('Please fill all fields');
+    } else if (!emailValid) {
       showInSnackBar('Incorrect email !');
-    }
-    else if(!phoneValid){
+    } else if (!phoneValid) {
       showInSnackBar('Incorrect phone number !');
-    }
-    else if(!passwordValid){
+    } else if (!passwordValid) {
       showInSnackBar('Password is too short !');
-    }
-    else {
-
+    } else {
       //TODO: If ID exists -> overwriting happens -> fix bug (check if ID exists)
 
       DBRef.child('employees').child(companyID).set({
@@ -525,7 +540,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
         "employeePosition": position,
         "employeeCompanyID": companyID,
         "employeeAuthority": 'User',
-        "employeeApprovalStatus" : false
+        "employeeApprovalStatus": false
       });
       showInSnackBar("Your data is sent successfully !!");
       showDialog(
@@ -539,13 +554,17 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                 child: Text('Ok'),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignIn()));
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => SignIn()));
                 },
               ),
             ],
           ));
     }
-
+    new Future.delayed(new Duration(seconds: 0), () {
+      setState(() {
+        _saving = true;
+      });
+    });
   }
 }
-

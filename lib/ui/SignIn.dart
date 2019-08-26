@@ -6,13 +6,15 @@ import 'package:employees_benefits/models/Employee.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import '../main.dart';
 import 'ForgetPassword.dart';
 import 'SignUp.dart';
 
 final List<Color> colors = new List<Color>();
-bool colorLoaderVisible;
+bool _saving = false;
+
 
 class SignIn extends StatefulWidget {
   @override
@@ -35,7 +37,6 @@ class _SignInState extends State<SignIn> {
     colors.add(Colors.yellow);
     colors.add(Color.fromRGBO(19, 46, 99, 10));
     colors.add(Colors.yellow);
-    colorLoaderVisible = false;
     loginEmailController.text = '';
     loginPasswordController.text = '';
     setState(() {
@@ -131,36 +132,37 @@ class _SignInState extends State<SignIn> {
         child: new Scaffold(
           key: _scaffoldKey,
           backgroundColor: Colors.white,
-          body: Center(
-            child: ListView(
-              shrinkWrap: true,
-              padding: EdgeInsets.only(left: 24.0, right: 24.0),
-              children: <Widget>[
-                Visibility(
-                  visible: colorLoaderVisible,
-                  child: ColorLoader(
-                      colors: colors, duration: Duration(milliseconds: 3000)),
-                ),
-                logo,
-                SizedBox(height: MediaQuery.of(context).size.height / 25),
-                email,
-                SizedBox(height: MediaQuery.of(context).size.height / 50),
-                password,
-                SizedBox(height: MediaQuery.of(context).size.height / 30),
-                loginButton,
-                forgotLabel,
-                dontHaveAnAccount,
-              ],
+          body: ModalProgressHUD(
+            child: Center(
+              child: ListView(
+                shrinkWrap: true,
+                padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                children: <Widget>[
+                  logo,
+                  SizedBox(height: MediaQuery.of(context).size.height / 25),
+                  email,
+                  SizedBox(height: MediaQuery.of(context).size.height / 50),
+                  password,
+                  SizedBox(height: MediaQuery.of(context).size.height / 30),
+                  loginButton,
+                  forgotLabel,
+                  dontHaveAnAccount,
+                ],
+              ),
             ),
-          ),
+            inAsyncCall: _saving,
+            progressIndicator: CircularProgressIndicator(),),
         ),
       ),
     );
   }
 
   void _onSignInButtonPress() async {
-    colorLoaderVisible = true;
-    setState(() {
+    mainCurrentIndex=0;
+    new Future.delayed(new Duration(seconds: 0), () {
+      setState(() {
+        _saving = true;
+      });
     });
     if (loginEmailController.text == '' || loginPasswordController.text == '') {
       showInSnackBar('Please enter your email and password !');
@@ -191,7 +193,6 @@ class _SignInState extends State<SignIn> {
           showInSnackBar("You haven't been approved yet !");
         else {
           showInSnackBar('Incorrect email or password ! Please try again.');
-          colorLoaderVisible = false;
           setState(() {
           });
         }
@@ -203,6 +204,11 @@ class _SignInState extends State<SignIn> {
 
     loginEmailController.text = '';
     loginPasswordController.text = '';
+    new Future.delayed(new Duration(seconds: 0), () {
+      setState(() {
+        _saving = false;
+      });
+    });
   }
 
   void showInSnackBar(String value) {
