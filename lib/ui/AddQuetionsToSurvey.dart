@@ -11,6 +11,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:intl/intl.dart';
 
 import '../main.dart';
 import 'AddQuetionToSurvey.dart';
@@ -20,6 +21,7 @@ import 'SignIn.dart';
 
 List<String> Control = List<String>.generate(10000, (i) => "");
 String globalTitle;
+String surveyID;
 
 class AddQuetionsToSurvey extends StatefulWidget {
   String surveyTitle;
@@ -309,13 +311,13 @@ class _AddQuetionsToSurveyState extends State<AddQuetionsToSurvey>
   }
 
   Future sendChoices(String count, int i,String count2, int j) async {
-    DBRef4.child('survey').child(count).child('Choices').child(count2).set({
+    DBRef4.child('survey'+surveyID).child(count).child('Choices').child(count2).set({
       "Choice":questions[i].questionChoice[j]
     });
   }
 
   Future sendQuestions(String count, int i) async {
-    DBRef.child('survey').child(count).set({
+    DBRef.child('survey'+surveyID).child(count).set({
       "Title": questions[i].questionTitle,
       "Type": questions[i].questionType,
       "NoOfChoices": questions[i].questionChoicesnumber,
@@ -332,12 +334,24 @@ class _AddQuetionsToSurveyState extends State<AddQuetionsToSurvey>
       });
     });
 
-    DBRef4.child('surveydetails').set({
-      "SurveyTitle":globalTitle,
-      "IsSurvey": true,
-      "count": questions.length,
-    });
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('d MMM yy,kk:mm ').format(now);
 
+    DBRef4.child('surveydetails').set({
+      "SurveyID": formattedDate,
+      "IsSurvey": true,
+    });
+    surveyID=formattedDate;
+    DBRef.child('survey'+surveyID).child("SurveyTitle").set({
+      "Title":globalTitle,
+    });
+    DBRef.child('survey'+surveyID).child("QuestionsCount").set({
+      "count":questions.length,
+    });
+    DBRef.child('survey'+surveyID).child("AnswersCount").set({
+      "count":0,
+    });
+    DBRef.child('SurveyAnswerCount').set({'count': 0});
     for (int i = 0; i < questions.length; i++) {
       await new Future.delayed(const Duration(seconds: 1));
       await sendQuestions(i.toString(), i);

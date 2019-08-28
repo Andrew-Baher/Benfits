@@ -24,6 +24,7 @@ String formattedDate;
 bool _saving = false;
 int incNoOfAnswers = 0;
 String noOfAnswers = '';
+String surveyID;
 
 class MakeSurvey extends StatefulWidget {
   @override
@@ -257,12 +258,20 @@ class _MakeSurveyState extends State<MakeSurvey>
   @override
   initState() {
     super.initState();
-
+    DBRef2.child('surveydetails')
+        .child('SurveyID')
+        .once()
+        .then((DataSnapshot dataSnapShot) {
+      surveyID = dataSnapShot.value;
+    });
+    new Future.delayed(new Duration(seconds: 1), () {
+      getSurvey();
+    });
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    getSurvey();
+
     _pageController = PageController();
   }
 
@@ -284,44 +293,31 @@ class _MakeSurveyState extends State<MakeSurvey>
   }
 
   void getSurvey() async {
-    DBRef4.child('SurveyAnswerCount')
-        .child('count')
-        .once()
-        .then((DataSnapshot dataSnapShot) {
-      int values = dataSnapShot.value;
+
+    DBRef2.child('survey'+surveyID).once().then((DataSnapshot dataSnapShot) {
+      print(dataSnapShot.value);
+      print(dataSnapShot.value["1"]["Title"]);
+      //print(dataSnapShot.value[1]["Type"]);
+      //print(dataSnapShot.value[1]["Choices"][1]["Choice"]);
+      print(dataSnapShot.value["AnswersCount"]["count"]);
+      print(dataSnapShot.value["QuestionsCount"]["count"]);
+      int values = dataSnapShot.value["AnswersCount"]["count"];
       noOfAnswers = "$values";
       incNoOfAnswers = ++values;
-    });
-    DBRef2.child('surveydetails')
-        .child('count')
-        .once()
-        .then((DataSnapshot dataSnapShot) {
-      SurveyQuestions = dataSnapShot.value;
-    });
-    DBRef2.child('surveydetails')
-        .child('SurveyTitle')
-        .once()
-        .then((DataSnapshot dataSnapShot) {
-      globalTitle = dataSnapShot.value;
-    });
-    print(globalTitle);
-
-    DBRef2.child('survey').once().then((DataSnapshot dataSnapShot) {
-      print(dataSnapShot.value[1]["Title"]);
-      print(dataSnapShot.value[1]["Type"]);
-      print(dataSnapShot.value[1]["Choices"][1]["Choice"]);
+      globalTitle = dataSnapShot.value["SurveyTitle"]["Title"];
+      SurveyQuestions = dataSnapShot.value["QuestionsCount"]["count"];
       int count = 0;
       Question question;
       for (int i = 0; i < SurveyQuestions; ++i) {
         question = new Question();
         question.questionChoice = new List<String>();
-        question.questionTitle = dataSnapShot.value[i]["Title"];
-        question.questionType = dataSnapShot.value[i]["Type"];
-        question.questionChoicesnumber = dataSnapShot.value[i]["NoOfChoices"];
+        question.questionTitle = dataSnapShot.value["${i}"]["Title"];
+        question.questionType = dataSnapShot.value["${i}"]["Type"];
+        question.questionChoicesnumber = dataSnapShot.value["${i}"]["NoOfChoices"];
         if (question.questionType) {
           for (int j = 0; j < question.questionChoicesnumber; ++j) {
             question.questionChoice
-                .add(dataSnapShot.value[i]["Choices"][j]["Choice"]);
+                .add(dataSnapShot.value["${i}"]["Choices"][j]["Choice"]);
           }
         }
         makeSurveyQuestions.add(question);
@@ -333,7 +329,7 @@ class _MakeSurveyState extends State<MakeSurvey>
   }
 
   Future sendAnswers(String count, int i) async {
-    DBRef4.child('SurveyAnswer').child(noOfAnswers).child(count).set({
+    DBRef4.child('SurveyAnswer'+surveyID).child(noOfAnswers).child(count).set({
       "Answer": Control[i],
     });
   }
@@ -347,9 +343,9 @@ class _MakeSurveyState extends State<MakeSurvey>
 
     DateTime now = DateTime.now();
     formattedDate = DateFormat('EEE d MMM, kk:mm ').format(now);
-    DBRef4.child('SurveyAnswer').child(noOfAnswers).set({
-      "Name":
-          mainEmployee.employeeFirstName + ' ' + mainEmployee.employeeLastName,
+    DBRef4.child('SurveyAnswer'+surveyID).child(noOfAnswers).set({
+      "ID": mainEmployee.employeeCompanyID,
+      "Name": mainEmployee.employeeFirstName + ' ' + mainEmployee.employeeLastName,
       "Time": formattedDate,
       "Email": mainEmployee.employeeEmail
     });
@@ -358,7 +354,9 @@ class _MakeSurveyState extends State<MakeSurvey>
       await sendAnswers(i.toString(), i);
     }
 
-    DBRef.child('SurveyAnswerCount').set({'count': incNoOfAnswers});
+    DBRef.child('survey'+surveyID).child("AnswersCount").set({
+      "count":incNoOfAnswers,
+    });
     new Future.delayed(new Duration(seconds: 0), () {
       setState(() {
         _saving = false;
