@@ -122,6 +122,7 @@ class _SignInState extends State<SignIn> {
         style: TextStyle(color: Color.fromRGBO(19, 46, 99, 10), fontSize: 18),
       ),
       onPressed: () {
+        //Navigator.pop(context);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => ForgetPassword()));
       },
@@ -133,6 +134,7 @@ class _SignInState extends State<SignIn> {
         style: TextStyle(color: Color.fromRGBO(19, 46, 99, 10), fontSize: 18),
       ),
       onPressed: () => {
+      //Navigator.pop(context),
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => SignUp()))
       },
@@ -214,6 +216,7 @@ class _SignInState extends State<SignIn> {
             emps[i].employeeApprovalStatus == true) {
           mainEmployee = emps[i];
           mainEmployeeCompanyID = mainEmployee.employeeCompanyID.toString();
+          Navigator.pop(context);
           Navigator.push(
               context, new MaterialPageRoute(builder: (context) => mainAPP));
         } else if (emps[i].employeeEmail == loginEmailController.text &&
