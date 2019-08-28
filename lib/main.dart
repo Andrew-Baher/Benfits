@@ -64,14 +64,14 @@ class MyApp extends StatelessWidget {
       currentComplaintIndexString = "$currentComplaintIndex";
       print(currentComplaintIndex);
     });
-    DBRef.child('Messagescount')
+    /*DBRef.child('Messagescount')
         .child('count')
         .once()
         .then((DataSnapshot dataSnapShot) {
       currentMessageId = dataSnapShot.value;
       currentMessageIdString = "$currentMessageId";
       print(currentMessageId);
-    });
+    });*/
     DBRef2.child('Benefitscount')
         .child('count')
         .once()

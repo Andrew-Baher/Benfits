@@ -10,6 +10,7 @@ import 'MainApp.dart';
 import 'SignIn.dart';
 
 String formattedDate;
+String MessageID;
 
 
 class NewMessage extends StatefulWidget {
@@ -60,34 +61,36 @@ class _NewMessage extends State<NewMessage>
   Widget build(BuildContext context) {
     loadData();
     Future senddata(BuildContext context, String email, String name) async {
-      DBRef.child('Messagescount')
+      /*DBRef.child('Messagescount')
           .child('count')
           .once()
           .then((DataSnapshot dataSnapShot) {
         currentMessageId = dataSnapShot.value;
         currentMessageIdString = "$currentMessageId";
         print(currentMessageId);
-      });
-      DBRef.child('MessagesDetails').child(currentMessageIdString).set({
+      });*/
+      DBRef.child('MessagesDetails').child(MessageID).set({
         "MessageDescription": MessageDescriptionController.text,
         "EmployeeEmail": email,
         "EmployeeName": name,
         "Status": "Manager",
         "MessageTiming": formattedDate
       });
-      nextMessageId = currentMessageId + 1;
-      DBRef.child('Messagescount').set({'count': nextMessageId});
+      //nextMessageId = currentMessageId + 1;
+      //DBRef.child('Messagescount').set({'count': nextMessageId});
     }
 
     Future sendMessage(BuildContext context) async {
       new Future.delayed(new Duration(seconds: 0), () {
         setState(() {
+
           _saving = true;
         });
       });
 
       DateTime now = DateTime.now();
       formattedDate = DateFormat('EEE d MMM, kk:mm ').format(now);
+      MessageID = DateFormat('EEE d MMM yy, kk:mm:ss ').format(now);
       print(formattedDate);
 
       final url =
@@ -109,23 +112,23 @@ class _NewMessage extends State<NewMessage>
             sendToName =
                 emps[i].employeeFirstName + ' ' + emps[i].employeeLastName;
           }
-        DBRef.child('Messagescount')
+        /*DBRef.child('Messagescount')
             .child('count')
             .once()
             .then((DataSnapshot dataSnapShot) {
           currentMessageId = dataSnapShot.value;
           currentMessageIdString = "$currentMessageId";
           print(currentMessageId);
-        });
-        DBRef.child('MessagesDetails').child(currentMessageIdString).set({
+        });*/
+        DBRef.child('MessagesDetails').child(MessageID).set({
           "MessageDescription": MessageDescriptionController.text,
           "EmployeeEmail": EmployeeEmailController.text,
           "EmployeeName": sendToName,
           "Status": "Manager",
           "MessageTiming": formattedDate
         });
-        nextMessageId = currentMessageId + 1;
-        DBRef.child('Messagescount').set({'count': nextMessageId});
+        //nextMessageId = currentMessageId + 1;
+        //DBRef.child('Messagescount').set({'count': nextMessageId});
 
         showInSnackBar('New Message uploaded successfully !!');
       } else {
@@ -145,6 +148,14 @@ class _NewMessage extends State<NewMessage>
         });
         showInSnackBar('All Messages uploaded successfully !!');
       }
+      MessageDescriptionController.text="";
+      EmployeeEmailController.text="";
+      selected=null;
+      new Future.delayed(new Duration(seconds: 0), () {
+        setState(() {
+          _saving = false;
+        });
+      });
     }
 
     Future<bool> _onBackPressed() {

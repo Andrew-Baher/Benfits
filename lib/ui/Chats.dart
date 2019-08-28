@@ -1,6 +1,10 @@
+import 'dart:convert';
+
+import 'package:employees_benefits/models/MessageDetails.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import '../main.dart';
 import 'ChatMessage.dart';
@@ -8,6 +12,7 @@ import 'ChatMessage.dart';
 List<ChatMessage> _messages ;
 String currentText;
 String formattedDate;
+String MessageID;
 
 class Chats extends StatefulWidget {
   @override
@@ -102,38 +107,66 @@ void sendMessage()
 {
   DateTime now = DateTime.now();
   formattedDate = DateFormat('EEE d MMM, kk:mm ').format(now);
+  MessageID = DateFormat('EEE d MMM yy, kk:mm:ss ').format(now);
   print(formattedDate);
 
-  DBRef.child('Messagescount')
+  /*DBRef.child('Messagescount')
       .child('count')
       .once()
       .then((DataSnapshot dataSnapShot) {
     currentMessageId = dataSnapShot.value;
     currentMessageIdString = "$currentMessageId";
     print(currentMessageId);
-  });
-  DBRef.child('MessagesDetails').child(currentMessageIdString).set({
+  });*/
+  DBRef.child('MessagesDetails').child(MessageID).set({
     "MessageDescription": currentText,
     "EmployeeEmail": mainEmployee.employeeEmail,
     "EmployeeName": mainEmployee.employeeFirstName+' '+mainEmployee.employeeLastName,
     "Status":"User",
     "MessageTiming": formattedDate
   });
-  nextMessageId = currentMessageId + 1;
-  DBRef.child('Messagescount').set({'count': nextMessageId});
+  /*nextMessageId = currentMessageId + 1;
+  DBRef.child('Messagescount').set({'count': nextMessageId});*/
 
 }
 
-void getChatMessages() {
-  DBRef.child('Messagescount')
+Future getChatMessages() async {
+  /*DBRef.child('Messagescount')
       .child('count')
       .once()
       .then((DataSnapshot dataSnapShot) {
     currentMessageId = dataSnapShot.value;
     print("ID"+currentMessageId.toString());
-  });
+  });*/
 
-  DBRef.child('MessagesDetails').once().then((DataSnapshot dataSnapShot) {
+  final url =
+      'https://employees-benifits-app.firebaseio.com/MessagesDetails.json';
+  final httpClient = new Client();
+  var response = await httpClient.get(url);
+  var mess = jsonCodec.decode(response.body);
+  print("size = ");
+  print (mess.length);
+  List<dynamic> mes = mess.values.toList();
+  print("size2 = ");
+  print (mes.length);
+  //print(emps[1].employeeEmail);
+  //print(mess[1]);
+  for (int i =0; i < mes.length; ++i) {
+    if (mes[i].employeeEmail ==
+        mainEmployee.employeeEmail) {
+      ChatMessage chatMessage;
+      if (mes[i].Status == "Manager")
+        chatMessage = new ChatMessage(
+            text: mes[i].messageDescription, state: true, messageTime: mes[i].messageTiming);
+      else
+        chatMessage = new ChatMessage(
+            text: mes[i].messageDescription, state: false, messageTime: mes[i].messageTiming);
+
+      _messages.insert(0, chatMessage);
+    }
+  }
+
+  /*DBRef.child('MessagesDetails').once().then((DataSnapshot dataSnapShot) {
     print(dataSnapShot.value[1]["EmployeeEmail"]);
     print(dataSnapShot.value[1]["MessageDescription"]);
     int count = 0;
@@ -153,5 +186,12 @@ void getChatMessages() {
       }
     }
     print(count);
-  });
+  });*/
 }
+
+_reviver(Object key, Object value) {
+  if (key != null && value is Map) return new MessageDetails.fromJson(value);
+  return value;
+}
+
+const jsonCodec = const JsonCodec(reviver: _reviver);
