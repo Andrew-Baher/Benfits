@@ -17,7 +17,6 @@ List<String> categoryTitle;
 
 bool _saving = true;
 
-
 class CurrentCategory extends StatefulWidget {
   String currentBenefit;
 
@@ -34,7 +33,7 @@ class CurrentCategory extends StatefulWidget {
 
 class CurrentCategoryState extends State<CurrentCategory> {
   Future<bool> _onBackPressed() {
-    isCurrentCategoryEmpty=false;
+    isCurrentCategoryEmpty = false;
     _saving = true;
     Navigator.of(context).pop();
     mainCurrentIndex = 1;
@@ -45,7 +44,7 @@ class CurrentCategoryState extends State<CurrentCategory> {
   @override
   void initState() {
     super.initState();
-    isCurrentCategoryEmpty=false;
+    isCurrentCategoryEmpty = false;
     new Future.delayed(new Duration(seconds: 0), () {
       setState(() {
         _saving = true;
@@ -55,7 +54,6 @@ class CurrentCategoryState extends State<CurrentCategory> {
     categoryDescription = new List<String>();
     categoryTitle = new List<String>();
     getImages();
-
   }
 
   Future getData() async {
@@ -66,9 +64,9 @@ class CurrentCategoryState extends State<CurrentCategory> {
         _saving = false;
       });
     });
-    isCurrentCategoryEmpty=false;
-    if(categoryImages.length==0){
-      isCurrentCategoryEmpty=true;
+    isCurrentCategoryEmpty = (categoryImages.length == 0);
+    if (categoryImages.length == 0) {
+      isCurrentCategoryEmpty = true;
     }
   }
 
@@ -83,53 +81,55 @@ class CurrentCategoryState extends State<CurrentCategory> {
           backgroundColor: Color.fromRGBO(19, 46, 99, 10),
         ),
         body: ModalProgressHUD(
-          child: (isCurrentCategoryEmpty)
-              ? Text(
-                  "No Benefits to display in this category",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: MediaQuery.of(context).size.width / 15,
-                      fontFamily: "WorkSansBold",
-                      fontWeight: FontWeight.bold),
-                )
-              : new GridView.extent(
-                  maxCrossAxisExtent: MediaQuery.of(context).size.width / 2,
-                  mainAxisSpacing: MediaQuery.of(context).size.width / 50,
-                  crossAxisSpacing: MediaQuery.of(context).size.width / 50,
-                  children: new List<Container>.generate(categoryImages.length,
-                      (int index) {
-                    return new Container(
-                      child: GestureDetector(
-                        onTap: () {
-                          mainCurrentBenefitImage = categoryImages[index];
-                          mainCurrentBenefitDescription =
-                              categoryDescription[index];
-                          mainCurrentBenefitTitle = categoryTitle[index];
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => new CurrentBenefit()));
-                        },
-                        child: new Image.network(
-                          categoryImages[index],
-                          fit: BoxFit.fill,
-                          loadingBuilder: (BuildContext context, Widget child,
-                              ImageChunkEvent loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes
-                                    : null,
-                              ),
-                            );
+          child: Center(
+            child: (isCurrentCategoryEmpty)
+                ? Text(
+                    "No Benefits found in this category",
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width / 20,
+                    ),
+                  )
+                : new GridView.extent(
+                    maxCrossAxisExtent: MediaQuery.of(context).size.width / 2,
+                    mainAxisSpacing: MediaQuery.of(context).size.width / 50,
+                    crossAxisSpacing: MediaQuery.of(context).size.width / 50,
+                    children: new List<Container>.generate(
+                        categoryImages.length, (int index) {
+                      return new Container(
+                        child: GestureDetector(
+                          onTap: () {
+                            mainCurrentBenefitImage = categoryImages[index];
+                            mainCurrentBenefitDescription =
+                                categoryDescription[index];
+                            mainCurrentBenefitTitle = categoryTitle[index];
+                            Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                    builder: (context) =>
+                                        new CurrentBenefit()));
                           },
+                          child: new Image.network(
+                            categoryImages[index],
+                            fit: BoxFit.fill,
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes
+                                      : null,
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    );
-                  }),
-                ),
+                      );
+                    }),
+                  ),
+          ),
           inAsyncCall: _saving,
           progressIndicator: CircularProgressIndicator(),
         ),
@@ -138,7 +138,7 @@ class CurrentCategoryState extends State<CurrentCategory> {
   }
 }
 
-void getImages()async {
+void getImages() async {
   DBRef2.child('Benefitscount')
       .child('count')
       .once()
