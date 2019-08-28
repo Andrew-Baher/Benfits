@@ -1,14 +1,18 @@
 import 'dart:convert';
-
+import 'package:encrypt/encrypt.dart';
+import 'package:flutter/material.dart' hide Key;
 import 'package:employees_benefits/models/Employee.dart';
 import 'package:employees_benefits/style/theme.dart' as Theme;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 
 import '../main.dart';
 import 'MainApp.dart';
+
+bool passwordVisible = true;
 
 class EditProfile extends StatefulWidget {
   @override
@@ -119,7 +123,7 @@ class _EditProfileState extends State<EditProfile> {
                       textCapitalization: TextCapitalization.words,
                       style: TextStyle(
                           fontFamily: "WorkSansSemiBold",
-                          fontSize: 24.0,
+                          fontSize: MediaQuery.of(context).size.width / 20,
                           color: Color.fromRGBO(19, 46, 99, 10)),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(8),
@@ -231,7 +235,6 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(
                 height: MediaQuery.of(context).size.height / 70,
               ),
-
               GestureDetector(
                 child: Column(
                   children: <Widget>[
@@ -354,7 +357,7 @@ class _EditProfileState extends State<EditProfile> {
                       height: MediaQuery.of(context).size.height / 70,
                     ),
                     TextField(
-                      obscureText: true,
+                      obscureText: passwordVisible,
                       controller: editedPasswordController,
                       keyboardType: TextInputType.emailAddress,
                       textCapitalization: TextCapitalization.words,
@@ -369,6 +372,19 @@ class _EditProfileState extends State<EditProfile> {
                         //hoverColor: Colors.black,
                         //focusColor: Colors.black,
                         fillColor: Colors.black,
+                        suffixIcon: IconButton(
+                            icon: Icon(
+                              // Based on passwordVisible state choose the icon
+                              passwordVisible
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                passwordVisible = !passwordVisible;
+                              });
+                            }),
                       ),
                     ),
                   ],
@@ -407,15 +423,20 @@ class _EditProfileState extends State<EditProfile> {
   @override
   initState() {
     super.initState();
-
+    passwordVisible = true;
     Employee employee = mainEmployee;
+    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    final iv = encrypt.IV.fromLength(16);
+    final encrypter = Encrypter(AES(key));
+    final decryptPass = encrypter.decrypt64(employee.employeePassword, iv: iv);
+    print(decryptPass);
 
     //Initialize TextFields with the employee's data
     editedFirstNameController.text = employee.employeeFirstName;
     editedLastNameController.text = employee.employeeLastName;
     editedPhoneController.text = employee.employeePhoneNumber;
     editedEmailController.text = employee.employeeEmail;
-    editedPasswordController.text = employee.employeePassword;
+    editedPasswordController.text = decryptPass.toString();
     editedPositionController.text = employee.employeePosition;
 
     SystemChrome.setPreferredOrientations([
@@ -425,10 +446,15 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   void _onSaveButtonPressed() async {
+    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    final iv = encrypt.IV.fromLength(16);
+    final encrypter = Encrypter(AES(key));
+    final encryptedPassword = encrypter.encrypt(editedPasswordController.text, iv: iv);
+
     String firstName = editedFirstNameController.text;
     String lastName = editedLastNameController.text;
     String email = editedEmailController.text;
-    String password = editedPasswordController.text;
+    String password = encryptedPassword.base64;
     String phoneNo = editedPhoneController.text;
     String position = editedPositionController.text;
 

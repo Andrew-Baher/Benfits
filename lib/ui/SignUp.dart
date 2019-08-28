@@ -9,6 +9,7 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'SignIn.dart';
 
+bool passwordVisible = true;
 bool _saving = false;
 
 class SignUp extends StatefulWidget {
@@ -398,7 +399,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                       height: MediaQuery.of(context).size.height / 70,
                     ),
                     TextFormField(
-                      obscureText: true,
+                      obscureText: passwordVisible,
                       controller: signUpPasswordController,
                       keyboardType: TextInputType.emailAddress,
                       textCapitalization: TextCapitalization.words,
@@ -413,6 +414,19 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                         //hoverColor: Colors.black,
                         //focusColor: Colors.black,
                         fillColor: Colors.black,
+                        suffixIcon: IconButton(
+                            icon: Icon(
+                              // Based on passwordVisible state choose the icon
+                              passwordVisible
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                passwordVisible = !passwordVisible;
+                              });
+                            }),
                       ),
                     ),
                   ],
@@ -466,7 +480,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
   @override
   initState() {
     super.initState();
-
+    passwordVisible = true;
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,

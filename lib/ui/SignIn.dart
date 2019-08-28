@@ -9,11 +9,11 @@ import 'package:flutter/material.dart' hide Key;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
 import '../main.dart';
 import 'ForgetPassword.dart';
 import 'SignUp.dart';
 
+bool passwordVisible = true;
 final List<Color> colors = new List<Color>();
 bool _saving = false;
 
@@ -38,6 +38,7 @@ class _SignInState extends State<SignIn> {
     colors.add(Colors.yellow);
     colors.add(Color.fromRGBO(19, 46, 99, 10));
     colors.add(Colors.yellow);
+    passwordVisible = true;
     _saving = false;
     loginEmailController.text = '';
     loginPasswordController.text = '';
@@ -77,7 +78,7 @@ class _SignInState extends State<SignIn> {
 
     final password = TextFormField(
       autofocus: false,
-      obscureText: true,
+      obscureText: passwordVisible,
       controller: loginPasswordController,
       style: TextStyle(
           fontFamily: "WorkSansSemiBold",
@@ -87,6 +88,17 @@ class _SignInState extends State<SignIn> {
         hintText: 'Password',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+        suffixIcon: IconButton(
+            icon: Icon(
+              // Based on passwordVisible state choose the icon
+              passwordVisible ? Icons.visibility_off : Icons.visibility,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              setState(() {
+                passwordVisible = !passwordVisible;
+              });
+            }),
       ),
     );
 
