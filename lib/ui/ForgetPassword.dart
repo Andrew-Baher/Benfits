@@ -260,11 +260,11 @@ class _ForgetPasswordState extends State<ForgetPassword>
             ..subject = 'Evapharma password reset'
             ..text = 'Dear ${currentEmployee.employeeFirstName} '
                 '${currentEmployee.employeeLastName},\n\n'
-                'Your request for resetting password is succefull.\n\n'
+                'Your request for resetting password is successful.\n\n'
                 'You can now login using the following credentials:\n\n'
                 'Username: ${currentEmployee.employeeEmail}\n'
                 'Password: $decryptPass\n\n'
-                'Thankyou,\n\n'
+                'Thank you,\n\n'
                 'Regards,\n\n'
                 'Evapharma H.R.';
           //..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";

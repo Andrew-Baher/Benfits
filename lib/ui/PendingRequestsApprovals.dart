@@ -1,19 +1,16 @@
 import 'package:employees_benefits/models/Employee.dart';
 import 'package:employees_benefits/style/theme.dart' as Theme;
+import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mailer/smtp_server/gmail.dart';
-import '../main.dart';
-import 'package:encrypt/encrypt.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart' hide Key;
-import 'MainApp.dart';
-import 'PendingRequests.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:flutter/services.dart';
 import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server/mailgun.dart';
+import 'package:mailer/smtp_server/gmail.dart';
+
+import '../main.dart';
 
 Employee employee;
 String pendingEmployeeCompanyID;
@@ -395,7 +392,6 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
   }
 
   void _onAcceptButtonPressed() async {
-
     //Decrypting password
     final key = encrypt.Key.fromUtf8('my 32 length key................');
     final iv = encrypt.IV.fromLength(16);
@@ -449,8 +445,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
     }
 
     await Future.delayed(const Duration(seconds: 2), () {});
-    Navigator.of(context)
-        .pop();
+    Navigator.of(context).pop();
   }
 
   void _onDeclineButtonPressed() async {
@@ -467,8 +462,8 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
     final message = Message()
       ..from = Address(username, 'bbbba7785@gmail.com')
       ..recipients.add(employee.employeeEmail)
-    //..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
-    //..bccRecipients.add(Address('bccAddress@example.com'))
+      //..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
+      //..bccRecipients.add(Address('bccAddress@example.com'))
       ..subject = 'Declined Evapharma signup'
       ..text = 'Dear ${employee.employeeFirstName} '
           '${employee.employeeLastName},\n\n'
@@ -492,12 +487,9 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
       }
     }
 
-
-
     showInSnackBar('Request declined !');
     await Future.delayed(const Duration(seconds: 2), () {});
-    Navigator.of(context)
-        .pop();
+    Navigator.of(context).pop();
   }
 
   void showInSnackBar(String value) {
