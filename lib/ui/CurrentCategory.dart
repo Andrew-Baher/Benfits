@@ -1,6 +1,10 @@
+import 'dart:convert';
+
+import 'package:employees_benefits/models/BenefitDetails.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import '../main.dart';
@@ -14,6 +18,10 @@ List<String> categoryImages;
 List<String> categoryDescription;
 
 List<String> categoryTitle;
+
+List<bool> categoryApply;
+
+List<String> categoryID;
 
 bool _saving = true;
 
@@ -53,21 +61,18 @@ class CurrentCategoryState extends State<CurrentCategory> {
     categoryImages = new List<String>();
     categoryDescription = new List<String>();
     categoryTitle = new List<String>();
+    categoryApply = new List<bool>();
+    categoryID = new List<String>();
     getImages();
   }
 
   Future getData() async {
-    await new Future.delayed(const Duration(seconds: 1));
-    setState(() {});
-    new Future.delayed(new Duration(seconds: 0), () {
+
+    new Future.delayed(new Duration(seconds: 1), () {
       setState(() {
         _saving = false;
       });
     });
-    isCurrentCategoryEmpty = (categoryImages.length == 0);
-    if (categoryImages.length == 0) {
-      isCurrentCategoryEmpty = true;
-    }
   }
 
   @override
@@ -102,6 +107,8 @@ class CurrentCategoryState extends State<CurrentCategory> {
                             mainCurrentBenefitDescription =
                                 categoryDescription[index];
                             mainCurrentBenefitTitle = categoryTitle[index];
+                            mainCurrentBenefitApply = categoryApply[index];
+                            mainCurrentBenefitID = categoryID[index];
                             Navigator.push(
                                 context,
                                 new MaterialPageRoute(
@@ -139,15 +146,39 @@ class CurrentCategoryState extends State<CurrentCategory> {
 }
 
 void getImages() async {
-  DBRef2.child('Benefitscount')
+  /*DBRef2.child('Benefitscount')
       .child('count')
       .once()
       .then((DataSnapshot dataSnapShot) {
     currentBenefitId = dataSnapShot.value;
     print(currentBenefitId);
-  });
+  });*/
+  final url =
+      'https://employees-benifits-app.firebaseio.com/benefitsDetails.json';
+  final httpClient = new Client();
+  var response = await httpClient.get(url);
+  var mess = jsonCodec.decode(response.body);
+  print("size = ");
+  print (mess.length);
+  List<dynamic> mes = mess.values.toList();
+  print("size2 = ");
+  print (mes.length);
+  print((mes[0].benefitApply));
+  //print(emps[1].employeeEmail);
+  //print(mess[1]);
+  for (int i = 0 ; i < mess.length ; ++i) {
+    //complaints.add(new Complaint(mes[i].employeeEmail,mes[i].employeetName,mes[i].complaintDescription ));
+    if ((mes[i].benefitCategory == globalCurrentBenefit)&&(mes[i].benefitActive)){
+      categoryImages.add(mes[i].benefitImage);
+      categoryDescription.add(mes[i].benefitDescription);
+      categoryTitle.add(mes[i].benefitTitle);
+      categoryApply.add(mes[i].benefitApply);
+      categoryID.add(mes[i].benefitID);
+    }
 
-  DBRef2.child('benefitsDetails').once().then((DataSnapshot dataSnapShot) {
+  }
+
+  /*DBRef2.child('benefitsDetails').once().then((DataSnapshot dataSnapShot) {
     print(dataSnapShot.value[1]["benefitImage"]);
     print(dataSnapShot.value[1]["benefitCategory"]);
     int count = 0;
@@ -156,9 +187,15 @@ void getImages() async {
         categoryImages.add(dataSnapShot.value[i]["benefitImage"]);
         categoryDescription.add(dataSnapShot.value[i]["benefitDescription"]);
         categoryTitle.add(dataSnapShot.value[i]["benefitTitle"]);
-        count++;
       }
     }
     print(count);
-  });
+  });*/
 }
+
+_reviver(Object key, Object value) {
+  if (key != null && value is Map) return new BenefitDetails.fromJson(value);
+  return value;
+}
+
+const jsonCodec = const JsonCodec(reviver: _reviver);

@@ -23,8 +23,8 @@ int noOfAnswers;
 int noOfQuestions;
 List<dynamic> row;
 List<List<dynamic>> rows;
-String surveyTitle='';
-bool _saving=false;
+String surveyTitle = '';
+bool _saving = false;
 String surveyID;
 
 class More extends StatefulWidget {
@@ -37,7 +37,6 @@ class More extends StatefulWidget {
 class _MyAppState3 extends State<More> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-
   Future getData() async {
     await new Future.delayed(const Duration(seconds: 0));
     setState(() {});
@@ -48,235 +47,236 @@ class _MyAppState3 extends State<More> {
     getData();
     return MaterialApp(
       home: Scaffold(
-          key: _scaffoldKey,
-          body: ModalProgressHUD(
-            child: ListView(
-              children: <Widget>[
-                GestureDetector(
+        key: _scaffoldKey,
+        body: ModalProgressHUD(
+          child: ListView(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  mainAppState.openAnotherTab(5);
+                },
+                child: ListTile(
+                  leading: Icon(
+                    Icons.person,
+                    size: MediaQuery.of(context).size.width / 16,
+                  ),
+                  title: Text(
+                    'Profile',
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width / 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: ListTile(
+                  leading: Icon(
+                    Icons.settings,
+                    size: MediaQuery.of(context).size.width / 16,
+                  ),
+                  title: Text(
+                    'Settings',
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width / 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  if (mainEmployee.employeeAuthority.toString() == "User") {
+                    mainAppState.openAnotherTab(8);
+                  } else {
+                    mainAppState.openAnotherTab(9);
+                  }
+                },
+                child: ListTile(
+                  leading: Icon(
+                    Icons.priority_high,
+                    size: MediaQuery.of(context).size.width / 16,
+                  ),
+                  title: Text(
+                    'Complaints',
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width / 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  mainAppState.openAnotherTab(11);
+                },
+                child: ListTile(
+                  leading: Icon(
+                    Icons.person_pin,
+                    size: MediaQuery.of(context).size.width / 16,
+                  ),
+                  title: Text(
+                    'About us',
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width / 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: IsSurvey && (!hasAuth),
+                child: GestureDetector(
                   onTap: () {
-                    mainAppState.openAnotherTab(5);
+                    makeSurveyQuestions = new List<Question>();
+                    mainAppState.openAnotherTab(10);
                   },
                   child: ListTile(
                     leading: Icon(
-                      Icons.person,
+                      Icons.assignment,
                       size: MediaQuery.of(context).size.width / 16,
                     ),
                     title: Text(
-                      'Profile',
+                      'Make a survey',
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width / 20,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.settings,
-                      size: MediaQuery.of(context).size.width / 16,
-                    ),
-                    title: Text(
-                      'Settings',
-                      style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width / 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                GestureDetector(
+              ), // Appear if user is admin
+
+              Visibility(
+                visible: hasAuth,
+                child: GestureDetector(
                   onTap: () {
-                    if (mainEmployee.employeeAuthority.toString() == "User") {
-                      mainAppState.openAnotherTab(8);
-                    } else {
-                      mainAppState.openAnotherTab(9);
-                    }
+                    mainAppState.openAnotherTab(3);
                   },
                   child: ListTile(
                     leading: Icon(
-                      Icons.priority_high,
+                      Icons.assignment_ind,
                       size: MediaQuery.of(context).size.width / 16,
                     ),
                     title: Text(
-                      'Complaints',
+                      'Pending Requests',
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width / 20,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
-                GestureDetector(
+              ), // Appear if user is admin
+
+              Visibility(
+                visible: hasAuth,
+                child: GestureDetector(
                   onTap: () {
-                    mainAppState.openAnotherTab(11);
+                    mainAppState.openAnotherTab(1);
                   },
                   child: ListTile(
                     leading: Icon(
-                      Icons.person_pin,
+                      Icons.add_a_photo,
                       size: MediaQuery.of(context).size.width / 16,
                     ),
                     title: Text(
-                      'About us',
+                      'Add benefit',
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width / 20,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
-                Visibility(
-                  visible: IsSurvey&&(!hasAuth),
-                  child: GestureDetector(
-                    onTap: () {
-                      makeSurveyQuestions=new List<Question>();
-                      mainAppState.openAnotherTab(10);
-                    },
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.assignment,
-                        size: MediaQuery.of(context).size.width / 16,
-                      ),
-                      title: Text(
-                        'Make a survey',
-                        style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontWeight: FontWeight.bold),
-                      ),
+              ), // Appear if user is admin
+
+              Visibility(
+                visible: hasAuth,
+                child: GestureDetector(
+                  onTap: () {
+                    mainAppState.openAnotherTab(2);
+                  },
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.message,
+                      size: MediaQuery.of(context).size.width / 16,
+                    ),
+                    title: Text(
+                      'Send a message',
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
-                ), // Appear if user is admin
+                ),
+              ), // Appear if user is admin
 
-                Visibility(
-                  visible: hasAuth,
-                  child: GestureDetector(
-                    onTap: () {
-                      mainAppState.openAnotherTab(3);
-                    },
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.assignment_ind,
-                        size: MediaQuery.of(context).size.width / 16,
-                      ),
-                      title: Text(
-                        'Pending Requests',
-                        style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ), // Appear if user is admin
-
-                Visibility(
-                  visible: hasAuth,
-                  child: GestureDetector(
-                    onTap: () {
-                      mainAppState.openAnotherTab(1);
-                    },
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.add_a_photo,
-                        size: MediaQuery.of(context).size.width / 16,
-                      ),
-                      title: Text(
-                        'Add benefit',
-                        style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ), // Appear if user is admin
-
-                Visibility(
-                  visible: hasAuth,
-                  child: GestureDetector(
-                    onTap: () {
-                      mainAppState.openAnotherTab(2);
-                    },
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.message,
-                        size: MediaQuery.of(context).size.width / 16,
-                      ),
-                      title: Text(
-                        'Send a message',
-                        style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ), // Appear if user is admin
-
-                Visibility(
-                  visible: hasAuth,
-                  child: GestureDetector(
-                    onTap: () {
-                      if(IsSurvey){
-                        showDialog(
-                            context: context,
-                            child: new AlertDialog(
-                              title: new Text("A survey is already here"),
-                              content: new Text("There is already a survey. "
-                                  "\n You can't make 2 surveys at the same time."),
-                              actions: <Widget>[
-                                FlatButton(
-                                  child: Text('Finish Survey \nand send results'),
-                                  onPressed: () {
+              Visibility(
+                visible: hasAuth,
+                child: GestureDetector(
+                  onTap: () {
+                    if (IsSurvey) {
+                      showDialog(
+                          context: context,
+                          child: new AlertDialog(
+                            title: new Text("A survey is already here"),
+                            content: new Text("There is already a survey. "
+                                "\n You can't make 2 surveys at the same time."),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text('Finish Survey \nand send results'),
+                                onPressed: () {
+                                  sendResults();
+                                  finishSurvey();
+                                },
+                              ),
+                              FlatButton(
+                                child: Text('Send me results\nby mail'),
+                                onPressed: () {
+                                  getSurveyDetails();
+                                  new Future.delayed(new Duration(seconds: 1),
+                                      () {
                                     sendResults();
-                                    finishSurvey();
-                                  },
-                                ),
-                                FlatButton(
-                                  child: Text('Send me results\nby mail'),
-                                  onPressed: () {
-                                    getSurveyDetails();
-                                    new Future.delayed(new Duration(seconds: 1), () {
-                                      sendResults();
-                                    });
-                                  },
-                                ),
-                              ],
-                            ));
-                      }else
-                        mainAppState.openAnotherTab(4);
-                    },
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.announcement,
-                        size: MediaQuery.of(context).size.width / 16,
-                      ),
-                      title: Text(
-                        'Add a survey',
-                        style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width / 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ), // Appear if user is admin
-
-                GestureDetector(
-                  onTap: () {
-                    mainAppState.openAnotherTab(6);
+                                  });
+                                },
+                              ),
+                            ],
+                          ));
+                    } else
+                      mainAppState.openAnotherTab(4);
                   },
                   child: ListTile(
                     leading: Icon(
-                      Icons.power_settings_new,
+                      Icons.announcement,
                       size: MediaQuery.of(context).size.width / 16,
                     ),
                     title: Text(
-                      'Log out',
+                      'Add a survey',
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width / 20,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
-              ],
-            ),
-            inAsyncCall: _saving,
-            progressIndicator: CircularProgressIndicator(),
+              ), // Appear if user is admin
+
+              GestureDetector(
+                onTap: () {
+                  mainAppState.openAnotherTab(6);
+                },
+                child: ListTile(
+                  leading: Icon(
+                    Icons.power_settings_new,
+                    size: MediaQuery.of(context).size.width / 16,
+                  ),
+                  title: Text(
+                    'Log out',
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width / 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
           ),
+          inAsyncCall: _saving,
+          progressIndicator: CircularProgressIndicator(),
+        ),
       ),
     );
   }
@@ -290,10 +290,12 @@ class _MyAppState3 extends State<More> {
       });
     });
 
-     rows= new List<List<dynamic>>();
-     DBRef4.child('SurveyAnswer'+surveyID).once().then((DataSnapshot dataSnapShot) async {
+    rows = new List<List<dynamic>>();
+    DBRef4.child('SurveyAnswer' + surveyID)
+        .once()
+        .then((DataSnapshot dataSnapShot) async {
       print(dataSnapShot.value);
-      print(dataSnapShot.value[noOfQuestions-1]["Email"]);
+      print(dataSnapShot.value[noOfQuestions - 1]["Email"]);
       print(dataSnapShot.value[0]['0']["Answer"]);
       print(dataSnapShot.value[0]['1']["Answer"]);
       print(noOfAnswers);
@@ -304,42 +306,41 @@ class _MyAppState3 extends State<More> {
       row.add("Created at:");
       row.add(surveyID);
       rows.add(row);
-      for(int i=0;i<1;i++){
+      for (int i = 0; i < 1; i++) {
         row = new List();
         row.add("Number");
         row.add("Email");
         row.add("Name");
         row.add("ID");
         row.add("Time");
-        for(int j=0;j<noOfQuestions;j++){
-          row.add("Question ${j+1}");
+        for (int j = 0; j < noOfQuestions; j++) {
+          row.add("Question ${j + 1}");
         }
         rows.add(row);
       }
 
-      for(int i=0;i<noOfAnswers;i++){
+      for (int i = 0; i < noOfAnswers; i++) {
         row = new List();
-        row.add("${i+1}");
+        row.add("${i + 1}");
         row.add(dataSnapShot.value[i]["Email"]);
         row.add(dataSnapShot.value[i]["Name"]);
         row.add(dataSnapShot.value[i]["ID"]);
         row.add(dataSnapShot.value[i]["Time"]);
-        for(int j=0;j<noOfQuestions;j++){
+        for (int j = 0; j < noOfQuestions; j++) {
           row.add(dataSnapShot.value[i]['${j}']["Answer"]);
         }
         rows.add(row);
       }
 
-
       String csv = const ListToCsvConverter().convert(rows);
       DateTime now = DateTime.now();
       String formattedDate = DateFormat('EEE d MMM, kk:mm ').format(now);
       final directory = await getApplicationDocumentsDirectory();
-      String currentDirectory=directory.path;
+      String currentDirectory = directory.path;
       var file = "$currentDirectory";
-      File f = new File(file +" "+ formattedDate + ".csv");
+      File f = new File(file + " " + formattedDate + ".csv");
       f.writeAsString(csv);
-      FileAttachment ff=new FileAttachment(f);
+      FileAttachment ff = new FileAttachment(f);
       String username = 'bbbba7785@gmail.com';
       String password = 'ah67@#nm12';
 
@@ -353,15 +354,15 @@ class _MyAppState3 extends State<More> {
       final message = Message()
         ..from = Address(username, 'bbbba7785@gmail.com')
         ..recipients.add('bbbba7785@gmail.com')
-      //..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
-      //..bccRecipients.add(Address('bccAddress@example.com'))
+        //..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
+        //..bccRecipients.add(Address('bccAddress@example.com'))
         ..subject = 'Approved Evapharma signup'
         ..text = 'Dear Benefits manager,\n\n'
             'Kindly find the attached file of answers to your survey.\n\n'
             'Thank you,\n\n'
             'Regards,\n\n'
             'Evapharma Application maker'
-        ..attachments=[ff];
+        ..attachments = [ff];
 
       try {
         final sendReport = await send(message, smtpServer);
@@ -371,7 +372,6 @@ class _MyAppState3 extends State<More> {
           });
         });
         showInSnackBar('email sent !');
-
       } catch (e) {
         new Future.delayed(new Duration(seconds: 0), () {
           setState(() {
@@ -379,25 +379,21 @@ class _MyAppState3 extends State<More> {
           });
         });
         showInSnackBar('email not sent !');
-        }
-
+      }
     });
-
   }
 
-  void finishSurvey(){
+  void finishSurvey() {
     DBRef4.child('surveydetails').set({
-      "SurveyID":"",
+      "SurveyID": "",
       "IsSurvey": false,
     });
-
 
     new Future.delayed(new Duration(seconds: 10), () {
       setState(() {
         _saving = false;
       });
     });
-
   }
 
   void showInSnackBar(String value) {
@@ -438,17 +434,17 @@ class _MyAppState3 extends State<More> {
     if (mainEmployee.employeeAuthority == "Manager") hasAuth = true;
   }
 
-void getSurveyDetails(){
-  DBRef2.child('survey'+surveyID).once().then((DataSnapshot dataSnapShot) {
-    print(dataSnapShot.value);
-    print(dataSnapShot.value["1"]["Title"]);
-    //print(dataSnapShot.value[1]["Type"]);
-    //print(dataSnapShot.value[1]["Choices"][1]["Choice"]);
-    print(dataSnapShot.value["AnswersCount"]["count"]);
-    print(dataSnapShot.value["QuestionsCount"]["count"]);
-    noOfAnswers = dataSnapShot.value["AnswersCount"]["count"];
-    surveyTitle = dataSnapShot.value["SurveyTitle"]["Title"];
-    noOfQuestions = dataSnapShot.value["QuestionsCount"]["count"];});
+  void getSurveyDetails() {
+    DBRef2.child('survey' + surveyID).once().then((DataSnapshot dataSnapShot) {
+      print(dataSnapShot.value);
+      print(dataSnapShot.value["1"]["Title"]);
+      //print(dataSnapShot.value[1]["Type"]);
+      //print(dataSnapShot.value[1]["Choices"][1]["Choice"]);
+      print(dataSnapShot.value["AnswersCount"]["count"]);
+      print(dataSnapShot.value["QuestionsCount"]["count"]);
+      noOfAnswers = dataSnapShot.value["AnswersCount"]["count"];
+      surveyTitle = dataSnapShot.value["SurveyTitle"]["Title"];
+      noOfQuestions = dataSnapShot.value["QuestionsCount"]["count"];
+    });
+  }
 }
-}
-

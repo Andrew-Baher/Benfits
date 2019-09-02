@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:employees_benefits/models/Complaint.dart';
+import 'package:employees_benefits/models/ComplaintDetails.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -91,27 +92,44 @@ class _ManagerComplaintsState extends State<ManagerComplaints> {
   }
 
   void getComplaints() async {
-    DBRef.child('ComplaintsCount')
+
+    final url =
+        'https://employees-benifits-app.firebaseio.com/ComplaintsDetails.json';
+    final httpClient = new Client();
+    var response = await httpClient.get(url);
+    var mess = jsonCodec.decode(response.body);
+    print("size = ");
+    print (mess.length);
+    List<dynamic> mes = mess.values.toList();
+    print("size2 = ");
+    print (mes.length);
+    //print(emps[1].employeeEmail);
+    //print(mess[1]);
+    for (int i = mess.length-1; i>=0 ; --i) {
+      complaints.add(new Complaint(mes[i].employeeEmail,mes[i].employeetName,mes[i].complaintDescription ));
+    }
+
+    /*DBRef.child('ComplaintsCount')
         .child('count')
         .once()
         .then((DataSnapshot dataSnapShot) {
       currentComplaintIndex = dataSnapShot.value;
       print("ID" + currentComplaintIndex.toString());
-    });
+    });*/
 
-    DBRef.child('ComplaintsDetails').once().then((DataSnapshot dataSnapShot) {
+    /*DBRef.child('ComplaintsDetails').once().then((DataSnapshot dataSnapShot) {
       print(dataSnapShot.value[1]["EmployeeEmail"]);
       print(dataSnapShot.value[1]["ComplaintDescription"]);
       for (int i = currentComplaintIndex - 1; i > 0; i--) {
         complaints.add(new Complaint(dataSnapShot.value[i]["EmployeeEmail"],
             dataSnapShot.value[i]["ComplaintDescription"], dataSnapShot.value[i]["EmployeeName"] ));
       }
-    });
+    });*/
   }
 }
 
 _reviver(Object key, Object value) {
-  if (key != null && value is Map) return new Complaint.fromJson(value);
+  if (key != null && value is Map) return new ComplaintDetails.fromJson(value);
   return value;
 }
 

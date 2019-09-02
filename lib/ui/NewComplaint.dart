@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:intl/intl.dart';
 
 import '../main.dart';
 import 'MainApp.dart';
@@ -55,23 +56,25 @@ class _NewComplaint extends State<NewComplaint>
         String empFullName = mainEmployee.employeeFirstName +
             ' ' +
             mainEmployee.employeeLastName;
-        DBRef5.child('ComplaintsCount')
+        /*DBRef5.child('ComplaintsCount')
             .child('count')
             .once()
             .then((DataSnapshot dataSnapShot) {
           currentComplaintIndex = dataSnapShot.value;
           currentComplaintIndexString = "$currentComplaintIndex";
           print(currentComplaintIndex);
-        });
+        });*/
+        DateTime now = DateTime.now();
+        String ComplaintID = DateFormat('EEE d MMM yy, kk:mm:ss ').format(now);
         DBRef5.child('ComplaintsDetails')
-            .child(currentComplaintIndexString)
+            .child(ComplaintID)
             .set({
           "ComplaintDescription": ComplaintDetailsController.text,
           "EmployeeEmail": mainEmployee.employeeEmail.toString(),
           "EmployeeName": empFullName,
         });
-        nextComplaintIndex = currentComplaintIndex + 1;
-        DBRef5.child('ComplaintsCount').set({'count': nextComplaintIndex});
+        //nextComplaintIndex = currentComplaintIndex + 1;
+        //DBRef5.child('ComplaintsCount').set({'count': nextComplaintIndex});
         showInSnackBar('Your complaint is sent successfully !');
 
         //Sending email to HR Manager

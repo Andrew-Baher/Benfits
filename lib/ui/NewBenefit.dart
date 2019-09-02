@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:employees_benefits/models/Question.dart';
 import 'package:employees_benefits/style/theme.dart' as Theme;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,10 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as Path;
 
 import '../main.dart';
+import 'AddQuestionsToBenefits.dart';
 import 'MainApp.dart';
+
+List<Question> questions;
 
 class NewBenefit extends StatefulWidget {
   @override
@@ -41,6 +46,8 @@ class _NewBenefit extends State<NewBenefit>
   bool _saving=false;
   bool progressIndicatorVisible = false;
   var url;
+  bool _applyEnable=false;
+
 
   List<DropdownMenuItem<String>> listDrop = [];
   List<String> drop = [
@@ -86,6 +93,8 @@ class _NewBenefit extends State<NewBenefit>
       });
     }
 
+
+
     Future saveBenefit(BuildContext context) async {
       new Future.delayed(new Duration(seconds: 0), () {
         setState(() {
@@ -107,22 +116,32 @@ class _NewBenefit extends State<NewBenefit>
             await (await uploadTask.onComplete).ref.getDownloadURL();
         url = downloadingurl.toString();
 
-        DBRef2.child('Benefitscount')
+        /*DBRef2.child('Benefitscount')
             .child('count')
             .once()
             .then((DataSnapshot dataSnapShot) {
           currentBenefitId = dataSnapShot.value;
           currentBenefitIdString = "$currentBenefitId";
           print(currentBenefitId);
-        });
-        DBRef2.child('benefitsDetails').child(currentBenefitIdString).set({
+        });*/
+        DateTime now = DateTime.now();
+        String BenfitID = DateFormat('EEE d MMM yy, kk:mm:ss ').format(now);
+        DBRef2.child('benefitsDetails').child(BenfitID).set({
+          "benefitID": BenfitID,
           "benefitDescription": benefitDescriptionController.text,
           "benefitTitle": benefitTitleController.text,
           "benefitCategory": selected,
           "benefitImage": url,
+          "benefitApply":_applyEnable,
+          "benfitActive":true,
         });
-        nextBenefitId = currentBenefitId + 1;
-        DBRef2.child('Benefitscount').set({'count': nextBenefitId});
+        if(_applyEnable==true)
+        {
+          questions = new List<Question>();
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => new AddQuetionsToBenefit(benefitTitleController.text,BenfitID)));        }
+        //nextBenefitId = currentBenefitId + 1;
+        //DBRef2.child('Benefitscount').set({'count': nextBenefitId});
         progressIndicatorVisible = false;
         setState(() {});
         showInSnackBar('New benefit picture uploaded successfully !!');
@@ -130,6 +149,8 @@ class _NewBenefit extends State<NewBenefit>
         selected = null;
         benefitTitleController.text = '';
         benefitDescriptionController.text = '';
+        _applyEnable=false;
+
       }
       new Future.delayed(new Duration(seconds: 0), () {
         setState(() {
@@ -143,6 +164,8 @@ class _NewBenefit extends State<NewBenefit>
       Navigator.push(context,
           new MaterialPageRoute(builder: (context) => MainApplication()));
     }
+
+    void _applyEnableChanged(bool value) => setState(() => _applyEnable = value);
 
     return new WillPopScope(
       onWillPop: _onBackPressed,
@@ -265,11 +288,21 @@ class _NewBenefit extends State<NewBenefit>
                                   style: BorderStyle.solid))),
                     ),
                     SizedBox(
+                      width: MediaQuery.of(context).size.width / 15,
+                    ),
+                    new CheckboxListTile(
+                      value: _applyEnable,
+                      onChanged: _applyEnableChanged,
+                      title: new Text('Apply for benefit'),
+                      activeColor: Colors.blue,
+                    ),
+                    SizedBox(
                       height: MediaQuery.of(context).size.height / 25,
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 500,
                     ),
+
                     Center(
                       child: Row(
                         children: <Widget>[
@@ -353,6 +386,7 @@ class _NewBenefit extends State<NewBenefit>
       duration: Duration(seconds: 3),
     ));
   }
+
 }
 
 hexStringToHexInt(String hex) {
