@@ -12,7 +12,8 @@ class PendingRequests extends StatefulWidget {
   _PendingRequestsState createState() => new _PendingRequestsState();
 }
 
-List<Employee> pendingEmployees;
+
+int currIndex;
 
 class _PendingRequestsState extends State<PendingRequests> {
   //Palette
@@ -55,8 +56,7 @@ class _PendingRequestsState extends State<PendingRequests> {
           backgroundColor: Color.fromRGBO(19, 46, 99, 10),
         ),
         body: new MaterialApp(
-          home: Scaffold(
-            body: ListView.builder(
+          home: ListView.builder(
               itemExtent: MediaQuery.of(context).size.height / 15,
               itemCount: pendingEmployees.length,
               itemBuilder: (context, index) {
@@ -75,17 +75,23 @@ class _PendingRequestsState extends State<PendingRequests> {
                     subtitle: Text(pendingEmployees[index].employeePosition),
                   ),
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => new PendingRequestsApprovals(
-                            pendingEmployees[index])));
+                    currIndex=index;
+                    _openPendingRequestApprovals();
+
                   },
                 );
               },
             ),
-          ),
+
         ),
       ),
     );
+  }
+  _openPendingRequestApprovals(){
+    Navigator.of(context).pop();
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => new PendingRequestsApprovals(
+            pendingEmployees[currIndex])));
   }
 }
 

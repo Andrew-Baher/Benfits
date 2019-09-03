@@ -11,6 +11,7 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 
 import '../main.dart';
+import 'PendingRequests.dart';
 
 Employee employee;
 String pendingEmployeeCompanyID;
@@ -41,15 +42,28 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
   TextEditingController editedPhoneController = new TextEditingController();
   TextEditingController editedPositionController = new TextEditingController();
 
+  Future<bool> _onBackPressed() {
+    Navigator.of(context).pop();
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => new PendingRequests()));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return new WillPopScope(
+      onWillPop: _onBackPressed,
+      child: new Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            title: Text('Pending requests approvals'),
+            backgroundColor: Color.fromRGBO(19, 46, 99, 10),
+          ),
+          body: new MaterialApp(
+              home: Scaffold(
+              body: Container(
       padding: EdgeInsets.all(MediaQuery.of(context).size.width / 20),
       color: Colors.white,
-      child: Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: Colors.transparent,
-        body: ListView(
+      child: ListView(
           padding:
               EdgeInsets.only(top: MediaQuery.of(context).size.width / 200),
           children: <Widget>[
@@ -375,7 +389,7 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
           ],
         ),
       ),
-    );
+    ),),),);
   }
 
   @override
@@ -444,8 +458,11 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
       }
     }
 
-    await Future.delayed(const Duration(seconds: 2), () {});
+    await Future.delayed(const Duration(seconds: 1), () {});
     Navigator.of(context).pop();
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => new PendingRequests()));
+
   }
 
   void _onDeclineButtonPressed() async {
@@ -488,8 +505,10 @@ class _PendingRequestsApprovalsState extends State<PendingRequestsApprovals> {
     }
 
     showInSnackBar('Request declined !');
-    await Future.delayed(const Duration(seconds: 2), () {});
+    await Future.delayed(const Duration(seconds: 1), () {});
     Navigator.of(context).pop();
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => new PendingRequests()));
   }
 
   void showInSnackBar(String value) {

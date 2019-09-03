@@ -44,6 +44,7 @@ bool isCurrentCategoryEmpty = false;
 bool BeneitFromHomeOrCategory=true;
 List<Question> makeSurveyQuestions;
 List<Question> makeBenefitQuestions;
+List<Employee> pendingEmployees;
 final DBRef = FirebaseDatabase.instance.reference();
 final DBRef2 = FirebaseDatabase.instance.reference();
 final DBRef3 = FirebaseDatabase.instance.reference();
@@ -59,31 +60,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    DBRef5.child('ComplaintsCount')
-        .child('count')
-        .once()
-        .then((DataSnapshot dataSnapShot) {
-      currentComplaintIndex = dataSnapShot.value;
-      currentComplaintIndexString = "$currentComplaintIndex";
-      print(currentComplaintIndex);
-    });
-    /*DBRef.child('Messagescount')
-        .child('count')
-        .once()
-        .then((DataSnapshot dataSnapShot) {
-      currentMessageId = dataSnapShot.value;
-      currentMessageIdString = "$currentMessageId";
-      print(currentMessageId);
-    });*/
-    DBRef2.child('Benefitscount')
-        .child('count')
-        .once()
-        .then((DataSnapshot dataSnapShot) {
-      currentBenefitId = dataSnapShot.value;
-      currentBenefitIdString = "$currentBenefitId";
-      print(currentBenefitId);
-    });
 
     return new MaterialApp(
       title: 'Login | Sign Up',
