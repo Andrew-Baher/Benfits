@@ -42,7 +42,7 @@ class CurrentCategory extends StatefulWidget {
 class CurrentCategoryState extends State<CurrentCategory> {
   Future<bool> _onBackPressed() {
     isCurrentCategoryEmpty = false;
-    _saving = true;
+    _saving = false;
     Navigator.of(context).pop();
     mainCurrentIndex = 1;
     Navigator.push(context,
@@ -109,6 +109,8 @@ class CurrentCategoryState extends State<CurrentCategory> {
                             mainCurrentBenefitTitle = categoryTitle[index];
                             mainCurrentBenefitApply = categoryApply[index];
                             mainCurrentBenefitID = categoryID[index];
+                            BeneitFromHomeOrCategory=false;
+                            Navigator.of(context).pop();
                             Navigator.push(
                                 context,
                                 new MaterialPageRoute(

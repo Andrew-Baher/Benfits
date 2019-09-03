@@ -12,6 +12,8 @@ import 'package:intl/intl.dart';
 
 import '../main.dart';
 import 'ApplyForBenefit.dart';
+import 'CurrentCategory.dart';
+import 'MainApp.dart';
 
 List<List<dynamic>> rows;
 List<dynamic> row;
@@ -63,10 +65,26 @@ class CurrentBenfitState extends State<CurrentBenefit> {
       });
   }
 
+  Future<bool> _onBackPressed() {
+    Navigator.of(context).pop();
+    if(BeneitFromHomeOrCategory){
+      mainCurrentIndex = 0;
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new MainApplication()));
+    }
+    else{
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new CurrentCategory(globalCurrentBenefit)));
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
+    return new WillPopScope(
+        onWillPop: _onBackPressed,
+        child: new Scaffold(
       appBar: AppBar(
         title: new Text(mainCurrentBenefitTitle),
         backgroundColor: Color.fromRGBO(19, 46, 99, 10),
@@ -245,7 +263,7 @@ class CurrentBenfitState extends State<CurrentBenefit> {
           ),
         ),
       ),
-    );
+        ),);
   }
   void sendResults() async {
     new Future.delayed(new Duration(seconds: 0), () {
@@ -352,10 +370,21 @@ class CurrentBenfitState extends State<CurrentBenefit> {
       "benfitActive": false,
     });
 
-    new Future.delayed(new Duration(seconds: 10), () {
+
+    new Future.delayed(new Duration(seconds: 0), () {
       setState(() {
         _saving = false;
       });
     });
+    Navigator.of(context).pop();
+    if(BeneitFromHomeOrCategory){
+      mainCurrentIndex = 0;
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new MainApplication()));
+    }
+    else{
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new CurrentCategory(globalCurrentBenefit)));
+    }
   }
 }

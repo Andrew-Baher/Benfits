@@ -6,6 +6,7 @@ import '../main.dart';
 import 'AboutUs.dart';
 import 'AddSurvey.dart';
 import 'AppNavigation.dart';
+import 'CurrentBenefit.dart';
 import 'CurrentCategory.dart';
 import 'EditProfile.dart';
 import 'MakeSurvey.dart';
@@ -154,6 +155,12 @@ class MainApplicationState extends State<MainApplication> {
       Navigator.of(context).pop();
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => new AboutUs()));
+    }
+    else if (index == 12) {
+      BeneitFromHomeOrCategory=true;
+      Navigator.of(context).pop();
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => new CurrentBenefit()));
     }
   }
 }

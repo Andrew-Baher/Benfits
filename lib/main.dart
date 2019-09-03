@@ -41,6 +41,7 @@ String currentChatMail;
 String currentChatName;
 bool loadingLastFourImages=true;
 bool isCurrentCategoryEmpty = false;
+bool BeneitFromHomeOrCategory=true;
 List<Question> makeSurveyQuestions;
 List<Question> makeBenefitQuestions;
 final DBRef = FirebaseDatabase.instance.reference();

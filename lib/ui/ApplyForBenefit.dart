@@ -364,7 +364,12 @@ class _ApplyForBenefitState extends State<ApplyForBenefit>
         _saving = false;
       });
     });
-    mainCurrentIndex = 1;
+    if(BeneitFromHomeOrCategory){
+      mainCurrentIndex = 0;
+    }
+    else{
+      mainCurrentIndex = 1;
+    }
     Navigator.of(context).pop();
     Navigator.push(context,
         new MaterialPageRoute(builder: (context) => MainApplication()));

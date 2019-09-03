@@ -5,7 +5,6 @@ import 'package:employees_benefits/models/Question.dart';
 import 'package:employees_benefits/style/theme.dart' as Theme;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'AddQuetionsToSurvey.dart';
 
 import 'NewBenefit.dart';
 import 'SignIn.dart';
@@ -83,7 +82,7 @@ class _AddQuetionToBenefitState extends State<AddQuetionToBenefit>
         key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: Color.fromRGBO(19, 46, 99, 10),
-          title: new Text('Add question to survey'),
+          title: new Text('Add question to benefit'),
         ),
         backgroundColor: Colors.transparent,
         body: ListView(

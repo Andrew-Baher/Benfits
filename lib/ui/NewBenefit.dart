@@ -124,6 +124,7 @@ class _NewBenefit extends State<NewBenefit>
           currentBenefitIdString = "$currentBenefitId";
           print(currentBenefitId);
         });*/
+        String benefitTitle=benefitTitleController.text;
         DateTime now = DateTime.now();
         String BenfitID = DateFormat('EEE d MMM yy, kk:mm:ss ').format(now);
         DBRef2.child('benefitsDetails').child(BenfitID).set({
@@ -139,7 +140,7 @@ class _NewBenefit extends State<NewBenefit>
         {
           questions = new List<Question>();
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => new AddQuetionsToBenefit(benefitTitleController.text,BenfitID)));        }
+              builder: (context) => new AddQuetionsToBenefit(benefitTitle,BenfitID)));        }
         //nextBenefitId = currentBenefitId + 1;
         //DBRef2.child('Benefitscount').set({'count': nextBenefitId});
         progressIndicatorVisible = false;
